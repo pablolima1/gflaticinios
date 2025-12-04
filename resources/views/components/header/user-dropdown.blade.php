@@ -108,12 +108,13 @@
         </ul>
 
         <!-- Sign Out -->
-        {{-- <form method="POST" action="#">
-            @csrf --}}
+        <form method="POST" action="{{ route('logout') }}" x-ref="logoutForm">
+            @csrf
             <a
-                href="/signin"
+                href="#"
+                @click.prevent="$refs.logoutForm.submit()"
                 class="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                @click="closeDropdown()"
+                
             >
                 <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,7 +123,7 @@
                 </span>
                 Sign out
             </a>
-        {{-- </form> --}}
+        </form>
     </div>
     <!-- Dropdown End -->
 </div>
