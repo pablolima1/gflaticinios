@@ -18,6 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'tipo_usuario_id',
         'name',
         'email',
         'password',
@@ -44,5 +45,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function tipoUsuario()
+    {
+        return $this->belongsTo(TipoUsuario::class, 'tipo_usuario_id');
+    }
+
+    public function clientesCriados()
+    {
+        return $this->hasMany(Cliente::class, 'responsavel_criacao');
+    }
+
+    public function processosResponsaveis()
+    {
+        return $this->hasMany(Processo::class, 'usuario_responsavel_id');
+    }
+
+    public function pagamentosCriados()
+    {
+        return $this->hasMany(Pagamento::class, 'usuario_criador_id');
+    }
+
+    public function registrosParcelas()
+    {
+        return $this->hasMany(ParcelaPagamento::class, 'usuario_registrou_id');
     }
 }
