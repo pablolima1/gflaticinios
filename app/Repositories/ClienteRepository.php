@@ -11,6 +11,11 @@ class ClienteRepository
         return Cliente::orderBy('created_at', 'desc')->paginate(10);
     }
 
+    public function allSemPaginacao()
+    {
+        return Cliente::all();
+    }
+
     public function find($id)
     {
         return Cliente::find($id);

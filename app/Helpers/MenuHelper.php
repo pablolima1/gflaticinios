@@ -15,6 +15,11 @@ class MenuHelper
                 ],
             ],
             [
+                'name' => 'Processos',
+                'icon' => 'pages',
+                'path' => '/processos',
+            ],
+            [
                 'icon' => 'dashboard',
                 'name' => 'Administração',
                 'subItems' => [

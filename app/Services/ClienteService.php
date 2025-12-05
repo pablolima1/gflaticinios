@@ -18,6 +18,11 @@ class ClienteService
         return $this->clienteRepository->all();
     }
 
+    public function allSemPaginacao()
+    {
+        return $this->clienteRepository->allSemPaginacao();
+    }
+
     public function registerUser(array $data)
     {
         $data = [

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ProcessoController;
 
 Route::group(['middleware' => ['auth']], function () {
     // dashboard pages
@@ -19,6 +20,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
         Route::post('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
         Route::post('/{id}/delete', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+    });
+
+    Route::group(['prefix' => 'processos'], function () {
+        Route::get('/', [ProcessoController::class, 'index'])->name('processos.index');
+        Route::get('/create', [ProcessoController::class, 'create'])->name('processos.create');
+        Route::post('/', [ProcessoController::class, 'store'])->name('processos.store');
+        Route::get('/{id}', [ProcessoController::class, 'show'])->name('processos.show');
+        Route::get('/{id}/edit', [ProcessoController::class, 'edit'])->name('processos.edit');
+        Route::post('/{id}', [ProcessoController::class, 'update'])->name('processos.update');
+        Route::post('/{id}/delete', [ProcessoController::class, 'destroy'])->name('processos.destroy');
     });
 
 // calender pages
