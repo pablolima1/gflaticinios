@@ -15,6 +15,13 @@ class MenuHelper
                 ],
             ],
             [
+                'icon' => 'dashboard',
+                'name' => 'Administração',
+                'subItems' => [
+                    ['name' => 'Clientes', 'path' => '/clientes'],
+                ],
+            ],
+            [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',

@@ -1,12 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClienteController;
 
 Route::group(['middleware' => ['auth']], function () {
     // dashboard pages
     Route::get('/', function () {
         return view('pages.dashboard.ecommerce', ['title' => 'BML Advogados']);
     })->name('dashboard');
+
+
+
+    Route::group(['prefix' => 'clientes'], function () {
+        Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
+        Route::get('/create', [ClienteController::class, 'create'])->name('clientes.create');
+        Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
+        Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
+        Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
+        Route::post('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
+        Route::post('/{id}/delete', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+    });
 
 // calender pages
     Route::get('/calendar', function () {
