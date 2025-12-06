@@ -33,7 +33,7 @@ class MenuHelper
             ],
             [
                 'icon' => 'user-profile',
-                'name' => 'User Profile',
+                'name' => 'Perfil do Usuário',
                 'path' => '/profile',
             ],
             [

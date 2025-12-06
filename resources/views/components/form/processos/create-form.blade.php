@@ -168,8 +168,8 @@
                     Data do Pagamento
                 </label>
 
-                <x-form.date-picker id="date_pick" name="date_pick" placeholder="Date Picker"
-                    defaultDate="{{ now()->format('Y-m-d') }}" />
+                <x-form.date-picker-custom id="date_pick" name="date_pick" placeholder="Date Picker"
+                    defaultDate="{{ now()->format('d-m-Y') }}" />
             </div>
 
             <!-- Valor da Entrada (somente a prazo) -->
@@ -188,8 +188,8 @@
                     Data da Entrada
                 </label>
 
-                <x-form.date-picker id="date_pick" name="date_pick" placeholder="Date Picker"
-                    defaultDate="{{ now()->format('Y-m-d') }}" />
+                <x-form.date-picker-custom id="date_pick" name="date_pick" placeholder="Date Picker"
+                    defaultDate="{{ now()->format('d-m-Y') }}" />
             </div>
 
             <!-- Valor Parcelado (somente a prazo) -->
@@ -208,8 +208,8 @@
                     Vencimento 1° Parcela
                 </label>
 
-                <x-form.date-picker id="date_pick" name="date_pick" placeholder="Date Picker"
-                    defaultDate="{{ now()->format('Y-m-d') }}" />
+                <x-form.date-picker-custom id="date_pick" name="date_pick" placeholder="Date Picker"
+                    defaultDate="{{ now()->format('d-m-Y') }}" />
             </div>
 
             <!-- Quantidade das Parcelas (somente a prazo) -->
@@ -284,11 +284,6 @@
             valor_total: 0,
             quantidade_parcelas: 1,
 
-            get valor_parcelas() {
-                if (!this.quantidade_parcelas || this.quantidade_parcelas == 0) return 'R$ ' + '0.00';
-                return 'R$ ' + (this.valor_total / this.quantidade_parcelas).toFixed(2);
-            },
-
             form: {
                 cliente_id: '',
                 tipo_processo_id: '',
@@ -325,7 +320,7 @@
                     return 'R$ 0.00';
                 }
                 const valor = this.form.valor_parcelado / this.form.quantidade_parcelas;
-                return 'R$ ' + valor.toFixed(2).replace('.', ',');
+                return this.form.quantidade_parcelas + ' x de ' +  'R$ ' + valor.toFixed(2).replace('.', ',');
             }
         }
     }

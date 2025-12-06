@@ -58,7 +58,7 @@ class SidebarController extends Controller
                     ],
                     [
                         'icon' => 'user-circle-icon',
-                        'name' => 'User Profile',
+                        'name' => 'Perfil do Usuário',
                         'path' => '/profile',
                     ],
                     [

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('cliente_id')->constrained('clientes');
             $table->foreignId('usuario_responsavel_id')->constrained('users');
             $table->string('numero_processo')->nullable();
-            $table->enum('esfera', ['judicial', 'extra_judicial']);
+            $table->enum('esfera', ['judicial', 'extrajudicial']);
             $table->foreignId('tipo_processo_id')->constrained('tipos_processos');
             $table->string('subtipo_processo')->nullable();
             $table->text('observacao')->nullable();
