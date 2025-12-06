@@ -13,7 +13,7 @@ class ClienteRepository
 
     public function allSemPaginacao()
     {
-        return Cliente::all();
+        return Cliente::orderBy('nome', 'asc')->get();
     }
 
     public function find($id)

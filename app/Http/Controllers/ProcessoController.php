@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Services\ClienteService;
 use App\Services\ProcessoService;
+use App\Services\TipoProcessoService;
 use Illuminate\Http\Request;
 
 class ProcessoController extends Controller
 {
     public function __construct(
         private ProcessoService $processoService,
-        private ClienteService $clienteService
+        private ClienteService $clienteService,
+        private TipoProcessoService $tipoProcessoService
         )
     {
     }
@@ -29,8 +31,9 @@ class ProcessoController extends Controller
     public function create()
     {
         $clientes = $this->clienteService->allSemPaginacao();
+        $tipos_processos = $this->tipoProcessoService->allSemPaginacao();
         
-        return view('pages.processos.create', compact('clientes'));
+        return view('pages.processos.create', compact('clientes', 'tipos_processos'));
     }
 
     /**
@@ -38,7 +41,30 @@ class ProcessoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'cliente_id' => 'required|exists:clientes,id',
+                'tipo_processo_id' => 'required|exists:tipos_processos,id',
+                'numero_processo' => 'nullable|string|max:255',
+                'esfera' => 'nullable|in:judicial,extrajudicial',
+                'subtipo_processo' => 'nullable|string|max:255',
+                'valor_total' => 'nullable|numeric|min:0',
+                'valor_entrada' => 'nullable|numeric|min:0',
+                'quantidade_parcelas' => 'nullable|integer|min:1|max:30',
+                'valor_parcelas' => 'nullable|numeric|min:0',
+                'data_entrada' => 'nullable|date',
+            ]);
+
+            $processo = $this->processoService->create($validated);
+
+            return redirect()
+                ->route('processos.show', $processo->id)
+                ->with('success', 'Processo criado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -46,7 +72,15 @@ class ProcessoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $processo = $this->processoService->find($id);
+        
+        if (!$processo) {
+            return redirect()
+                ->route('processos.index')
+                ->with('error', 'Processo não encontrado');
+        }
+
+        return view('pages.processos.show', compact('processo'));
     }
 
     /**
@@ -54,7 +88,18 @@ class ProcessoController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $processo = $this->processoService->find($id);
+        
+        if (!$processo) {
+            return redirect()
+                ->route('processos.index')
+                ->with('error', 'Processo não encontrado');
+        }
+
+        $clientes = $this->clienteService->allSemPaginacao();
+        $tipos_processos = $this->tipoProcessoService->allSemPaginacao();
+
+        return view('pages.processos.edit', compact('processo', 'clientes', 'tipos_processos'));
     }
 
     /**
@@ -62,7 +107,30 @@ class ProcessoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'cliente_id' => 'required|exists:clientes,id',
+                'tipo_processo_id' => 'required|exists:tipos_processos,id',
+                'numero_processo' => 'nullable|string|max:255',
+                'esfera' => 'nullable|in:judicial,extrajudicial',
+                'subtipo_processo' => 'nullable|string|max:255',
+                'valor_total' => 'nullable|numeric|min:0',
+                'valor_entrada' => 'nullable|numeric|min:0',
+                'quantidade_parcelas' => 'nullable|integer|min:1|max:30',
+                'valor_parcelas' => 'nullable|numeric|min:0',
+                'data_entrada' => 'nullable|date',
+            ]);
+
+            $processo = $this->processoService->update($id, $validated);
+
+            return redirect()
+                ->route('processos.show', $processo->id)
+                ->with('success', 'Processo atualizado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -70,6 +138,16 @@ class ProcessoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $this->processoService->delete($id);
+
+            return redirect()
+                ->route('processos.index')
+                ->with('success', 'Processo deletado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 }

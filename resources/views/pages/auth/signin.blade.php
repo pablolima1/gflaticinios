@@ -96,19 +96,19 @@
                                                         </span>
                                                     </div>
                                                 </div>
-                                                Keep me logged in
+                                                Mantenha-me conectado
                                             </label>
                                         </div>
                                         <a href="/reset-password"
                                             class="text-brand-500 hover:text-brand-600 dark:text-brand-400 text-sm">
-                                            Forgot password?
+                                            Esqueceu sua senha?
                                         </a>
                                     </div>
                                     <!-- Button -->
                                     <div>
                                         <button
                                             class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 flex w-full items-center justify-center rounded-lg px-4 py-3 text-sm font-medium text-white transition">
-                                            Sign In
+                                            Entrar
                                         </button>
                                     </div>
                                 </div>
