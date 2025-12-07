@@ -36,13 +36,16 @@
                                 Numero do Processo</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Cliente</th>
+                            <th scope="col"
+                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Esfera</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Subtipo do Processo</th>
+                                Tipo do Processo</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Data de Criação</th>
+                                Vencimento</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Status Pagamento</th>
@@ -61,12 +64,17 @@
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $processo->cliente->nome }}
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ ucfirst($processo->esfera) }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $processo->subtipo_processo }}
+                                        {{ $processo->tipoProcesso->nome }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
