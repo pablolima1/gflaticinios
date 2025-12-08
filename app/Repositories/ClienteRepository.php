@@ -8,7 +8,7 @@ class ClienteRepository
 {
     public function all()
     {
-        return Cliente::orderBy('created_at', 'desc')->paginate(10);
+        return Cliente::orderBy('nome', 'asc')->paginate(10);
     }
 
     public function allSemPaginacao()

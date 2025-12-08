@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('tipo_processo_id')->constrained('tipos_processos');
             $table->string('subtipo_processo')->nullable();
             $table->text('observacao')->nullable();
+            $table->enum('status', ['aberto', 'andamento', 'finalizado', 'suspenso'])
+              ->default('aberto');
             $table->timestamps();
         });
     }

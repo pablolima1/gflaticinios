@@ -33,4 +33,9 @@ class Pagamento extends Model
     {
         return $this->hasMany(Parcela::class, 'pagamento_id');
     }
+    
+    public function processo()
+    {
+        return $this->belongsTo(Processo::class, 'processo_id');
+    }
 }

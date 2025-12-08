@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  laravel:
+    build: .
+    container_name: gestor-juridico
+    ports:
+      - "8081:8000"
+    volumes:
+      - .:/var/www
+    tty: true

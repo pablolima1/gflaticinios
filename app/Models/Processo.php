@@ -15,7 +15,8 @@ class Processo extends Model
         'esfera',
         'tipo_processo_id',
         'subtipo_processo',
-        'observacao'
+        'observacao',
+        'status'
     ];
 
     public function cliente()
@@ -32,4 +33,10 @@ class Processo extends Model
     {
         return $this->belongsTo(TipoProcesso::class, 'tipo_processo_id');
     }
+
+    public function pagamentos()
+    {
+        return $this->hasMany(Pagamento::class, 'processo_id');
+    }
+
 }

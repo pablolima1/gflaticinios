@@ -35,6 +35,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'tipo_usuario_id' => 2, // Definindo o tipo de usuário padrão como 2 (Cliente)
         ]);
     }
 }

@@ -12,10 +12,11 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('cliente_id')->constrained('clientes')->cascadeOnDelete();
+            $table->foreignId('processo_id')->nullable()->constrained('processos')->nullOnDelete();
             $table->foreignId('usuario_criador_id')->constrained('users')->cascadeOnDelete();
 
             $table->decimal('valor_total', 10, 2);
-            $table->decimal('valor_entrada', 10, 2)->default(0);
+            $table->decimal('valor_entrada', 10, 2)->nullable();
             $table->decimal('valor_parcelado', 10, 2)->default(0);
             $table->integer('quantidade_parcelas');
 
