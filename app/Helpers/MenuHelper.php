@@ -7,13 +7,13 @@ class MenuHelper
     public static function getMainNavItems()
     {
         return [
-            [
+            /* [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'subItems' => [
                     ['name' => 'Ecommerce', 'path' => '/'],
                 ],
-            ],
+            ], */
             [
                 'name' => 'Processos',
                 'icon' => 'pages',
@@ -26,7 +26,7 @@ class MenuHelper
                     ['name' => 'Clientes', 'path' => '/clientes'],
                 ],
             ],
-            [
+            /* [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',
@@ -57,10 +57,11 @@ class MenuHelper
                     ['name' => 'Blank Page', 'path' => '/blank', 'pro' => false],
                     ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
                 ],
-            ],
+            ], */
         ];
     }
 
+    // COMENTADO ABAIXO
     public static function getOthersItems()
     {
         return [
@@ -102,10 +103,10 @@ class MenuHelper
                 'title' => 'Menu',
                 'items' => self::getMainNavItems()
             ],
-            [
+            /* [
                 'title' => 'Others',
                 'items' => self::getOthersItems()
-            ]
+            ] */
         ];
     }
 

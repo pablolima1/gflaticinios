@@ -6,11 +6,15 @@ use App\Http\Controllers\ProcessoController;
 
 Route::group(['middleware' => ['auth']], function () {
     // dashboard pages
-    Route::get('/', function () {
+    /* Route::get('/', function () {
+        return view('pages.dashboard.ecommerce', ['title' => 'BML Advogados']);
+    })->name('dashboard'); */
+
+    Route::get('/home', function () {
         return view('pages.dashboard.ecommerce', ['title' => 'BML Advogados']);
     })->name('dashboard');
 
-
+    Route::get('/', [ProcessoController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'clientes'], function () {
         Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
