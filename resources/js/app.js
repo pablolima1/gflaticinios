@@ -1,12 +1,15 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
-
+import mask from '@alpinejs/mask';
 // flatpickr
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 // FullCalendar
 import { Calendar } from '@fullcalendar/core';
+
+import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index';
+import 'flatpickr/dist/plugins/monthSelect/style.css';
 
 
 
@@ -14,7 +17,9 @@ window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
 window.FullCalendar = Calendar;
+window.monthSelectPlugin = monthSelectPlugin;
 
+Alpine.plugin(mask);
 Alpine.start();
 
 // Initialize components on DOM ready
