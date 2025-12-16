@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProcessoController;
+use App\Http\Controllers\TipoProcessoController;
 
 Route::group(['middleware' => ['auth']], function () {
     // dashboard pages
@@ -23,7 +24,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
         Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
         Route::post('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
-        Route::post('/{id}/delete', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+        Route::get('/{id}/delete', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+    });
+
+    Route::group(['prefix' => 'tipos-processos'], function () {
+        Route::get('/', [TipoProcessoController::class, 'index'])->name('tipos-processos.index');
+        Route::get('/create', [TipoProcessoController::class, 'create'])->name('tipos-processos.create');
+        Route::post('/', [TipoProcessoController::class, 'store'])->name('tipos-processos.store');
+        Route::get('/{id}', [TipoProcessoController::class, 'show'])->name('tipos-processos.show');
+        Route::get('/{id}/edit', [TipoProcessoController::class, 'edit'])->name('tipos-processos.edit');
+        Route::post('/{id}', [TipoProcessoController::class, 'update'])->name('tipos-processos.update');
+        Route::get('/{id}/delete', [TipoProcessoController::class, 'destroy'])->name('tipos-processos.destroy');
     });
 
     Route::group(['prefix' => 'processos'], function () {

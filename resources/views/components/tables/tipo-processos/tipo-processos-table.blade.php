@@ -1,11 +1,11 @@
-@props(['clientes'])
+@props(['tipoprocessos'])
 
-<div x-data='{ clientes: @json($clientes->items()) }'>
+<div x-data='{ tipoprocessos: @json($tipoprocessos->items()) }'>
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Lista de Clientes</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Lista dos Tipos de Processos</h3>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <form>
@@ -36,51 +36,34 @@
                                 Nome</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                RG</th>
-                            <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                CPF</th>
+                                Descrição</th>
                             <th scope="col"
                                 class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 capitalize">
-                                Telefone</th>
+                                Responsável Criação</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Email</th>
-                            <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Data de Criação</th>    
+                                Data de Criação</th>
                             <th scope="col" class="relative px-4 py-3 capitalize">
                                 <span class="sr-only">Ações</span>
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <template x-for="cliente in clientes" :key="cliente.id">
+                        <template x-for="tipoprocesso in tipoprocessos" :key="tipoprocesso.id">
                             <tr>
-                                <td class="py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="shrink-0 w-8 h-8">
-                                            <img class="w-8 h-8 rounded-full" :src="`/images/support/user-2.jpg`" alt="">
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="cliente.nome"></div>
-                                        </div>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="tipoprocesso.nome"></div>
                                     </div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.rg"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipoprocesso.descricao"></div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.cpf"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipoprocesso.responsavel_criacao"></div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.telefone"></div>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.email"></div>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.created_at"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipoprocesso.created_at"></div>
                                 </td>
                                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
                                     <div class="flex justify-center relative">
@@ -99,17 +82,12 @@
                                             </x-slot>
 
                                             <x-slot name="content">
-                                                <a :href="`/clientes/${cliente.id}`"
-                                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                    role="menuitem">
-                                                    Ver Mais
-                                                </a>
-                                                <a :href="`/clientes/${cliente.id}/edit`"
+                                                <a :href="`/tipos-processos/${tipoprocesso.id}/edit`"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Editar
                                                 </a>
-                                                <a :href="`/clientes/${cliente.id}/delete`"
+                                                <a :href="`/tipos-processos/${tipoprocesso.id}/delete`"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Deletar
@@ -127,11 +105,11 @@
 
         <!-- Pagination Laravel -->
         <div class="mt-4">
-            {!! $clientes->links() !!}
+            {!! $tipoprocessos->links() !!}
         </div>
 
         <!-- Pagination -->
-        {{--         <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]">
+        {{-- <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]">
             <div class="flex items-center justify-between">
                 <button @click="prevPage" :disabled="currentPage === 1" :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''" class="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-3 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:px-3.5">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

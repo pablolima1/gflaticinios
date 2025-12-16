@@ -24,6 +24,7 @@ class MenuHelper
                 'name' => 'Administração',
                 'subItems' => [
                     ['name' => 'Clientes', 'path' => '/clientes'],
+                    ['name' => 'Tipos de Processos', 'path' => '/tipos-processos'],
                 ],
             ],
             /* [
