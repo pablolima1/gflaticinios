@@ -44,6 +44,17 @@
                 ],
 
                 defaultDate: {{ $defaultDate ? "'" . $defaultDate . "'" : 'null' }},
+
+                onChange: (selectedDates, dateStr) => {
+
+                    const [ano, mes] = dateStr.split('-');
+
+                    const url = '{{ route('processos.balanco-balancete', ['ano' => '__ANO__', 'mes' => '__MES__']) }}'.replace('__ANO__', ano).replace('__MES__', mes);
+
+                    console.log(url);
+
+                    window.location.href = url;
+                }
             });
         });
     },

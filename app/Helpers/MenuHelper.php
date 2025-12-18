@@ -15,9 +15,12 @@ class MenuHelper
                 ],
             ], */
             [
-                'name' => 'Processos',
                 'icon' => 'pages',
-                'path' => '/processos',
+                'name' => 'Processos',
+                'subItems' => [
+                    ['name' => 'Processos', 'path' => '/processos'],
+                    ['name' => 'Balanço/Balancete', 'path' => '/balanco-balancete'],
+                ],
             ],
             [
                 'icon' => 'dashboard',

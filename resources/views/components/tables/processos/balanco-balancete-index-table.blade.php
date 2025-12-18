@@ -33,22 +33,25 @@
                         <tr class="border-gray-200 border-y dark:border-gray-700">
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Numero do Processo</th>
-                            <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Cliente</th>
                             <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Esfera</th>
+                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
+                                Total de Parcelas</th>
                             <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Tipo do Processo</th>
+                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
+                                Número da Parcela</th>
                             <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Vencimento</th>
+                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
+                                Valor da Parcela</th>
                             <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Status Pagamento</th>
+                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
+                                Valor Restante</th>
+                            <th scope="col"
+                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
+                                Dia do Vencimento</th>
+                            <th scope="col"
+                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
+                                Status Pagamento</th>    
                             <th scope="col" class="relative px-4 py-3 capitalize">
                                 <span class="sr-only">Ações</span>
                             </th>
@@ -56,36 +59,42 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse ($processos as $processo)
+                        
                             <tr>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $processo->numero_processo }}
+                                        {{ $processo->pagamento->cliente->nome }}
                                     </div>
                                 </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $processo->cliente->nome }}
-                                    </div>
+                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                    {{ $processo->pagamento->quantidade_parcelas }}
                                 </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ ucfirst($processo->esfera) }}
-                                    </div>
+                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                    {{ $processo->numero_parcela }}
                                 </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $processo->tipoProcesso->nome }}
-                                    </div>
+                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                    R$ {{ number_format($processo->valor_parcela, 2, ',', '.') }}
                                 </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $processo->created_at->format('d/m/Y') }}
-                                    </div>
+                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                    R$ {{ number_format($processo->valor_restante, 2, ',', '.') }}
                                 </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        Pago
-                                    </div>
+                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                    {{ \Carbon\Carbon::parse($processo->vencimento)->format('d/m/Y') }}
+                                </td>
+                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                    @if($processo->status == 'pago')
+                                        <span class="px-2 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">
+                                            Pago
+                                        </span>
+                                    @elseif($processo->status == 'parcial')
+                                        <span class="px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-100 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                                            Parcialmente Pago
+                                        </span>    
+                                    @else
+                                        <span class="px-2 py-1 text-sm font-medium text-red-800 bg-red-100 rounded-full dark:bg-red-900 dark:text-red-300">
+                                            Pendente
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
                                     <div class="flex justify-center relative">
@@ -134,11 +143,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Pagination Laravel -->
-        <div class="mt-4">
-            {!! $processos->links() !!}
         </div>
     </div>
 </div>
