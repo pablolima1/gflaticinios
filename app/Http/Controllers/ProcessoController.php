@@ -25,6 +25,20 @@ class ProcessoController extends Controller
         return view('pages.processos.index', compact('processos'));
     }
 
+    public function balancoBalancete(Request $request)
+    {
+        $processos = $this->processoService->processosMesAno($request->all());
+        //dd($processos);
+
+        $receitaPrevista = $processos->sum('valor_parcela');
+        $receitaRecebida = $receitaPrevista - $processos->sum('valor_restante');
+
+        $mes = $request->input('mes', date('m'));
+        $ano = $request->input('ano', date('Y'));
+        
+        return view('pages.processos.balanco-balancete.index', compact('processos', 'mes', 'ano', 'receitaPrevista', 'receitaRecebida'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

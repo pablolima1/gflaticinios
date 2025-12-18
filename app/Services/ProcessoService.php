@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Repositories\ProcessoRepository;
+use Carbon\Carbon;
+
+use function Symfony\Component\Clock\now;
 
 class ProcessoService
 {
@@ -16,6 +19,22 @@ class ProcessoService
     public function all()
     {
         return $this->processoRepository->all();
+    }
+
+    public function processosMesAno($data)
+    {
+        $mes = '';
+        $ano = '';
+
+        if (!isset($data['mes']) || !isset($data['ano'])) {
+            $mes = Carbon::now()->month;
+            $ano = Carbon::now()->year;
+        } else {
+            $mes = $data['mes'];
+            $ano = $data['ano'];
+        }
+
+        return $this->processoRepository->processosMesAno($mes, $ano);
     }
 
     public function allSemPaginacao()
