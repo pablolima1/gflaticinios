@@ -20,6 +20,27 @@ window.FullCalendar = Calendar;
 window.monthSelectPlugin = monthSelectPlugin;
 
 Alpine.plugin(mask);
+
+Alpine.magic('maskMoney', () => {
+    return (input) => {
+        let value = input.value.replace(/\D/g, '');
+
+        if (!value) {
+            input.value = '';
+            return null;
+        }
+
+        let number = Number(value) / 100;
+
+        input.value = number.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        return number;
+    };
+});
+
 Alpine.start();
 
 // Initialize components on DOM ready

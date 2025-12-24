@@ -1,7 +1,7 @@
 @props(['clientes', 'tipos_processos'])
 
 <div x-data="pagamentoForm()">
-    <form action="{{ route('clientes.store') }}" method="POST" class="space-y-4">
+    <form action="{{ route('processos.store') }}" method="POST" class="space-y-4">
         @csrf
         <x-common.component-card title="Preencha os campos">
             <!-- Selecionar Cliente -->
@@ -15,9 +15,9 @@
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
                         <option value="">Selecione um cliente</option>
                         @forelse($clientes as $cliente)
-                            <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
+                        <option value="{{ $cliente->id }}">{{ $cliente->nome }}</option>
                         @empty
-                            <option value="" disabled>Nenhum cliente disponível</option>
+                        <option value="" disabled>Nenhum cliente disponível</option>
                         @endforelse
                     </select>
                     <span
@@ -37,7 +37,7 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Numero do Processo
                 </label>
-                <input name="numero_proceso" type="text" placeholder="123456789"
+                <input name="numero_processo" type="text" placeholder="123456789"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
             </div>
 
@@ -50,6 +50,7 @@
                     <select
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                         :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                        name="esfera"
                         @change="isOptionSelected = true">
                         <option value="judicial" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
                             Judicial
@@ -81,9 +82,9 @@
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
                         <option value="">Selecione um Tipo</option>
                         @forelse($tipos_processos as $tipo)
-                            <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>
+                        <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>
                         @empty
-                            <option value="" disabled>Nenhum tipo disponível</option>
+                        <option value="" disabled>Nenhum tipo disponível</option>
                         @endforelse
                     </select>
                     <span
@@ -103,10 +104,9 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Subtipo do Processo
                 </label>
-                <input name="numero_proceso" type="text" placeholder="Digite" x-model="form.nome" @blur="validar()"
-                    :class="errors.nome ? 'border-red-500 ring-red-500/10' : ''"
+                <input name="subtipo_processo" type="text" placeholder="Digite"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-                <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
+                <span x-show="errors.subtipo_processo" class="text-red-500 text-sm mt-1" x-text="errors.subtipo_processo"></span>
             </div>
 
             <!-- Separator PAGAMENTO -->
@@ -157,7 +157,7 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Valor Total <span x-show="form.tipo_pagamento === 'aprazo'">(Parcelado)</span>
                 </label>
-                <input x-model.number="form.valor_total" type="number" placeholder="10000.00"
+                <input type="text" name="valor_total" x-on:input="form.valor_total = $maskMoney($event.target)" placeholder="0,00"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
             </div>
@@ -168,7 +168,7 @@
                     Data do Pagamento
                 </label>
 
-                <x-form.date-picker-custom id="date_pick" name="date_pick" placeholder="Date Picker"
+                <x-form.date-picker-custom id="date_pick" name="date_pagamento" placeholder="Date Picker"
                     defaultDate="{{ now()->format('d-m-Y') }}" />
             </div>
 
@@ -177,7 +177,7 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Valor da Entrada
                 </label>
-                <input name="valor_entrada" type="number" x-model.number="form.valor_entrada" placeholder="800.00"
+                <input name="valor_entrada" type="text" x-on:input="form.valor_entrada = $maskMoney($event.target)" placeholder="0,00"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
             </div>
@@ -188,7 +188,7 @@
                     Data da Entrada
                 </label>
 
-                <x-form.date-picker-custom id="date_pick" name="date_pick" placeholder="Date Picker"
+                <x-form.date-picker-custom id="date_pick" name="date_entrada" placeholder="Date Picker"
                     defaultDate="{{ now()->format('d-m-Y') }}" />
             </div>
 
@@ -197,7 +197,7 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Valor Parcelado
                 </label>
-                <input name="valor_parcelado" type="number" x-model.number="form.valor_parcelado" placeholder="4500.00"
+                <input name="valor_parcelado" type="text" x-on:input="form.valor_parcelado = $maskMoney($event.target)" placeholder="0,00"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
             </div>
@@ -208,7 +208,7 @@
                     Vencimento 1° Parcela
                 </label>
 
-                <x-form.date-picker-custom id="date_pick" name="date_pick" placeholder="Date Picker"
+                <x-form.date-picker-custom id="date_pick" name="data_vencimento_1parcela" placeholder="Date Picker"
                     defaultDate="{{ now()->format('d-m-Y') }}" />
             </div>
 
@@ -217,7 +217,7 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Quantidade das Parcelas
                 </label>
-                <input x-model.number="form.quantidade_parcelas" type="number" placeholder="1" min="1" max="30"
+                <input x-model.number="form.quantidade_parcelas" type="number" name="quantidade_parcelas" placeholder="1" min="1" max="30"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
             </div>
@@ -267,13 +267,13 @@
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Valor das Parcelas
                 </label>
-                <input type="text" :value="calcularValorParcela()"
+                <input type="text" name="valor_parcela" :value="calcularValorParcela()"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                     readonly />
                 <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
             </div>
 
-            <x-ui.button type="button" @click="submit()">Adicionar Processo</x-ui.button>
+            <x-ui.button type="submit" @click="submit()">Adicionar Processo</x-ui.button>
         </x-common.component-card>
     </form>
 </div>
@@ -295,7 +295,7 @@
             },
 
             errors: {},
-            validar() {
+            /* validar() {
                 this.errors = {};
 
                 if (!this.form.cliente_id || this.form.cliente_id.trim() === '') {
@@ -313,14 +313,14 @@
                 if (this.validar()) {
                     this.$el.querySelector('form').submit();
                 }
-            },
+            }, */
 
             calcularValorParcela() {
                 if (!this.form.quantidade_parcelas || this.form.quantidade_parcelas === 0) {
                     return 'R$ 0.00';
                 }
                 const valor = this.form.valor_parcelado / this.form.quantidade_parcelas;
-                return this.form.quantidade_parcelas + ' x de ' +  'R$ ' + valor.toFixed(2).replace('.', ',');
+                return this.form.quantidade_parcelas + ' x de ' + 'R$ ' + valor.toFixed(2).replace('.', ',');
             }
         }
     }

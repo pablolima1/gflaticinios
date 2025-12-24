@@ -13,9 +13,7 @@ class ProcessoController extends Controller
         private ProcessoService $processoService,
         private ClienteService $clienteService,
         private TipoProcessoService $tipoProcessoService
-        )
-    {
-    }
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -35,7 +33,7 @@ class ProcessoController extends Controller
 
         $mes = $request->input('mes', date('m'));
         $ano = $request->input('ano', date('Y'));
-        
+
         return view('pages.processos.balanco-balancete.index', compact('processos', 'mes', 'ano', 'receitaPrevista', 'receitaRecebida'));
     }
 
@@ -46,7 +44,7 @@ class ProcessoController extends Controller
     {
         $clientes = $this->clienteService->allSemPaginacao();
         $tipos_processos = $this->tipoProcessoService->allSemPaginacao();
-        
+
         return view('pages.processos.create', compact('clientes', 'tipos_processos'));
     }
 
@@ -56,7 +54,8 @@ class ProcessoController extends Controller
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate([
+
+            /* $validated = $request->validate([
                 'cliente_id' => 'required|exists:clientes,id',
                 'tipo_processo_id' => 'required|exists:tipos_processos,id',
                 'numero_processo' => 'nullable|string|max:255',
@@ -67,13 +66,20 @@ class ProcessoController extends Controller
                 'quantidade_parcelas' => 'nullable|integer|min:1|max:30',
                 'valor_parcelas' => 'nullable|numeric|min:0',
                 'data_entrada' => 'nullable|date',
-            ]);
+            ]); */
 
-            $processo = $this->processoService->create($validated);
+            //dd($request->all());
+
+            $this->processoService->create($request->all());
 
             return redirect()
-                ->route('processos.show', $processo->id)
+                ->route('processos.index')
                 ->with('success', 'Processo criado com sucesso!');
+
+
+            /* return redirect()
+                ->route('processos.show', $processo->id)
+                ->with('success', 'Processo criado com sucesso!'); */
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -87,7 +93,7 @@ class ProcessoController extends Controller
     public function show(string $id)
     {
         $processo = $this->processoService->find($id);
-        
+
         if (!$processo) {
             return redirect()
                 ->route('processos.index')
@@ -103,7 +109,7 @@ class ProcessoController extends Controller
     public function edit(string $id)
     {
         $processo = $this->processoService->find($id);
-        
+
         if (!$processo) {
             return redirect()
                 ->route('processos.index')
@@ -163,5 +169,17 @@ class ProcessoController extends Controller
                 ->back()
                 ->with('error', $e->getMessage());
         }
+    }
+
+
+    public function detalhes(string $id)
+    {
+        $processo = $this->processoService->find($id);
+        $pagamentos = $processo->pagamentos()->with('parcelas')->get();
+        
+        return response()->json([
+            'processo' => $processo,
+            'pagamentos' => $pagamentos,
+        ]);
     }
 }

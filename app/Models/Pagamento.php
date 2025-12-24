@@ -10,6 +10,7 @@ class Pagamento extends Model
 
     protected $fillable = [
         'cliente_id',
+        'processo_id',
         'usuario_criador_id',
         'valor_total',
         'valor_entrada',
