@@ -73,21 +73,6 @@
                 }
             });
 
-            Alpine.magic('cpfCnpjMask', () => {
-                return (value) => {
-                    // conta apenas dígitos
-                    const digits = value.replace(/\D/g, '');
-
-                    // CPF → 11 dígitos
-                    if (digits.length <= 11) {
-                        return '999.999.999-99';
-                    }
-
-                    // CNPJ → 14 dígitos
-                    return '99.999.999/9999-99';
-                };
-            });
-
         });
     </script>
 
