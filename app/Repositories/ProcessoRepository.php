@@ -5,13 +5,16 @@ namespace App\Repositories;
 use App\Models\Pagamento;
 use App\Models\Parcela;
 use App\Models\Processo;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 class ProcessoRepository
 {
     public function all()
     {
-        return Processo::orderBy('created_at', 'desc')->paginate(5);
+        return Processo::orderBy('created_at', 'desc')->orderByDesc('created_at')->paginate(5);
     }
 
     public function allSemPaginacao()
@@ -34,9 +37,80 @@ class ProcessoRepository
         return Processo::find($id);
     }
 
-    public function create(array $data)
+    public function create($data)
     {
-        return Processo::create($data);
+        try {
+            DB::beginTransaction();
+
+            $dataEntrada = Str::replace('/', '-', $data['date_entrada']);
+            $dataEntrada = Carbon::parse($dataEntrada);
+
+            $dataVencimento = Str::replace('/', '-', $data['data_vencimento_1parcela']);
+            $dataVencimento = Carbon::parse($dataVencimento);
+
+            $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_total']);
+            $data['valor_total'] = (float) $valorTotal;
+
+            $valorEntrada = str_replace(['.', ','], ['', '.'], $data['valor_entrada'] ?? '0');
+            $data['valor_entrada'] = (float) $valorEntrada;
+
+            $valorParcelado = str_replace(['.', ','], ['', '.'], $data['valor_parcelado'] ?? '0');
+            $data['valor_parcelado'] = (float) $valorParcelado;
+            
+            $processo = Processo::create([
+                'cliente_id' => $data['cliente_id'],
+                'usuario_responsavel_id' => auth()->user()->id,
+                'numero_processo' => $data['numero_processo'],
+                'esfera' => $data['esfera'],
+                'tipo_processo_id' => $data['tipo_processo_id'],
+                'subtipo_processo' => $data['subtipo_processo'],
+                'observacao' => $data['observacao'] ?? null,
+            ]);
+
+            $pagamento = Pagamento::create([
+                'cliente_id' => $data['cliente_id'],
+                'processo_id' => $processo->id,
+                'usuario_criador_id' => auth()->user()->id,
+                'valor_total' => $data['valor_total'],
+                'valor_entrada' => $data['valor_entrada'] ?? 0,
+                'valor_parcelado' => $data['valor_parcelado'] ?? 0,
+                'quantidade_parcelas' => $data['quantidade_parcelas'] ?? 1,
+                'data_pagamento_entrada' => $dataEntrada,
+                'dia_vencimento_primeira_parcela' => $dataVencimento->day,
+            ]);
+
+            if ($data['tipo_pagamento'] === 'aprazo') {
+                // Criar parcelas
+                $valor_parcela = $data['valor_parcelado'] / $data['quantidade_parcelas'];
+                $data_vencimento = $dataVencimento;
+
+                for ($i = 0; $i < $data['quantidade_parcelas']; $i++) {
+                    Parcela::create([
+                        'pagamento_id' => $pagamento->id,
+                        'numero_parcela' => $i + 1,
+                        'valor_parcela' => $valor_parcela,
+                        'valor_restante' => $valor_parcela,
+                        'vencimento' => $data_vencimento->copy()->addMonths($i),
+                    ]);
+                }
+            } else if ($data['tipo_pagamento'] === 'avista') {
+                // Criar parcela única
+                Parcela::create([
+                    'pagamento_id' => $pagamento->id,
+                    'numero_parcela' => 1,
+                    'valor_parcela' => $data['valor_total'],
+                    'valor_restante' => $data['valor_total'],
+                    'vencimento' => $dataEntrada,
+                ]);
+            }
+            
+            DB::commit();
+
+            return $processo;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     public function update($id, array $data)

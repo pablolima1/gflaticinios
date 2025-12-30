@@ -12,6 +12,7 @@
         this.$nextTick(() => {
             this.flatpickrInstance = flatpickr(this.$refs.dateInput, {
                 static: true,
+                disableMobile: true,
 
                 // formato final enviado ao backend
                 dateFormat: 'Y-m',

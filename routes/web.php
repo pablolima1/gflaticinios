@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/edit', [ProcessoController::class, 'edit'])->name('processos.edit');
         Route::post('/{id}', [ProcessoController::class, 'update'])->name('processos.update');
         Route::post('/{id}/delete', [ProcessoController::class, 'destroy'])->name('processos.destroy');
+        Route::get('/{id}/detalhes', [ProcessoController::class, 'detalhes'])->name('processos.detalhes');
 
         
     });

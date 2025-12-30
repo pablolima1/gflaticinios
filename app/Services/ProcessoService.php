@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Processo;
 use App\Repositories\ProcessoRepository;
 use Carbon\Carbon;
 
@@ -47,30 +48,9 @@ class ProcessoService
         return $this->processoRepository->find($id);
     }
 
-    public function create(array $data)
+    public function create($data)
     {
-        $validatedData = [
-            'cliente_id' => $data['cliente_id'] ?? null,
-            'numero_processo' => $data['numero_processo'] ?? null,
-            'tipo_processo_id' => $data['tipo_processo_id'] ?? null,
-            'esfera' => $data['esfera'] ?? null,
-            'valor_total' => $data['valor_total'] ?? 0,
-            'valor_entrada' => $data['valor_entrada'] ?? 0,
-            'quantidade_parcelas' => $data['quantidade_parcelas'] ?? 1,
-            'valor_parcelas' => $data['valor_parcelas'] ?? 0,
-            'data_entrada' => $data['data_entrada'] ?? null,
-            'responsavel_criacao' => auth()->user()->id,
-        ];
-
-        if (!$validatedData['cliente_id']) {
-            throw new \Exception('Cliente é obrigatório');
-        }
-
-        if (!$validatedData['tipo_processo_id']) {
-            throw new \Exception('Tipo de processo é obrigatório');
-        }
-
-        return $this->processoRepository->create($validatedData);
+        return $this->processoRepository->create($data);
     }
 
     public function update($id, array $data)
