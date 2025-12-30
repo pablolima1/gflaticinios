@@ -207,8 +207,8 @@
         </div>
     </div>
 
-    <x-ui.modal @open-profile-address-modal.window="open = true" :isOpen="false" class="max-w-[700px]">
-        <div class="p-6" class="max-w-[700px]">
+    <x-ui.modal @open-profile-address-modal.window="open = true" :isOpen="false" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
             <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div>
                     <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
@@ -272,7 +272,7 @@
 
                     <div class="mt-6">
                         <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-                            Histórico de Pagamentos
+                            Parcelas
                         </h4>
                         <template x-for="(parcela, index) in pagamento.parcelas" :key="index">
                             <div class="mb-4 p-4 border border-gray-200 rounded-lg dark:border-gray-700">
