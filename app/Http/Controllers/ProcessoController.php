@@ -174,12 +174,12 @@ class ProcessoController extends Controller
 
     public function detalhes(string $id)
     {
-        $processo = $this->processoService->find($id);
-        $pagamentos = $processo->pagamentos()->with('parcelas')->get();
+        $processo = $this->processoService->find($id)->load('cliente', 'tipoProcesso');
+        $pagamento = $processo->pagamentos()->with('parcelas')->get();
         
         return response()->json([
             'processo' => $processo,
-            'pagamentos' => $pagamentos,
+            'pagamento' => $pagamento,
         ]);
     }
 }

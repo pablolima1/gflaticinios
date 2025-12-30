@@ -1,6 +1,58 @@
 @props(['processos'])
 
-<div>
+<div x-data="{
+
+    processo: {
+        id: null,
+        numero_processo: '',
+        cliente_nome: '',
+        esfera: '',
+        tipo_processo_nome: '',
+        status: '',
+        created_at: '',
+        cliente: {
+            nome: ''
+        },
+        tipo_processo: {
+            nome: ''
+        }
+    },
+
+    pagamento: {
+        id: null,
+        valor_total: '',
+        valor_entrada: '',
+        valor_parcelado: '',
+        quantidade_parcelas: '',
+        parcelas: []
+    },
+    
+    async getDetalhesProcesso(id) {
+        try {
+            const response = await fetch(`/processos/${id}/detalhes`);
+            const data = await response.json();
+
+            this.processo.numero_processo = data.processo.numero_processo;
+            this.processo.cliente.nome = data.processo.cliente.nome;
+            this.processo.esfera = data.processo.esfera;
+            this.processo.tipo_processo.nome = data.processo.tipo_processo.nome;
+            this.processo.subtipo_processo = data.processo.subtipo_processo;
+            this.processo.status = data.processo.status;
+            this.processo.created_at = data.processo.created_at;
+
+            this.pagamento.valor_total = data.pagamento[0].valor_total;
+            this.pagamento.valor_entrada = data.pagamento[0].valor_entrada;
+            this.pagamento.valor_parcelado = data.pagamento[0].valor_parcelado;
+            this.pagamento.quantidade_parcelas = data.pagamento[0].quantidade_parcelas;
+            this.pagamento.data_pagamento_entrada = data.pagamento[0].data_pagamento_entrada;
+            
+            this.pagamento.parcelas = data.pagamento[0].parcelas;
+
+        } catch (e) {
+            console.error('Erro ao buscar dados do processo', e);
+        }
+    }
+ }" class="space-y-6">
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -45,10 +97,10 @@
                                 Tipo do Processo</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Criado Em</th>
+                                Status Pagamento</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Status Pagamento</th>
+                                Criado Em</th>
                             <th scope="col" class="relative px-4 py-3 capitalize">
                                 <span class="sr-only">Ações</span>
                             </th>
@@ -82,11 +134,6 @@
                                 </div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ $processo->created_at->format('d/m/Y - H:i') }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
                                 @if($processo->status == 'aberto')
                                 <span class="px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-100 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
                                     Criado
@@ -100,6 +147,11 @@
                                     Finalizado
                                 </span>
                                 @endif
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ $processo->created_at->format('d/m/Y - H:i') }}
+                                </div>
                             </td>
                             <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
                                 <div class="flex justify-center relative">
@@ -119,6 +171,10 @@
 
                                         <x-slot name="content">
                                             <a href="#"
+                                                @click="$dispatch('open-profile-address-modal')"
+                                                x-on:click="
+                                                    getDetalhesProcesso({{ $processo->id }});
+                                                "
                                                 class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                 role="menuitem">
                                                 Exibir Detalhes
@@ -150,5 +206,98 @@
             {!! $processos->links() !!}
         </div>
     </div>
-    
+
+    <x-ui.modal @open-profile-address-modal.window="open = true" :isOpen="false" class="max-w-[700px]">
+        <div class="p-6" class="max-w-[700px]">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
+                        Detalhes do Processo
+                    </h4>
+
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-7 2xl:gap-x-32">
+                        <div>
+                            <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Número do Processo</p>
+                            <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="processo.numero_processo"></p>
+                        </div>
+
+                        <div>
+                            <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Cliente</p>
+                            <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="processo.cliente.nome"></p>
+                        </div>
+
+                        <div>
+                            <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Tipo do Processo</p>
+                            <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="processo.tipo_processo.nome"></p>
+                        </div>
+
+                        <div>
+                            <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Esfera</p>
+                            <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="processo.esfera"></p>
+                        </div>
+
+                        <div>
+                            <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Subtipo do Processo</p>
+                            <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="processo.subtipo_processo"></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
+                            Pagamentos
+                        </h4>
+
+                        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-7 2xl:gap-x-32">
+                            <div>
+                                <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Valor Total</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="'R$ ' + pagamento.valor_total"></p>
+                            </div>
+
+                            <div>
+                                <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Valor da Entrada</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="'R$ ' + pagamento.valor_entrada"></p>
+                            </div>
+
+                            <div>
+                                <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Quantidade de Parcelas</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="pagamento.quantidade_parcelas"></p>
+                            </div>
+
+                            <div>
+                                <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Data de Entrada</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="pagamento.data_pagamento_entrada"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
+                            Histórico de Pagamentos
+                        </h4>
+                        <template x-for="(parcela, index) in pagamento.parcelas" :key="index">
+                            <div class="mb-4 p-4 border border-gray-200 rounded-lg dark:border-gray-700">
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+                                    Parcela <span x-text="index + 1"></span>
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Valor: R$ <span x-text="parcela.valor_parcela"></span>
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Valor Restante: R$ <span x-text="parcela.valor_restante"></span>
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Data de Vencimento: <span x-text="parcela.vencimento"></span>
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Status: <span x-text="parcela.status"></span>
+                                </p>
+                            </div>
+                            
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </x-ui.modal>
+
 </div>
