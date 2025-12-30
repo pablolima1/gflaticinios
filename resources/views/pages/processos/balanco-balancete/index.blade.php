@@ -10,7 +10,7 @@
             </div>
         </div>
         <div
-            class="grid grid-cols-1 rounded-xl border border-gray-200 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-y-0 dark:divide-gray-800 dark:border-gray-800">
+            class="grid grid-cols-1 rounded-xl border border-gray-200 sm:grid-cols-2 lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-gray-800 dark:border-gray-800">
             <div class="border-b p-5 sm:border-r sm:border-b-0">
                 <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Mês/Ano de Referência</p>
                 <x-form.date-picker-anomes
@@ -24,10 +24,6 @@
             <div class="border-b p-5 lg:border-b-0">
                 <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Receita Recebida</p>
                 <h3 class="text-3xl {{ $receitaRecebida >= $receitaPrevista ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500' }}">R$ {{ number_format($receitaRecebida, 2, ',', '.') }}</h3>
-            </div>
-            <div class="p-5">
-                <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Informação</p>
-                <h3 class="text-3xl text-gray-800 dark:text-white/90">Teste</h3>
             </div>
         </div>
     </div>
