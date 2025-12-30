@@ -6,51 +6,13 @@
 'name' => null,
 ])
 
-<style>
-/* Fixes para mobile: evita clipping e define z-index alto */
-.flatpickr-calendar {
-    z-index: 9999;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* Styles específicos do monthSelectPlugin */
-.flatpickr-monthSelect-months {
-    display: flex;
-    gap: .5rem;
-}
-.flatpickr-monthSelect-month {
-    padding: .35rem .5rem;
-    border-radius: .375rem;
-}
-
-/* Em telas pequenas, deixa o calendário responsivo e centralizado */
-@media (max-width: 640px) {
-    .flatpickr-calendar {
-        width: calc(100% - 1rem) !important;
-        left: 0 !important;
-        right: 0 !important;
-        margin: .5rem auto !important;
-    }
-    .flatpickr-monthSelect-months {
-        flex-wrap: wrap;
-    }
-    .flatpickr-monthSelect-month {
-        flex: 1 0 30%;
-        text-align: center;
-    }
-}
-</style>
-
 <div x-data="{
     flatpickrInstance: null,
     init() {
         this.$nextTick(() => {
-                this.flatpickrInstance = flatpickr(this.$refs.dateInput, {
-                static: false,
+            this.flatpickrInstance = flatpickr(this.$refs.dateInput, {
+                static: true,
                 disableMobile: true,
-                appendTo: document.body,
-                position: 'below',
 
                 // formato final enviado ao backend
                 dateFormat: 'Y-m',
