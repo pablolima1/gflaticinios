@@ -41,6 +41,29 @@ Alpine.magic('maskMoney', () => {
     };
 });
 
+Alpine.magic('formatarMonetario', () => (value) => {
+    if (value === null || value === undefined || value === '') return 'R$ 0,00';
+
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(value);
+})
+
+Alpine.magic('formatarData', () => (value) => {
+    if (!value) return '';
+
+    const date = new Date(value);
+
+    if (isNaN(date)) return value; // caso venha algo inesperado
+
+    return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+});
+
 Alpine.magic('cpfCnpjMask', () => {
     return (value) => {
         // conta apenas dígitos

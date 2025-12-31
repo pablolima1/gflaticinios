@@ -26,6 +26,11 @@
         quantidade_parcelas: '',
         parcelas: []
     },
+
+    informacoesPagamento: {
+        valor_total_pago: '',
+        valor_total_restante: ''
+    },
     
     async getDetalhesProcesso(id) {
         try {
@@ -47,6 +52,9 @@
             this.pagamento.data_pagamento_entrada = data.pagamento[0].data_pagamento_entrada;
             
             this.pagamento.parcelas = data.pagamento[0].parcelas;
+
+            this.informacoesPagamento.valor_total_pago = data.informacoesPagamento.valor_total_pago;
+            this.informacoesPagamento.valor_total_restante = data.informacoesPagamento.valor_total_restante;
 
         } catch (e) {
             console.error('Erro ao buscar dados do processo', e);
@@ -250,12 +258,12 @@
                         <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-7 2xl:gap-x-32">
                             <div>
                                 <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Valor Total</p>
-                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="'R$ ' + pagamento.valor_total"></p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="$formatarMonetario(pagamento.valor_total)"></p>
                             </div>
 
                             <div>
                                 <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Valor da Entrada</p>
-                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="'R$ ' + pagamento.valor_entrada"></p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="$formatarMonetario(pagamento.valor_entrada)"></p>
                             </div>
 
                             <div>
@@ -265,7 +273,17 @@
 
                             <div>
                                 <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Data de Entrada</p>
-                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="pagamento.data_pagamento_entrada"></p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="$formatarData(pagamento.data_pagamento_entrada)"></p>
+                            </div>
+
+                            <div>
+                                <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Valor Total Pago</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="$formatarMonetario(informacoesPagamento.valor_total_pago)"></p>
+                            </div>
+
+                            <div>
+                                <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Valor Total Restante</p>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90" x-text="$formatarMonetario(informacoesPagamento.valor_total_restante)"></p>
                             </div>
                         </div>
                     </div>
@@ -280,19 +298,19 @@
                                     Parcela <span x-text="index + 1"></span>
                                 </p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    Valor: R$ <span x-text="parcela.valor_parcela"></span>
+                                    Valor: <span x-text="$formatarMonetario(parcela.valor_parcela)"></span>
                                 </p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    Valor Restante: R$ <span x-text="parcela.valor_restante"></span>
+                                    Valor Restante: <span x-text="$formatarMonetario(parcela.valor_restante)"></span>
                                 </p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    Data de Vencimento: <span x-text="parcela.vencimento"></span>
+                                    Data de Vencimento: <span x-text="$formatarData(parcela.vencimento)"></span>
                                 </p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
                                     Status: <span x-text="parcela.status"></span>
                                 </p>
                             </div>
-                            
+
                         </template>
                     </div>
                 </div>
