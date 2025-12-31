@@ -41,6 +41,44 @@ Alpine.magic('maskMoney', () => {
     };
 });
 
+Alpine.magic('formatarMonetario', () => (value) => {
+    if (value === null || value === undefined || value === '') return 'R$ 0,00';
+
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(value);
+})
+
+Alpine.magic('formatarData', () => (value) => {
+    if (!value) return '';
+
+    const date = new Date(value);
+
+    if (isNaN(date)) return value; // caso venha algo inesperado
+
+    return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+});
+
+Alpine.magic('cpfCnpjMask', () => {
+    return (value) => {
+        // conta apenas dígitos
+        const digits = value.replace(/\D/g, '');
+
+        // CPF → 11 dígitos
+        if (digits.length <= 11) {
+            return '999.999.999-99';
+        }
+
+        // CNPJ → 14 dígitos
+        return '99.999.999/9999-99';
+    };
+});
+
 Alpine.start();
 
 // Initialize components on DOM ready

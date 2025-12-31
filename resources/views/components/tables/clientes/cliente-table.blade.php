@@ -60,7 +60,7 @@
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="shrink-0 w-8 h-8">
-                                            <img class="w-8 h-8 rounded-full" :src="`/images/support/user-2.jpg`" alt="">
+                                            <img class="w-8 h-8 rounded-full" :src="`/images/support/user.jpg`" alt="">
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="cliente.nome"></div>

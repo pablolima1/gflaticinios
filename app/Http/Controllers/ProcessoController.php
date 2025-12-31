@@ -75,11 +75,6 @@ class ProcessoController extends Controller
             return redirect()
                 ->route('processos.index')
                 ->with('success', 'Processo criado com sucesso!');
-
-
-            /* return redirect()
-                ->route('processos.show', $processo->id)
-                ->with('success', 'Processo criado com sucesso!'); */
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -176,10 +171,19 @@ class ProcessoController extends Controller
     {
         $processo = $this->processoService->find($id)->load('cliente', 'tipoProcesso');
         $pagamento = $processo->pagamentos()->with('parcelas')->get();
+        $parcelas = $pagamento->flatMap(function ($pagamento) {
+            return $pagamento->parcelas;
+        });
+
+        $informacoesPagamento = [
+            'valor_total_pago' => $parcelas->sum('valor_parcela') - $parcelas->sum('valor_restante'),
+            'valor_total_restante' => $parcelas->sum('valor_restante'),
+        ];
         
         return response()->json([
             'processo' => $processo,
             'pagamento' => $pagamento,
+            'informacoesPagamento' => $informacoesPagamento
         ]);
     }
 }
