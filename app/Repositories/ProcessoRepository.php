@@ -15,7 +15,7 @@ class ProcessoRepository
 {
     public function all()
     {
-        return Processo::orderBy('created_at', 'desc')->orderByDesc('created_at')->paginate(5);
+        return Processo::orderBy('created_at', 'desc')->orderByDesc('created_at')->paginate(30);
     }
 
     public function allSemPaginacao()
@@ -48,6 +48,9 @@ class ProcessoRepository
 
             $dataVencimento = Str::replace('/', '-', $data['data_vencimento_1parcela']);
             $dataVencimento = Carbon::parse($dataVencimento);
+
+            $dataPagamento = $data['date_pagamento'] ? Str::replace('/', '-', $data['date_pagamento']) : null;
+            $dataPagamento = $dataPagamento ? Carbon::parse($dataPagamento) : null;
 
             $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_total']);
             $data['valor_total'] = (float) $valorTotal;
@@ -122,7 +125,7 @@ class ProcessoRepository
                         'numero_parcela' => 1,
                         'valor_parcela' => $data['valor_total'],
                         'valor_restante' => $data['valor_total'],
-                        'vencimento' => $dataEntrada,
+                        'vencimento' => $dataPagamento,
                     ]);
                 }
             }
