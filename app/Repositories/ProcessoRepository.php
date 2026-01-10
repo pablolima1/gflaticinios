@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Pagamento;
 use App\Models\Parcela;
+use App\Models\ParcelaPagamento;
 use App\Models\Processo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,7 @@ class ProcessoRepository
 
             $valorParcelado = str_replace(['.', ','], ['', '.'], $data['valor_parcelado'] ?? '0');
             $data['valor_parcelado'] = (float) $valorParcelado;
-            
+
             $processo = Processo::create([
                 'cliente_id' => $data['cliente_id'],
                 'usuario_responsavel_id' => auth()->user()->id,
@@ -65,6 +66,7 @@ class ProcessoRepository
                 'tipo_processo_id' => $data['tipo_processo_id'],
                 'subtipo_processo' => $data['subtipo_processo'],
                 'observacao' => $data['observacao'] ?? null,
+                'status' => $data['switcherPagoNoAto'] ? 'finalizado' : 'aberto'
             ]);
 
             $pagamento = Pagamento::create([
@@ -79,8 +81,8 @@ class ProcessoRepository
                 'dia_vencimento_primeira_parcela' => $dataVencimento->day,
             ]);
 
-            if ($data['tipo_pagamento'] === 'aprazo') {
-                // Criar parcelas
+            if ($data['tipo_pagamento'] === 'aprazo') { // Criar parcelas
+
                 $valor_parcela = $data['valor_parcelado'] / $data['quantidade_parcelas'];
                 $data_vencimento = $dataVencimento;
 
@@ -93,17 +95,38 @@ class ProcessoRepository
                         'vencimento' => $data_vencimento->copy()->addMonths($i),
                     ]);
                 }
-            } else if ($data['tipo_pagamento'] === 'avista') {
-                // Criar parcela única
-                Parcela::create([
-                    'pagamento_id' => $pagamento->id,
-                    'numero_parcela' => 1,
-                    'valor_parcela' => $data['valor_total'],
-                    'valor_restante' => $data['valor_total'],
-                    'vencimento' => $dataEntrada,
-                ]);
+            } else if ($data['tipo_pagamento'] === 'avista') { // Criar parcela única
+
+                if ($data['switcherPagoNoAto']) {
+
+                    $parcela = Parcela::create([
+                        'pagamento_id' => $pagamento->id,
+                        'numero_parcela' => 1,
+                        'valor_parcela' => $data['valor_total'],
+                        'valor_restante' => 0,
+                        'vencimento' => $dataEntrada,
+                        'status' => 'pago',
+                    ]);
+
+                    ParcelaPagamento::create([
+                        'parcela_id' => $parcela->id,
+                        'usuario_registrou_id' => auth()->user()->id,
+                        'valor_pago' => $data['valor_total'],
+                        'data_pagamento' => $dataEntrada,
+
+                    ]);
+                } else {
+
+                    Parcela::create([
+                        'pagamento_id' => $pagamento->id,
+                        'numero_parcela' => 1,
+                        'valor_parcela' => $data['valor_total'],
+                        'valor_restante' => $data['valor_total'],
+                        'vencimento' => $dataEntrada,
+                    ]);
+                }
             }
-            
+
             DB::commit();
 
             return $processo;
