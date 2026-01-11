@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
+use function Symfony\Component\Clock\now;
+
 class ProcessoRepository
 {
     public function all()
@@ -51,17 +53,12 @@ class ProcessoRepository
 
             $dataPagamento = $data['date_pagamento'] ? Str::replace('/', '-', $data['date_pagamento']) : null;
             $dataPagamento = $dataPagamento ? Carbon::parse($dataPagamento) : null;
-            
-            $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_parcelado']) + str_replace(['.', ','], ['', '.'], $data['valor_entrada']);
-            $valorTotal = (float) $valorTotal;
 
             $valorEntrada = str_replace(['.', ','], ['', '.'], $data['valor_entrada'] ?? '0');
             $data['valor_entrada'] = (float) $valorEntrada;
 
             $valorParcelado = str_replace(['.', ','], ['', '.'], $data['valor_parcelado'] ?? '0');
             $data['valor_parcelado'] = (float) $valorParcelado;
-
-            //dd($data['tipo_pagamento'] === 'avista' && $data['switcherPagoNoAto'] === 1);
 
             $processo = Processo::create([
                 'cliente_id' => $data['cliente_id'],
@@ -71,22 +68,25 @@ class ProcessoRepository
                 'tipo_processo_id' => $data['tipo_processo_id'],
                 'subtipo_processo' => $data['subtipo_processo'],
                 'observacao' => $data['observacao'] ?? null,
-                'status' => $data['tipo_pagamento'] === 'avista' && $data['switcherPagoNoAto'] === 1 ? 'finalizado' : 'aberto'
+                'status' => $data['tipo_pagamento'] === 'avista' && $data['switcherPagoNoAto'] ? 'finalizado' : 'aberto'
             ]);
 
-            $pagamento = Pagamento::create([
-                'cliente_id' => $data['cliente_id'],
-                'processo_id' => $processo->id,
-                'usuario_criador_id' => auth()->user()->id,
-                'valor_total' => $valorTotal,
-                'valor_entrada' => $data['valor_entrada'] ?? 0,
-                'valor_parcelado' => $data['valor_parcelado'] ?? 0,
-                'quantidade_parcelas' => $data['quantidade_parcelas'] ?? 1,
-                'data_pagamento_entrada' => $dataEntrada,
-                'dia_vencimento_primeira_parcela' => $dataVencimento->day,
-            ]);
+            if ($data['tipo_pagamento'] === 'aprazo') {
 
-            if ($data['tipo_pagamento'] === 'aprazo') { // Criar parcelas
+                $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_parcelado']) + str_replace(['.', ','], ['', '.'], $data['valor_entrada']);
+                $valorTotal = (float) $valorTotal;
+
+                $pagamento = Pagamento::create([
+                    'cliente_id' => $data['cliente_id'],
+                    'processo_id' => $processo->id,
+                    'usuario_criador_id' => auth()->user()->id,
+                    'valor_total' => $valorTotal,
+                    'valor_entrada' => $data['valor_entrada'] ?? 0,
+                    'valor_parcelado' => $data['valor_parcelado'] ?? 0,
+                    'quantidade_parcelas' => $data['quantidade_parcelas'] ?? 1,
+                    'data_pagamento_entrada' => $dataEntrada,
+                    'dia_vencimento_primeira_parcela' => $dataVencimento->day,
+                ]);
 
                 $valor_parcela = $data['valor_parcelado'] / $data['quantidade_parcelas'];
                 $data_vencimento = $dataVencimento;
@@ -113,22 +113,36 @@ class ProcessoRepository
                 }
             } else if ($data['tipo_pagamento'] === 'avista') { // Criar parcela única
 
+                $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_total']);
+                $data['valor_total'] = (float) $valorTotal;
+
+                $pagamento = Pagamento::create([
+                    'cliente_id' => $data['cliente_id'],
+                    'processo_id' => $processo->id,
+                    'usuario_criador_id' => auth()->user()->id,
+                    'valor_total' => $data['valor_total'],
+                    'valor_entrada' => $data['valor_entrada'] ?? 0,
+                    'valor_parcelado' => $data['valor_parcelado'] ?? 0,
+                    'quantidade_parcelas' => $data['quantidade_parcelas'] ?? 1,
+                    'dia_vencimento_primeira_parcela' => $dataVencimento->day,
+                ]);
+
                 if ($data['switcherPagoNoAto']) {
 
                     $parcela = Parcela::create([
                         'pagamento_id' => $pagamento->id,
                         'numero_parcela' => 1,
-                        'valor_parcela' => $valorTotal,
+                        'valor_parcela' => $data['valor_total'],
                         'valor_restante' => 0,
-                        'vencimento' => $dataEntrada,
+                        'vencimento' => now(),
                         'status' => 'pago',
                     ]);
 
                     ParcelaPagamento::create([
                         'parcela_id' => $parcela->id,
                         'usuario_registrou_id' => auth()->user()->id,
-                        'valor_pago' => $valorTotal,
-                        'data_pagamento' => $dataEntrada,
+                        'valor_pago' => $data['valor_total'],
+                        'data_pagamento' => now(),
 
                     ]);
                 } else {
@@ -136,8 +150,8 @@ class ProcessoRepository
                     Parcela::create([
                         'pagamento_id' => $pagamento->id,
                         'numero_parcela' => 1,
-                        'valor_parcela' => $valorTotal,
-                        'valor_restante' => $valorTotal,
+                        'valor_parcela' => $data['valor_total'],
+                        'valor_restante' => $data['valor_total'],
                         'vencimento' => $dataPagamento,
                     ]);
                 }
