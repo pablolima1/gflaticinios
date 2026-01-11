@@ -51,15 +51,17 @@ class ProcessoRepository
 
             $dataPagamento = $data['date_pagamento'] ? Str::replace('/', '-', $data['date_pagamento']) : null;
             $dataPagamento = $dataPagamento ? Carbon::parse($dataPagamento) : null;
-
-            $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_total']);
-            $data['valor_total'] = (float) $valorTotal;
+            
+            $valorTotal = str_replace(['.', ','], ['', '.'], $data['valor_parcelado']) + str_replace(['.', ','], ['', '.'], $data['valor_entrada']);
+            $valorTotal = (float) $valorTotal;
 
             $valorEntrada = str_replace(['.', ','], ['', '.'], $data['valor_entrada'] ?? '0');
             $data['valor_entrada'] = (float) $valorEntrada;
 
             $valorParcelado = str_replace(['.', ','], ['', '.'], $data['valor_parcelado'] ?? '0');
             $data['valor_parcelado'] = (float) $valorParcelado;
+
+            //dd($data['tipo_pagamento'] === 'avista' && $data['switcherPagoNoAto'] === 1);
 
             $processo = Processo::create([
                 'cliente_id' => $data['cliente_id'],
@@ -69,14 +71,14 @@ class ProcessoRepository
                 'tipo_processo_id' => $data['tipo_processo_id'],
                 'subtipo_processo' => $data['subtipo_processo'],
                 'observacao' => $data['observacao'] ?? null,
-                'status' => $data['switcherPagoNoAto'] ? 'finalizado' : 'aberto'
+                'status' => $data['tipo_pagamento'] === 'avista' && $data['switcherPagoNoAto'] === 1 ? 'finalizado' : 'aberto'
             ]);
 
             $pagamento = Pagamento::create([
                 'cliente_id' => $data['cliente_id'],
                 'processo_id' => $processo->id,
                 'usuario_criador_id' => auth()->user()->id,
-                'valor_total' => $data['valor_total'],
+                'valor_total' => $valorTotal,
                 'valor_entrada' => $data['valor_entrada'] ?? 0,
                 'valor_parcelado' => $data['valor_parcelado'] ?? 0,
                 'quantidade_parcelas' => $data['quantidade_parcelas'] ?? 1,
@@ -88,6 +90,17 @@ class ProcessoRepository
 
                 $valor_parcela = $data['valor_parcelado'] / $data['quantidade_parcelas'];
                 $data_vencimento = $dataVencimento;
+
+                if ($data['valor_entrada'] > 0) {
+                    // Criar parcela da entrada como paga
+                    Parcela::create([
+                        'pagamento_id' => $pagamento->id,
+                        'numero_parcela' => 0,
+                        'valor_parcela' => $data['valor_entrada'],
+                        'valor_restante' => $data['valor_entrada'],
+                        'vencimento' => $dataEntrada
+                    ]);
+                }
 
                 for ($i = 0; $i < $data['quantidade_parcelas']; $i++) {
                     Parcela::create([
@@ -105,7 +118,7 @@ class ProcessoRepository
                     $parcela = Parcela::create([
                         'pagamento_id' => $pagamento->id,
                         'numero_parcela' => 1,
-                        'valor_parcela' => $data['valor_total'],
+                        'valor_parcela' => $valorTotal,
                         'valor_restante' => 0,
                         'vencimento' => $dataEntrada,
                         'status' => 'pago',
@@ -114,7 +127,7 @@ class ProcessoRepository
                     ParcelaPagamento::create([
                         'parcela_id' => $parcela->id,
                         'usuario_registrou_id' => auth()->user()->id,
-                        'valor_pago' => $data['valor_total'],
+                        'valor_pago' => $valorTotal,
                         'data_pagamento' => $dataEntrada,
 
                     ]);
@@ -123,8 +136,8 @@ class ProcessoRepository
                     Parcela::create([
                         'pagamento_id' => $pagamento->id,
                         'numero_parcela' => 1,
-                        'valor_parcela' => $data['valor_total'],
-                        'valor_restante' => $data['valor_total'],
+                        'valor_parcela' => $valorTotal,
+                        'valor_restante' => $valorTotal,
                         'vencimento' => $dataPagamento,
                     ]);
                 }
@@ -134,6 +147,7 @@ class ProcessoRepository
 
             return $processo;
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             throw $th;
         }
