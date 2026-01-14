@@ -11,40 +11,40 @@ class PagamentoController extends Controller
 {
     public function __construct() {}
 
-    public function registrarPagamento($id, Request $request)
+    public function registrarPagamento(Request $request)
     {
         try {
             DB::beginTransaction();
+            $idParcela = $request->input('parcela_id');
+            $valorPagamento = (float) $request->input('valor_pagamento');
 
-            //dd('chegou aqui no controller com id ' . $id, $request->all());
-            $parcela = Parcela::find($id);
-            dd('parcela', $parcela);
+            $dataPagamentoFormat = str_replace('/', '-', $request->input('data_pagamento'));
+            $dataPagamento = date('Y-m-d', strtotime($dataPagamentoFormat));
+
+            $observacoes = $request->input('observacoes');
+
+            $parcela = Parcela::find($idParcela);
             $processo = $parcela->pagamento->processo;
             $pagamento = $parcela->pagamento;
 
-            if ($pagamento->quantidade_parcelas == $parcela->numero_parcela && $request->input('valor_pagamento') >= $parcela->valor) {
+            $valorRestanteParcela = (float) $parcela->valor_restante;
+
+            if ($pagamento->quantidade_parcelas == $parcela->numero_parcela && $valorPagamento == $valorRestanteParcela) {
                 $processo->status = 'finalizado';
             } else {
                 $processo->status = 'andamento';
             }
+
             $processo->save();
 
-            /* if (!$parcela) {
-                return redirect()->back()->with('error', 'Parcela não encontrada.');
-            }
-
-            if ($parcela->status === 'pago') {
-                return redirect()->back()->with('error', 'Esta parcela já foi paga.');
-            } */
-
-            if ($request->input('valor_pagamento') == $parcela->valor) {
+            if ($valorPagamento == $valorRestanteParcela) {
                 // Valor pago é igual ao valor da parcela
                 $parcela->status = 'pago';
                 $parcela->valor_restante = 0;
-            } elseif ($request->input('valor_pagamento') < $parcela->valor) {
+            } elseif ($valorPagamento < $valorRestanteParcela) {
                 // Valor pago é menor que o valor da parcela
                 $parcela->status = 'parcial';
-                $parcela->valor_restante = $parcela->valor - $request->input('valor_pagamento');
+                $parcela->valor_restante = $valorRestanteParcela - $valorPagamento;
             } else {
                 // Valor pago é maior que o valor da parcela
                 return redirect()->back()->with('error', 'O valor pago não pode ser maior que o valor da parcela.');
@@ -52,35 +52,40 @@ class PagamentoController extends Controller
             $parcela->save();
 
             ParcelaPagamento::create([
-                'parcela_id' => $id,
+                'parcela_id' => $idParcela,
                 'usuario_registrou_id' => auth()->user()->id,
-                'valor_pago' => $request->input('valor_pagamento'),
-                'data_pagamento' => $request->input('data_pagamento'),
-                'observacao' => $request->input('observacoes'),
+                'valor_pago' => $valorPagamento,
+                'data_pagamento' => $dataPagamento,
+                'observacao' => $observacoes,
             ]);
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Pagamento registrado com sucesso.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Pagamento registrado com sucesso.'
+            ]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Erro ao registrar o pagamento: ' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao registrar o pagamento: ' . $th->getMessage()
+            ]);
         }
     }
 
-    public function detalhes(string $id)
+    public function detalhesPagamento(string $id)
     {
         $parcela = Parcela::find($id);
 
         $pagamento = $parcela->pagamento;
         $processo = $pagamento->processo;
-
-        dd($pagamento, $processo);
+        $cliente = $processo->cliente;
 
         return response()->json([
+            'parcela' => $parcela,
             'processo' => $processo,
-            'pagamento' => $pagamento,
-            'informacoesPagamento' => $informacoesPagamento
+            'pagamento' => $pagamento
         ]);
     }
 }

@@ -1,13 +1,6 @@
 @props(['processos'])
 
-<div x-data="{
-
-    form: {
-        cliente_id: '',
-        valor_total: 0,
-        valor_pagamento: 0,
-    },
- }">
+<div x-data="financeiroComponent()" x-init="">
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -122,6 +115,9 @@
                                         <x-slot name="content">
                                             <a href="#"
                                                 @click="$dispatch('open-registrar-pagamento-modal')"
+                                                x-on:click="
+                                                    getDetalhesPagamento({{ $processo->id }});
+                                                "
                                                 class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                 role="menuitem">
                                                 Registrar Pagamento
@@ -153,17 +149,17 @@
                 </svg>
             </button>
 
-            <form method="POST" action="{{ route('pagamentos.registrar-pagamento', $processo->id) }}" class="mt-4">
+            <form @submit.prevent="submitForm" class="mt-4">
                 @csrf
                 <div class="mb-6">
                     <span class="text-sm text-gray-500 dark:text-gray-400">
-                        Cliente: <strong class="text-gray-800 dark:text-white/90"> {{ $processo->pagamento->cliente->nome }} </strong>
+                        Cliente: <strong class="text-gray-800 dark:text-white/90" x-text="processo.cliente.nome"></strong>
                     </span>
                     <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">
-                        Parcela: <strong class="text-gray-800 dark:text-white/90"> {{ $processo->numero_parcela }} de {{ $processo->pagamento->quantidade_parcelas }} </strong>
+                        Parcela: <strong class="text-gray-800 dark:text-white/90" x-text="parcela.numero_parcela + ' de ' + pagamento.quantidade_parcelas"></strong>
                     </span>
                     <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">
-                        Vencimento: <strong class="text-gray-800 dark:text-white/90"> {{ \Carbon\Carbon::parse($processo->vencimento)->format('d/m/Y') }} </strong>
+                        Vencimento: <strong class="text-gray-800 dark:text-white/90" x-text="$formatarData(parcela.vencimento)"></strong>
                     </span>
                 </div>
 
@@ -176,7 +172,7 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Valor Total Parcela
                         </label>
-                        <span class="text-gray-800 dark:text-white/90"> R$ {{ number_format($processo->valor_parcela ?? 0, 2, ',', '.') }} </span>
+                        <span class="text-gray-800 dark:text-white/90" x-text="$formatarMonetario(parcela.valor_parcela)"></span>
                         <!-- <input type="text" x-on:input="$maskMoney($event.target)" placeholder="0,00"
                             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" /> -->
                     </div>
@@ -185,7 +181,7 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Valor do Pagamento
                         </label>
-                        <input name="valor_pagamento" type="text" x-on:input="form.valor_pagamento = $maskMoney($event.target)" placeholder="0,00"
+                        <input type="text" x-model="formData.valor_pagamento" x-on:input="form.valor_pagamento = $maskMoney($event.target)" placeholder="0,00"
                             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                     </div>
 
@@ -195,7 +191,7 @@
                                 Data do Pagamento
                             </label>
 
-                            <x-form.date-picker-custom id="date_pick" name="data_pagamento" placeholder="Date Picker"
+                            <x-form.date-picker-custom x-ref="datePick" id="date_pick" name="data_pagamento" placeholder="Date Picker"
                                 defaultDate="{{ now()->format('d-m-Y') }}" />
                         </div>
                     </div>
@@ -211,7 +207,7 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Observações
                         </label>
-                        <textarea name="observacoes" placeholder="Insira informações caso necessário para esse pagamento..." type="text" rows="6" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"></textarea>
+                        <textarea x-model="formData.observacoes" placeholder="Insira informações caso necessário para esse pagamento..." type="text" rows="6" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"></textarea>
                     </div>
                 </div>
 
@@ -219,11 +215,121 @@
                     <button @click="open = false" type="button" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:w-auto">
                         Fechar
                     </button>
-                    <button @click="open = false" type="submit" class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto">
+                    <button type="submit" class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto">
                         Registrar Pagamento
                     </button>
                 </div>
             </form>
         </div>
     </x-ui.modal>
+
+    <script>
+        function financeiroComponent() {
+            return {
+                open: false, // Controle do modal
+
+                // Estados iniciais
+                form: {
+                    cliente_id: '',
+                    valor_total: 0,
+                    valor_pagamento: 0,
+                },
+
+                processo: {
+                    id: null,
+                    numero_processo: '',
+                    cliente: {
+                        nome: ''
+                    },
+                    tipo_processo: {
+                        nome: ''
+                    }
+                },
+
+                parcela: {
+                    id: null,
+                    numero_parcela: '',
+                    valor_parcela: 0,
+                    vencimento: '',
+                    status: ''
+                },
+
+                pagamento: {
+                    id: null,
+                    valor_total: '',
+                    quantidade_parcelas: '',
+                    parcelas: []
+                },
+
+                formData: {
+                    _token: '{{ csrf_token() }}',
+                    parcela_id: '',
+                    valor_pagamento: '',
+                    data_pagamento: '',
+                    observacoes: ''
+                },
+
+                // Métodos
+                async getDetalhesPagamento(id) {
+                    try {
+                        const response = await fetch(`/pagamentos/detalhes-pagamento/${id}`);
+                        const data = await response.json();
+
+                        this.parcela = data.parcela;
+                        this.processo = data.processo;
+                        this.pagamento = data.pagamento;
+
+                        // Preenche automaticamente o ID da parcela no form
+                        this.formData.parcela_id = data.parcela.id;
+                    } catch (e) {
+                        console.error('Erro ao buscar dados do processo', e);
+                    }
+                },
+
+                async submitForm() {
+                    try {
+                        let dataToSubmit = JSON.parse(JSON.stringify(this.formData));
+
+                        // 2. Limpar a formatação do valor_pagamento (de "1.600,00" para "1600.00")
+                        if (dataToSubmit.valor_pagamento) {
+                            let valor = dataToSubmit.valor_pagamento.toString();
+                            // Remove tudo que não é dígito
+                            let apenasNumeros = valor.replace(/\D/g, '');
+                            // Converte para decimal (centavos)
+                            dataToSubmit.valor_pagamento = parseFloat(apenasNumeros) / 100;
+                        }
+
+                        // 3. Lógica do Date Picker (mantida do seu código)
+                        let dateInput = this.$refs.datePick?.querySelector('[name="data_pagamento"]') ||
+                            this.$refs.datePick?.querySelector('input') ||
+                            document.querySelector('[name="data_pagamento"]');
+
+                        if (dateInput?.value) {
+                            dataToSubmit.data_pagamento = dateInput.value;
+                        }
+                        const response = await fetch(`/pagamentos/registrar-pagamento`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': dataToSubmit._token
+                            },
+                            body: JSON.stringify(dataToSubmit)
+                        });
+
+                        if (!response.ok) throw new Error('Erro ao registrar pagamento');
+
+                        const data = await response.json();
+                        console.log('Sucesso:', data);
+
+                        this.open = false;
+                        window.location.reload(); 
+
+                    } catch (e) {
+                        console.error('Erro ao registrar pagamento', e);
+                    }
+                }
+            }
+        }
+    </script>
 </div>

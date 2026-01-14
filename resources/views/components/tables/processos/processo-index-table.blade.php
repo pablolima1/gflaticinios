@@ -306,8 +306,23 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
                                     Data de Vencimento: <span x-text="$formatarData(parcela.vencimento)"></span>
                                 </p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    Status: <span x-text="parcela.status"></span>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                    Status:
+                                    <span class="flex items-center gap-1.5 font-medium"
+                                        :class="{
+              'text-green-600': parcela.status === 'pago',
+              'text-yellow-600': parcela.status === 'parcial',
+              'text-red-600': parcela.status !== 'pago' && parcela.status !== 'parcial'
+          }">
+                                        <span class="h-1.5 w-1.5 rounded-full"
+                                            :class="{
+                  'bg-green-600': parcela.status === 'pago',
+                  'bg-yellow-600': parcela.status === 'parcial',
+                  'bg-red-600': parcela.status !== 'pago' && parcela.status !== 'parcial'
+              }">
+                                        </span>
+                                        <span class="capitalize" x-text="parcela.status"></span>
+                                    </span>
                                 </p>
                             </div>
 
