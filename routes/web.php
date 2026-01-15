@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\ProcessoController;
 use App\Http\Controllers\TipoProcessoController;
 
@@ -48,6 +49,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/detalhes', [ProcessoController::class, 'detalhes'])->name('processos.detalhes');
 
         
+    });
+
+    Route::group(['prefix' => 'pagamentos'], function () {
+        Route::post('registrar-pagamento', [PagamentoController::class, 'registrarPagamento'])->name('pagamentos.registrar-pagamento');
+        Route::get('detalhes-pagamento/{id}', [PagamentoController::class, 'detalhesPagamento'])->name('pagamentos.detalhes-pagamento');
     });
 
     Route::get('/balanco-balancete', [ProcessoController::class, 'balancoBalancete'])->name('processos.balanco-balancete');

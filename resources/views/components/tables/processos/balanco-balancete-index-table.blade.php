@@ -1,11 +1,11 @@
 @props(['processos'])
 
-<div>
+<div x-data="financeiroComponent()" x-init="">
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Lista dos Processos</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Entradas Esperadas</h3>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <form>
@@ -51,7 +51,7 @@
                                 Dia do Vencimento</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
-                                Status Pagamento</th>    
+                                Status Pagamento</th>
                             <th scope="col" class="relative px-4 py-3 capitalize">
                                 <span class="sr-only">Ações</span>
                             </th>
@@ -59,90 +59,277 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse ($processos as $processo)
-                        
-                            <tr>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $processo->pagamento->cliente->nome }}
-                                    </div>
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                    {{ $processo->pagamento->quantidade_parcelas }}
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                    {{ $processo->numero_parcela }}
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                    R$ {{ number_format($processo->valor_parcela, 2, ',', '.') }}
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                    R$ {{ number_format($processo->valor_restante, 2, ',', '.') }}
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                    {{ \Carbon\Carbon::parse($processo->vencimento)->format('d/m/Y') }}
-                                </td>
-                                <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                    @if($processo->status == 'pago')
-                                        <span class="px-2 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">
-                                            Pago
-                                        </span>
-                                    @elseif($processo->status == 'parcial')
-                                        <span class="px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-100 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                                            Parcialmente Pago
-                                        </span>    
-                                    @else
-                                        <span class="px-2 py-1 text-sm font-medium text-red-800 bg-red-100 rounded-full dark:bg-red-900 dark:text-red-300">
-                                            Pendente
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                    <div class="flex justify-center relative">
-                                        <x-common.table-dropdown>
-                                            <x-slot name="button">
-                                                <button type="button" id="options-menu" aria-haspopup="true"
-                                                    aria-expanded="true" class="text-gray-500 dark:text-gray-400'">
-                                                    <svg class="fill-current" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                                            fill="currentColor" />
-                                                    </svg>
-                                                </button>
-                                            </x-slot>
 
-                                            <x-slot name="content">
-                                                <a href="#"
-                                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                    role="menuitem">
-                                                    Ver Mais
-                                                </a>
-                                                <a href="#"
-                                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                    role="menuitem">
-                                                    Editar
-                                                </a>
-                                                <a href="#"
-                                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                    role="menuitem">
-                                                    Deletar
-                                                </a>
-                                            </x-slot>
-                                        </x-common.table-dropdown>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ $processo->pagamento->cliente->nome }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                {{ $processo->pagamento->quantidade_parcelas }}
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                {{ $processo->numero_parcela }}
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                R$ {{ number_format($processo->valor_parcela, 2, ',', '.') }}
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                R$ {{ number_format($processo->valor_restante, 2, ',', '.') }}
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                {{ \Carbon\Carbon::parse($processo->vencimento)->format('d/m/Y') }}
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
+                                @if($processo->status == 'pago')
+                                <span class="px-2 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">
+                                    Pago
+                                </span>
+                                @elseif($processo->status == 'parcial')
+                                <span class="px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-100 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                                    Parcialmente Pago
+                                </span>
+                                @else
+                                <span class="px-2 py-1 text-sm font-medium text-red-800 bg-red-100 rounded-full dark:bg-red-900 dark:text-red-300">
+                                    Pendente
+                                </span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
+                                <div class="flex justify-center relative">
+                                    <x-common.table-dropdown>
+                                        <x-slot name="button">
+                                            <button type="button" id="options-menu" aria-haspopup="true"
+                                                aria-expanded="true" class="text-gray-500 dark:text-gray-400'">
+                                                <svg class="fill-current" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
+                                                        fill="currentColor" />
+                                                </svg>
+                                            </button>
+                                        </x-slot>
+
+                                        <x-slot name="content">
+                                            <a href="#"
+                                                @click="$dispatch('open-registrar-pagamento-modal')"
+                                                x-on:click="
+                                                    getDetalhesPagamento({{ $processo->id }});
+                                                "
+                                                class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                                                role="menuitem">
+                                                Registrar Pagamento
+                                            </a>
+                                        </x-slot>
+                                    </x-common.table-dropdown>
+                                </div>
+                            </td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="7" class="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                                    Nenhum processo encontrado.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="7" class="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                                Nenhuma Entrada Encontrada para o Mês selecionado.
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <x-ui.modal @open-registrar-pagamento-modal.window="open = true" :isOpen="false" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        <div class="relative w-full rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10">
+            <!-- close btn -->
+            <button @click="open = false" class="group absolute right-3 top-3 z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-200 text-gray-500 transition-colors hover:bg-gray-300 hover:text-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 sm:right-6 sm:top-6 sm:h-11 sm:w-11">
+                <svg class="transition-colors fill-current group-hover:text-gray-600 dark:group-hover:text-gray-200" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.04289 16.5413C5.65237 16.9318 5.65237 17.565 6.04289 17.9555C6.43342 18.346 7.06658 18.346 7.45711 17.9555L11.9987 13.4139L16.5408 17.956C16.9313 18.3466 17.5645 18.3466 17.955 17.956C18.3455 17.5655 18.3455 16.9323 17.955 16.5418L13.4129 11.9997L17.955 7.4576C18.3455 7.06707 18.3455 6.43391 17.955 6.04338C17.5645 5.65286 16.9313 5.65286 16.5408 6.04338L11.9987 10.5855L7.45711 6.0439C7.06658 5.65338 6.43342 5.65338 6.04289 6.0439C5.65237 6.43442 5.65237 7.06759 6.04289 7.45811L10.5845 11.9997L6.04289 16.5413Z" fill=""></path>
+                </svg>
+            </button>
+
+            <form @submit.prevent="submitForm" class="mt-4">
+                @csrf
+                <div class="mb-6">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                        Cliente: <strong class="text-gray-800 dark:text-white/90" x-text="processo.cliente.nome"></strong>
+                    </span>
+                    <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">
+                        Parcela: <strong class="text-gray-800 dark:text-white/90" x-text="parcela.numero_parcela + ' de ' + pagamento.quantidade_parcelas"></strong>
+                    </span>
+                    <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">
+                        Vencimento: <strong class="text-gray-800 dark:text-white/90" x-text="$formatarData(parcela.vencimento)"></strong>
+                    </span>
+                </div>
+
+                <h4 class="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
+                    Registrar Pagamento
+                </h4>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+                    <div class="col-span-1">
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Valor Total Parcela
+                        </label>
+                        <span class="text-gray-800 dark:text-white/90" x-text="$formatarMonetario(parcela.valor_parcela)"></span>
+                        <!-- <input type="text" x-on:input="$maskMoney($event.target)" placeholder="0,00"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" /> -->
+                    </div>
+
+                    <div class="col-span-1">
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Valor do Pagamento
+                        </label>
+                        <input type="text" x-model="formData.valor_pagamento" x-on:input="form.valor_pagamento = $maskMoney($event.target)" placeholder="0,00"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                    </div>
+
+                    <div class="col-span-2">
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Data do Pagamento
+                            </label>
+
+                            <x-form.date-picker-custom x-ref="datePick" id="date_pick" name="data_pagamento" placeholder="Date Picker"
+                                defaultDate="{{ now()->format('d-m-Y') }}" />
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-span-1">
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Valor Restante
+                        </label>
+                        <input type="text" placeholder="+09 363 398 46" class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800">
+                    </div> -->
+
+                    <div class="col-span-1 sm:col-span-2">
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Observações
+                        </label>
+                        <textarea x-model="formData.observacoes" placeholder="Insira informações caso necessário para esse pagamento..." type="text" rows="6" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end w-full gap-3 mt-6">
+                    <button @click="open = false" type="button" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:w-auto">
+                        Fechar
+                    </button>
+                    <button type="submit" class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto">
+                        Registrar Pagamento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-ui.modal>
+
+    <script>
+        function financeiroComponent() {
+            return {
+                open: false, // Controle do modal
+
+                // Estados iniciais
+                form: {
+                    cliente_id: '',
+                    valor_total: 0,
+                    valor_pagamento: 0,
+                },
+
+                processo: {
+                    id: null,
+                    numero_processo: '',
+                    cliente: {
+                        nome: ''
+                    },
+                    tipo_processo: {
+                        nome: ''
+                    }
+                },
+
+                parcela: {
+                    id: null,
+                    numero_parcela: '',
+                    valor_parcela: 0,
+                    vencimento: '',
+                    status: ''
+                },
+
+                pagamento: {
+                    id: null,
+                    valor_total: '',
+                    quantidade_parcelas: '',
+                    parcelas: []
+                },
+
+                formData: {
+                    _token: '{{ csrf_token() }}',
+                    parcela_id: '',
+                    valor_pagamento: '',
+                    data_pagamento: '',
+                    observacoes: ''
+                },
+
+                // Métodos
+                async getDetalhesPagamento(id) {
+                    try {
+                        const response = await fetch(`/pagamentos/detalhes-pagamento/${id}`);
+                        const data = await response.json();
+
+                        this.parcela = data.parcela;
+                        this.processo = data.processo;
+                        this.pagamento = data.pagamento;
+
+                        // Preenche automaticamente o ID da parcela no form
+                        this.formData.parcela_id = data.parcela.id;
+                    } catch (e) {
+                        console.error('Erro ao buscar dados do processo', e);
+                    }
+                },
+
+                async submitForm() {
+                    try {
+                        let dataToSubmit = JSON.parse(JSON.stringify(this.formData));
+
+                        // 2. Limpar a formatação do valor_pagamento (de "1.600,00" para "1600.00")
+                        if (dataToSubmit.valor_pagamento) {
+                            let valor = dataToSubmit.valor_pagamento.toString();
+                            // Remove tudo que não é dígito
+                            let apenasNumeros = valor.replace(/\D/g, '');
+                            // Converte para decimal (centavos)
+                            dataToSubmit.valor_pagamento = parseFloat(apenasNumeros) / 100;
+                        }
+
+                        // 3. Lógica do Date Picker (mantida do seu código)
+                        let dateInput = this.$refs.datePick?.querySelector('[name="data_pagamento"]') ||
+                            this.$refs.datePick?.querySelector('input') ||
+                            document.querySelector('[name="data_pagamento"]');
+
+                        if (dateInput?.value) {
+                            dataToSubmit.data_pagamento = dateInput.value;
+                        }
+                        const response = await fetch(`/pagamentos/registrar-pagamento`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': dataToSubmit._token
+                            },
+                            body: JSON.stringify(dataToSubmit)
+                        });
+
+                        if (!response.ok) throw new Error('Erro ao registrar pagamento');
+
+                        const data = await response.json();
+                        console.log('Sucesso:', data);
+
+                        this.open = false;
+                        window.location.reload(); 
+
+                    } catch (e) {
+                        console.error('Erro ao registrar pagamento', e);
+                    }
+                }
+            }
+        }
+    </script>
 </div>

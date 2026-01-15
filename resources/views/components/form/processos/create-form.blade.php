@@ -152,44 +152,43 @@
                 </div>
             </div>
 
-            <!-- Valor Total (a vista e a prazo) -->
-            <div x-show="form.tipo_pagamento">
+            <!-- Valor Total (a vista) -->
+            <div x-show="form.tipo_pagamento === 'avista'">
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Valor Total <span x-show="form.tipo_pagamento === 'aprazo'">(Parcelado)</span>
                 </label>
-                <input type="text" name="valor_total" x-on:input="form.valor_total = $maskMoney($event.target)" placeholder="0,00"
+                <input name="valor_total" type="text" x-on:input="form.valor_total = $maskMoney($event.target)" placeholder="0,00"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-                <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
             </div>
 
-            <!-- Data do Pagamento  (somente a vista)-->
-            <div x-show="form.tipo_pagamento === 'avista'">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Data do Pagamento
-                </label>
+            <div x-data="{ switcherPagoNoAto: true }" x-show="form.tipo_pagamento === 'avista'">
+                <div>
+                    <label for="toggle2"
+                        class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                        <div class="relative">
+                            <input type="hidden" name="switcherPagoNoAto" value="0">
+                            <input type="checkbox" name="switcherPagoNoAto" id="toggle2" class="sr-only" value="1" x-model="switcherPagoNoAto" />
+                            <div class="block h-6 w-11 rounded-full"
+                                :class="switcherPagoNoAto ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'">
+                            </div>
+                            <div :class="switcherPagoNoAto ? 'translate-x-full' : 'translate-x-0'"
+                                class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear">
+                            </div>
+                        </div>
 
-                <x-form.date-picker-custom id="date_pick" name="date_pagamento" placeholder="Date Picker"
-                    defaultDate="{{ now()->format('d-m-Y') }}" />
-            </div>
+                        Pagamento Já Realizado ? (Pagamento realizado na data de criação do processo)
+                    </label>
+                </div>
 
-            <!-- Valor da Entrada (somente a prazo) -->
-            <div x-show="form.tipo_pagamento === 'aprazo'">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Valor da Entrada
-                </label>
-                <input name="valor_entrada" type="text" x-on:input="form.valor_entrada = $maskMoney($event.target)" placeholder="0,00"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-                <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
-            </div>
+                <!-- Data do Pagamento  (somente a vista)-->
+                <div x-show="form.tipo_pagamento === 'avista' && !switcherPagoNoAto" class="mt-4">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Data do Pagamento
+                    </label>
 
-            <!-- Data da Entrada (somente a prazo) -->
-            <div x-show="form.tipo_pagamento === 'aprazo'">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Data da Entrada
-                </label>
-
-                <x-form.date-picker-custom id="date_pick" name="date_entrada" placeholder="Date Picker"
-                    defaultDate="{{ now()->format('d-m-Y') }}" />
+                    <x-form.date-picker-custom id="date_pick" name="date_pagamento" placeholder="Date Picker"
+                        defaultDate="{{ now()->format('d-m-Y') }}" />
+                </div>
             </div>
 
             <!-- Valor Parcelado (somente a prazo) -->
@@ -200,6 +199,55 @@
                 <input name="valor_parcelado" type="text" x-on:input="form.valor_parcelado = $maskMoney($event.target)" placeholder="0,00"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
+            </div>
+
+
+            <div x-data="{ switcherToggle: false }" x-show="form.tipo_pagamento === 'aprazo'">
+                <div>
+                    <label for="toggle1"
+                        class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                        <div class="relative">
+                            <input type="checkbox" name="switcherToggle" id="toggle1" class="sr-only" @change="switcherToggle = !switcherToggle" />
+                            <div class="block h-6 w-11 rounded-full"
+                                :class="switcherToggle ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'">
+                            </div>
+                            <div :class="switcherToggle ? 'translate-x-full' : 'translate-x-0'"
+                                class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear">
+                            </div>
+                        </div>
+
+                        Inserir valor de entrada
+                    </label>
+                </div>
+
+                <!-- Valor da Entrada (somente a prazo) -->
+                <div class="mt-4" x-show="form.tipo_pagamento === 'aprazo' && switcherToggle">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Valor da Entrada
+                    </label>
+                    <input name="valor_entrada" type="text" x-on:input="form.valor_entrada = $maskMoney($event.target)" placeholder="0,00"
+                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                    <span x-show="errors.nome" class="text-red-500 text-sm mt-1" x-text="errors.nome"></span>
+                </div>
+
+                <!-- Data da Entrada (somente a prazo) -->
+                <div class="mt-4" x-show="form.tipo_pagamento === 'aprazo' && switcherToggle">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Data da Entrada
+                    </label>
+
+                    <x-form.date-picker-custom id="date_pick" name="date_entrada" placeholder="Date Picker"
+                        defaultDate="{{ now()->format('d-m-Y') }}" />
+                </div>
+
+                <!-- Valor Total (somente a prazo) -->
+                <div class="mt-4" x-show="form.tipo_pagamento === 'aprazo' && switcherToggle">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Valor Total (Parcelado + Entrada)
+                    </label>
+                    <input readonly type="text" name="valor_total_a_prazo" :value="calcularValorTotalAPrazo()" x-on:input="form.valor_total_a_prazo = $maskMoney($event.target)" placeholder="0,00"
+                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                </div>
             </div>
 
             <!-- Vencimento 1° Parcela (somente a prazo) -->
@@ -291,29 +339,11 @@
                 valor_total: 0,
                 valor_entrada: 0,
                 valor_parcelado: 0,
-                quantidade_parcelas: 1
+                quantidade_parcelas: 1,
+                switcherToggle: false,
             },
 
             errors: {},
-            /* validar() {
-                this.errors = {};
-
-                if (!this.form.cliente_id || this.form.cliente_id.trim() === '') {
-                    this.errors.cliente_id = 'Cliente é obrigatório';
-                }
-
-                if (!this.form.tipo_processo_id || this.form.tipo_processo_id.trim() === '') {
-                    this.errors.tipo_processo_id = 'Tipo do Processo é obrigatório';
-                }
-
-                return Object.keys(this.errors).length === 0;
-            },
-
-            submit() {
-                if (this.validar()) {
-                    this.$el.querySelector('form').submit();
-                }
-            }, */
 
             calcularValorParcela() {
                 if (!this.form.quantidade_parcelas || this.form.quantidade_parcelas === 0) {
@@ -321,6 +351,10 @@
                 }
                 const valor = this.form.valor_parcelado / this.form.quantidade_parcelas;
                 return this.form.quantidade_parcelas + ' x de ' + 'R$ ' + valor.toFixed(2).replace('.', ',');
+            },
+
+            calcularValorTotalAPrazo() {
+                return 'R$ ' + (this.form.valor_parcelado + this.form.valor_entrada).toFixed(2).replace('.', ',');
             }
         }
     }
