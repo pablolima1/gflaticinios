@@ -180,9 +180,27 @@ class ProcessoRepository
     public function delete($id)
     {
         $processo = $this->find($id);
-        if (!$processo) {
-            return false;
-        }
+
         return $processo->delete();
+    }
+
+    public function deleteParcelasPagamentosByParcelasId($parcelaIds)
+    {
+        return ParcelaPagamento::whereIn('parcela_id', $parcelaIds)->delete();
+    }
+
+    public function deleteParcelasPagamentosByParcelaId($parcelaId)
+    {
+        return ParcelaPagamento::where('parcela_id', $parcelaId)->delete();
+    }
+
+    public function deleteParcelasByPagamentoId($pagamentoId)
+    {
+        return Parcela::where('pagamento_id', $pagamentoId)->delete();
+    }
+
+    public function deletePagamentosByProcessoId($processoId)
+    {
+        return Pagamento::where('processo_id', $processoId)->delete();
     }
 }

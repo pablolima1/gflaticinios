@@ -55,21 +55,6 @@ class ProcessoController extends Controller
     {
         try {
 
-            /* $validated = $request->validate([
-                'cliente_id' => 'required|exists:clientes,id',
-                'tipo_processo_id' => 'required|exists:tipos_processos,id',
-                'numero_processo' => 'nullable|string|max:255',
-                'esfera' => 'nullable|in:judicial,extrajudicial',
-                'subtipo_processo' => 'nullable|string|max:255',
-                'valor_total' => 'nullable|numeric|min:0',
-                'valor_entrada' => 'nullable|numeric|min:0',
-                'quantidade_parcelas' => 'nullable|integer|min:1|max:30',
-                'valor_parcelas' => 'nullable|numeric|min:0',
-                'data_entrada' => 'nullable|date',
-            ]); */
-
-            //dd($request->all());
-
             $this->processoService->create($request->all());
 
             return redirect()

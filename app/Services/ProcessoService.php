@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Processo;
 use App\Repositories\ProcessoRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use function Symfony\Component\Clock\now;
 
@@ -77,11 +78,24 @@ class ProcessoService
 
     public function delete($id)
     {
-        $processo = $this->processoRepository->find($id);
-        if (!$processo) {
-            throw new \Exception('Processo not found');
-        }
+        try {
+            DB::beginTransaction();
 
-        return $this->processoRepository->delete($id);
+            $processo = $this->processoRepository->find($id);
+            $parcelas = $processo->pagamentos[0]->parcelas ?? [];
+            $idsParcelas = $parcelas->pluck('id')->toArray();
+
+            $this->processoRepository->deleteParcelasPagamentosByParcelasId($idsParcelas);
+            $this->processoRepository->deleteParcelasByPagamentoId($processo->pagamentos[0]->id);
+            $this->processoRepository->deletePagamentosByProcessoId($id);
+            $this->processoRepository->delete($id);
+
+            DB::commit();
+
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }
