@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\ProcessoController;
+use App\Http\Controllers\TipoDespesaController;
 use App\Http\Controllers\TipoProcessoController;
+use App\Models\TipoDespesa;
 
 Route::group(['middleware' => ['auth']], function () {
     // dashboard pages
@@ -49,6 +52,26 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/detalhes', [ProcessoController::class, 'detalhes'])->name('processos.detalhes');
 
         
+    });
+
+    Route::group(['prefix' => 'tipos-despesas'], function () {
+        Route::get('/', [TipoDespesaController::class, 'index'])->name('tipos-despesas.index');
+        Route::get('/create', [TipoDespesaController::class, 'create'])->name('tipos-despesas.create');
+        Route::post('/', [TipoDespesaController::class, 'store'])->name('tipos-despesas.store');
+        Route::get('/{id}', [TipoDespesaController::class, 'show'])->name('tipos-despesas.show');
+        Route::get('/{id}/edit', [TipoDespesaController::class, 'edit'])->name('tipos-despesas.edit');
+        Route::post('/{id}', [TipoDespesaController::class, 'update'])->name('tipos-despesas.update');
+        Route::get('/{id}/delete', [TipoDespesaController::class, 'destroy'])->name('tipos-despesas.destroy');
+    });
+
+    Route::group(['prefix' => 'despesa'], function () {
+        Route::get('/', [DespesaController::class, 'index'])->name('despesa.index');
+        Route::get('/create', [DespesaController::class, 'create'])->name('despesa.create');
+        Route::post('/', [DespesaController::class, 'store'])->name('despesa.store');
+        Route::get('/{id}', [DespesaController::class, 'show'])->name('despesa.show');
+        Route::get('/{id}/edit', [DespesaController::class, 'edit'])->name('despesa.edit');
+        Route::post('/{id}', [DespesaController::class, 'update'])->name('despesa.update');
+        Route::get('/{id}/delete', [DespesaController::class, 'destroy'])->name('despesa.destroy');
     });
 
     Route::group(['prefix' => 'pagamentos'], function () {
