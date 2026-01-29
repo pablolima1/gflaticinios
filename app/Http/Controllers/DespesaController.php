@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 class DespesaController extends Controller
 {
 
-    public function __construct(private DespesaService $despesaService)
-    {
-    }
+    public function __construct(private DespesaService $despesaService) {}
     /**
      * Display a listing of the resource.
      */
@@ -73,6 +71,16 @@ class DespesaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $this->despesaService->delete($id);
+
+            return redirect()
+                ->back()
+                ->with('success', 'Despesa deletada com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('despesa.index')
+                ->with('error', $e->getMessage());
+        }
     }
 }

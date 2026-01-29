@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}', [DespesaController::class, 'show'])->name('despesa.show');
         Route::get('/{id}/edit', [DespesaController::class, 'edit'])->name('despesa.edit');
         Route::post('/{id}', [DespesaController::class, 'update'])->name('despesa.update');
-        Route::get('/{id}/delete', [DespesaController::class, 'destroy'])->name('despesa.destroy');
+        Route::post('/{id}/delete', [DespesaController::class, 'destroy'])->name('despesa.destroy');
     });
 
     Route::group(['prefix' => 'pagamentos'], function () {

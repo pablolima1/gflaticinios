@@ -36,9 +36,6 @@
                                 Tipo Despesa</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
-                                Descricao</th>
-                            <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
                                 Valor da Despesa</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-end text-theme-sm dark:text-gray-400">
@@ -59,9 +56,6 @@
                                 <div class="text-sm text-gray-500 dark:text-gray-400">
                                     {{ $despesa->tipo->nome }}
                                 </div>
-                            </td>
-                            <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
-                                {{ $despesa->descricao }}
                             </td>
                             <td class="px-4 py-4 text-sm text-gray-800 text-end dark:text-white/90 whitespace-nowrap">
                                 R$ {{ number_format($despesa->valor, 2, ',', '.') }}
@@ -108,8 +102,8 @@
                                             </a>
                                             <a href="#"
                                                 x-on:click="
-                                                    processo.id = {{ $despesa->id }}; 
-                                                    $dispatch('open-delete-processo-modal');
+                                                    despesa.id = {{ $despesa->id }}; 
+                                                    $dispatch('open-delete-despesa-modal');
                                                 "
                                                 class="flex w-full px-3 py-2 font-medium text-left text-red-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-red-700 dark:hover:bg-white/5 dark:hover:text-red-400"
                                                 role="menuitem">
@@ -199,10 +193,32 @@
         </div>
     </x-ui.modal>
 
+    <x-ui.modal @open-delete-despesa-modal.window="open = true" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        <div>
+            <form method="POST" class="p-6 mt-4" :action="`/despesa/${despesa.id}/delete`">
+                @csrf
+                @method('POST')
+                <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">
+                    Tem certeza que deseja excluir esta despesa? Esta ação não pode ser desfeita.
+                </p>
+                <div class="flex justify-end mt-4">
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                        Excluir
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-ui.modal>
+
     <script>
         function despesasAlpineJs() {
             return {
                 open: false,
+
+                despesa: {
+                    id: null,
+                },
 
                 form: {
                     tipo_despesa_id: '',
