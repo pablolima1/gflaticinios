@@ -1,7 +1,7 @@
 @props(['processos'])
 
 <div x-data="financeiroComponent()" x-init="">
-    <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
+    <div class="rounded-2xl border border-green-200 bg-white pt-4 dark:border-green-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
@@ -18,7 +18,7 @@
                                     fill="" />
                             </svg>
                         </button>
-                        <input type="text" placeholder="Search..."
+                        <input type="text" placeholder="Buscar..."
                             class="h-[42px] w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-[42px] pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-blue-800 xl:w-[300px]" />
                     </div>
                 </form>

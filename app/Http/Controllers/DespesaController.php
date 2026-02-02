@@ -47,7 +47,9 @@ class DespesaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $despesa = $this->despesaService->find($id);
+
+        return response()->json($despesa);
     }
 
     /**

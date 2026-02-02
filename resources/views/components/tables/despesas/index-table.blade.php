@@ -1,7 +1,7 @@
 @props(['despesas', 'tiposdespesas'])
 
 <div x-data="despesasAlpineJs()" x-init="">
-    <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
+    <div class="rounded-2xl border border-red-200 bg-white pt-4 dark:border-red-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
@@ -18,7 +18,7 @@
                                     fill="" />
                             </svg>
                         </button>
-                        <input type="text" placeholder="Search..."
+                        <input type="text" placeholder="Buscar..."
                             class="h-[42px] w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-[42px] pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-blue-800 xl:w-[300px]" />
                     </div>
                 </form>
@@ -92,9 +92,9 @@
 
                                         <x-slot name="content">
                                             <a href="#"
-                                                @click="$dispatch('open-registrar-pagamento-modal')"
+                                                @click="$dispatch('open-editar-despesa-modal')"
                                                 x-on:click="
-                                                    getDetalhesPagamento({{ $despesa->id }});
+                                                    getDetalhesDespesa({{ $despesa->id }});
                                                 "
                                                 class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                 role="menuitem">
@@ -131,6 +131,7 @@
         <x-ui.button @click="$dispatch('open-registrar-despesa-modal')">Add Nova Despesa</x-ui.button>
     </div>
 
+    <!-- Modal Registrar Despesa -->
     <x-ui.modal @open-registrar-despesa-modal.window="open = true" :isOpen="false" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
         <div class="relative w-full rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10">
             <!-- close btn -->
@@ -193,6 +194,69 @@
         </div>
     </x-ui.modal>
 
+    <!-- Modal Editar Despesa -->
+    <x-ui.modal @open-editar-despesa-modal.window="open = true" :isOpen="false" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        <div class="relative w-full rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10">
+            <!-- close btn -->
+            <button @click="open = false" class="group absolute right-3 top-3 z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-200 text-gray-500 transition-colors hover:bg-gray-300 hover:text-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 sm:right-6 sm:top-6 sm:h-11 sm:w-11">
+                <svg class="transition-colors fill-current group-hover:text-gray-600 dark:group-hover:text-gray-200" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.04289 16.5413C5.65237 16.9318 5.65237 17.565 6.04289 17.9555C6.43342 18.346 7.06658 18.346 7.45711 17.9555L11.9987 13.4139L16.5408 17.956C16.9313 18.3466 17.5645 18.3466 17.955 17.956C18.3455 17.5655 18.3455 16.9323 17.955 16.5418L13.4129 11.9997L17.955 7.4576C18.3455 7.06707 18.3455 6.43391 17.955 6.04338C17.5645 5.65286 16.9313 5.65286 16.5408 6.04338L11.9987 10.5855L7.45711 6.0439C7.06658 5.65338 6.43342 5.65338 6.04289 6.0439C5.65237 6.43442 5.65237 7.06759 6.04289 7.45811L10.5845 11.9997L6.04289 16.5413Z" fill=""></path>
+                </svg>
+            </button>
+
+            <form @submit.prevent="submitForm" class="mt-4">
+                @csrf
+
+                <h4 class="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
+                    Editar Despesa
+                </h4>
+
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Tipo da Despesa *
+                    </label>
+                    <select name="tipo_despesa_id" x-model="form.tipo_despesa_id"
+                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
+                        <option value="" disabled selected>Selecione o Tipo da Despesa</option>
+                        @foreach ($tiposdespesas as $tipodespesa)
+                        <option value="{{ $tipodespesa->id }}">{{ $tipodespesa->nome }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 mt-4">
+                    <div class="col-span-1">
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Valor da Despesa
+                        </label>
+                        <input type="text" x-model="formData.valor" x-on:input="form.valor = $maskMoney($event.target)" placeholder="0,00"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                    </div>
+
+                    <div class="col-span-1">
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Data do Pagamento
+                            </label>
+
+                            <x-form.date-picker-custom x-ref="datePick" id="date_pick" name="data_despesa" placeholder="Date Picker"
+                                defaultDate="{{ now()->format('d-m-Y') }}" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end w-full gap-3 mt-6">
+                    <button @click="open = false" type="button" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:w-auto">
+                        Fechar
+                    </button>
+                    <button type="submit" class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto">
+                        Editar Despesa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-ui.modal>
+
     <x-ui.modal @open-delete-despesa-modal.window="open = true" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
         <div>
             <form method="POST" class="p-6 mt-4" :action="`/despesa/${despesa.id}/delete`">
@@ -215,6 +279,7 @@
         function despesasAlpineJs() {
             return {
                 open: false,
+                defaultDate: '',
 
                 despesa: {
                     id: null,
@@ -230,6 +295,34 @@
                     tipo_despesa_id: '',
                     valor: '',
                     data_despesa: '',
+                },
+
+                async getDetalhesDespesa(despesaId) {
+                    try {
+                        const response = await fetch(`/despesa/${despesaId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                        });
+
+                        if (!response.ok) throw new Error('Erro ao buscar detalhes da despesa');
+
+                        const data = await response.json();
+
+                        // Preencher o formulário com os dados recebidos
+                        this.form.tipo_despesa_id = data.tipo_despesa_id;
+                        this.formData.tipo_despesa_id = data.tipo_despesa_id;
+
+                        console.log('Dados da despesa recebidos:', data);
+                        // Formatar o valor para exibição
+                        this.form.valor = this.$formatarMonetario(data.valor);
+                        this.formData.valor = this.$formatarMonetario(data.valor);
+
+                    } catch (e) {
+                        console.error('Erro ao buscar detalhes da despesa', e);
+                    }
                 },
 
                 async submitForm() {
@@ -256,8 +349,6 @@
                         if (dateInput?.value) {
                             dataToSubmit.data_despesa = dateInput.value;
                         }
-
-                        console.log('Dados a enviar:', dataToSubmit);
 
                         const response = await fetch(`/despesa`, {
                             method: 'POST',
