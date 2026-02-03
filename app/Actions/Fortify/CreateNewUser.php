@@ -7,10 +7,21 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Illuminate\Http\Request;
 
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
+
+    public function index()
+    {
+    
+        if (auth()->user() && auth()->user()->tipo_usuario_id === 1) {
+            return view('pages.auth.signup', ['title' => 'Sign Up']);
+        } else {
+            return redirect()->route('dashboard')->with('error', 'Acesso negado.');
+        }
+    }
 
     /**
      * Validate and create a newly registered user.
