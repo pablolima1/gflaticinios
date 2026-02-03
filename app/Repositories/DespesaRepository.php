@@ -34,4 +34,17 @@ class DespesaRepository
     {
         return Despesa::create($data);
     }
+
+    public function update(array $data, $id)
+    {
+        $despesa = Despesa::find($id);
+        if ($despesa) {
+            $despesa->update([
+                'tipo_despesa_id' => $data['tipo_despesa_id'],
+                'valor' => $data['valor'],
+            ]);
+            return $despesa;
+        }
+        return null;
+    }
 }

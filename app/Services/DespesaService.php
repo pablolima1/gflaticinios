@@ -59,20 +59,7 @@ class DespesaService
 
     public function update(array $data, $id)
     {
-        $despesa = $this->despesaRepository->find($id);
-        if (!$despesa) {
-            throw new \Exception('Despesa not found');
-        }
-
-        $despesa->nome = $data['nome'] ?? $despesa->nome;
-        $despesa->cpf = $data['cpf'] ?? $despesa->cpf;
-        $despesa->rg = $data['rg'] ?? $despesa->rg;
-        $despesa->email = $data['email'] ?? $despesa->email;
-        $despesa->telefone = $data['telefone'] ?? $despesa->telefone;
-
-        $despesa->save();
-
-        return $despesa;
+        return $this->despesaRepository->update($data, $id);
     }
 
     public function find($id)

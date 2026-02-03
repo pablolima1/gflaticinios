@@ -204,7 +204,7 @@
                 </svg>
             </button>
 
-            <form @submit.prevent="submitForm" class="mt-4">
+            <form @submit.prevent="submitFormEdit" class="mt-4">
                 @csrf
 
                 <h4 class="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
@@ -231,17 +231,6 @@
                         </label>
                         <input type="text" x-model="formData.valor" x-on:input="form.valor = $maskMoney($event.target)" placeholder="0,00"
                             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-                    </div>
-
-                    <div class="col-span-1">
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Data do Pagamento
-                            </label>
-
-                            <x-form.date-picker-custom x-ref="datePick" id="date_pick" name="data_despesa" placeholder="Date Picker"
-                                defaultDate="{{ now()->format('d-m-Y') }}" />
-                        </div>
                     </div>
                 </div>
 
@@ -315,7 +304,8 @@
                         this.form.tipo_despesa_id = data.tipo_despesa_id;
                         this.formData.tipo_despesa_id = data.tipo_despesa_id;
 
-                        console.log('Dados da despesa recebidos:', data);
+                        this.despesa.id = data.id;
+
                         // Formatar o valor para exibição
                         this.form.valor = this.$formatarMonetario(data.valor);
                         this.formData.valor = this.$formatarMonetario(data.valor);
@@ -373,6 +363,48 @@
 
                     } catch (e) {
                         console.error('Erro ao registrar despesa', e);
+                    }
+                },
+
+                async submitFormEdit() {
+                    try {
+                        let dataToSubmit = JSON.parse(JSON.stringify(this.formData));
+
+                        // Sincronizar o tipo_despesa_id do form
+                        dataToSubmit.tipo_despesa_id = this.form.tipo_despesa_id;
+
+                        // Limpar a formatação do valor_pagamento (de "1.600,00" para "1600.00")
+                        if (dataToSubmit.valor) {
+                            let valor = dataToSubmit.valor.toString();
+                            // Remove tudo que não é dígito
+                            let apenasNumeros = valor.replace(/\D/g, '');
+                            // Converte para decimal (centavos)
+                            dataToSubmit.valor = parseFloat(apenasNumeros) / 100;
+                        }
+
+                        const response = await fetch(`/despesa/${this.despesa.id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': dataToSubmit._token
+                            },
+                            body: JSON.stringify(dataToSubmit)
+                        });
+
+                        if (!response.ok) throw new Error('Erro ao editar despesa');
+
+                        const responseText = await response.text();
+                        if (responseText) {
+                            const data = JSON.parse(responseText);
+                            console.log('Sucesso:', data);
+                        }
+
+                        this.open = false;
+                        window.location.reload();
+
+                    } catch (e) {
+                        console.error('Erro ao editar despesa', e);
                     }
                 }
             }

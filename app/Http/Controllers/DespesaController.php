@@ -65,7 +65,8 @@ class DespesaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $this->despesaService->update($request->all(), $id);
+        return response()->json(['message' => 'Despesa atualizada com sucesso!'], 200);
     }
 
     /**

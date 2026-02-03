@@ -20,7 +20,7 @@
             </div>
             <div class="border-b p-5 sm:border-r lg:border-b-0">
                 <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Receita Prevista</p>
-                <h3 class="text-3xl text-green-600 dark:text-green-500">R$ {{ number_format($receitaPrevista, 2, ',', '.') }}</h3>
+                <h3 class="text-3xl text-gray-800 dark:text-white/90">R$ {{ number_format($receitaPrevista, 2, ',', '.') }}</h3>
             </div>
             <div class="border-b p-5 lg:border-b-0">
                 <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Receita Recebida</p>
@@ -36,14 +36,10 @@
             </div>
         </div>
         <div
-            class="grid grid-cols-1 rounded-xl border border-gray-200 sm:grid-cols-2 lg:grid-cols-3 lg:divide-x lg:divide-y-0 dark:divide-gray-800 dark:border-gray-800">
+            class="grid grid-cols-1 rounded-xl border border-gray-200 sm:grid-cols-2 lg:grid-cols-2 lg:divide-x lg:divide-y-0 dark:divide-gray-800 dark:border-gray-800">
             <div class="border-b p-5 sm:border-r lg:border-b-0">
-                <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Entradas</p>
-                <h3 class="text-3xl text-green-600 dark:text-green-500">R$ {{ number_format($receitaRecebida, 2, ',', '.') }}</h3>
-            </div>
-            <div class="border-b p-5 sm:border-r lg:border-b-0">
-                <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Saídas</p>
-                <h3 class="text-3xl text-green-600 dark:text-green-500">R$ {{ number_format($despesas->sum('valor'), 2, ',', '.') }}</h3>
+                <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Saídas (Total de {{ $despesas->count() }} despesas)</p>
+                <h3 class="text-3xl text-gray-800 dark:text-white/90">R$ {{ number_format($despesas->sum('valor'), 2, ',', '.') }}</h3>
             </div>
             <div class="border-b p-5 lg:border-b-0">
                 <p class="mb-1.5 text-sm text-gray-400 dark:text-gray-500">Total (Entradas - Saídas)</p>
