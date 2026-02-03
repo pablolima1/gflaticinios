@@ -113,13 +113,13 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="mt-5">
+                            <!-- <div class="mt-5">
                                 <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
                                     Não tem uma conta?
                                     <a href="/signup"
                                         class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Registrar</a>
                                 </p>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

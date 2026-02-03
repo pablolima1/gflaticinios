@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\ClienteService;
+use App\Services\DespesaService;
 use App\Services\ProcessoService;
+use App\Services\TipoDespesaService;
 use App\Services\TipoProcessoService;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,9 @@ class ProcessoController extends Controller
     public function __construct(
         private ProcessoService $processoService,
         private ClienteService $clienteService,
-        private TipoProcessoService $tipoProcessoService
+        private TipoProcessoService $tipoProcessoService,
+        private DespesaService $despesaService,
+        private TipoDespesaService $tipoDespesaService
     ) {}
     /**
      * Display a listing of the resource.
@@ -26,7 +30,8 @@ class ProcessoController extends Controller
     public function balancoBalancete(Request $request)
     {
         $processos = $this->processoService->processosMesAno($request->all());
-        //dd($processos);
+        $despesas = $this->despesaService->despesasMesAno($request->all());
+        $tiposDespesas = $this->tipoDespesaService->allSemPaginacao();
 
         $receitaPrevista = $processos->sum('valor_parcela');
         $receitaRecebida = $receitaPrevista - $processos->sum('valor_restante');
@@ -34,7 +39,7 @@ class ProcessoController extends Controller
         $mes = $request->input('mes', date('m'));
         $ano = $request->input('ano', date('Y'));
 
-        return view('pages.processos.balanco-balancete.index', compact('processos', 'mes', 'ano', 'receitaPrevista', 'receitaRecebida'));
+        return view('pages.processos.balanco-balancete.index', compact('processos', 'mes', 'ano', 'receitaPrevista', 'receitaRecebida', 'despesas', 'tiposDespesas'));
     }
 
     /**

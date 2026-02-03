@@ -1,11 +1,11 @@
-@props(['tipoprocessos'])
+@props(['tipodespesas'])
 
-<div x-data='{ tipoprocessos: @json($tipoprocessos->items()) }'>
+<div x-data='{ tipodespesas: @json($tipodespesas->items()) }'>
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Lista dos Tipos de Processos</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Lista dos Tipos de Despesas</h3>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <form>
@@ -38,9 +38,6 @@
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Descrição</th>
                             <th scope="col"
-                                class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 capitalize">
-                                Responsável Criação</th>
-                            <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Data de Criação</th>
                             <th scope="col" class="relative px-4 py-3 capitalize">
@@ -49,21 +46,18 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <template x-for="tipoprocesso in tipoprocessos" :key="tipoprocesso.id">
+                        <template x-for="tipodespesa in tipodespesas" :key="tipodespesa.id">
                             <tr>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="tipoprocesso.nome"></div>
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="tipodespesa.nome"></div>
                                     </div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipoprocesso.descricao"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipodespesa.descricao"></div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipoprocesso.responsavel_criacao"></div>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipoprocesso.created_at"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="tipodespesa.created_at"></div>
                                 </td>
                                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
                                     <div class="flex justify-center relative">
@@ -82,12 +76,12 @@
                                             </x-slot>
 
                                             <x-slot name="content">
-                                                <a :href="`/tipos-processos/${tipoprocesso.id}/edit`"
+                                                <a :href="`/tipos-despesas/${tipodespesa.id}/edit`"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Editar
                                                 </a>
-                                                <a :href="`/tipos-processos/${tipoprocesso.id}/delete`"
+                                                <a :href="`/tipos-despesas/${tipodespesa.id}/delete`"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Deletar
@@ -105,7 +99,7 @@
 
         <!-- Pagination Laravel -->
         <div class="mt-4">
-            {!! $tipoprocessos->links() !!}
+            {!! $tipodespesas->links() !!}
         </div>
 
         <!-- Pagination -->
