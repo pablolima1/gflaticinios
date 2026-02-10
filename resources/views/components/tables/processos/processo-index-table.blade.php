@@ -93,9 +93,6 @@
                         <tr class="border-gray-200 border-y dark:border-gray-700">
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Numero do Processo</th>
-                            <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Cliente</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -121,14 +118,9 @@
                                 <div class="flex items-center">
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $processo->numero_processo }}
+                                            {{ $processo->cliente->nome }}
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ $processo->cliente->nome }}
                                 </div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">

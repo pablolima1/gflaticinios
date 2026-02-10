@@ -27,8 +27,8 @@ class MenuHelper
                 'name' => 'Administração',
                 'subItems' => [
                     ['name' => 'Clientes', 'path' => '/clientes'],
-                    ['name' => 'Tipos de Processos', 'path' => '/tipos-processos'],
-                    ['name' => 'Tipos de Depesas', 'path' => '/tipos-despesas'],
+                    ['name' => 'Processos', 'path' => '/tipos-processos'],
+                    ['name' => 'Despesas', 'path' => '/tipos-despesas'],
                 ],
             ],
             /* [
