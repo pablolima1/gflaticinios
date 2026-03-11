@@ -101,14 +101,25 @@ class ProcessoRepository
                         'vencimento' => $dataEntrada
                     ]);
                 }
+                $dia_vencimento = $data_vencimento->day;
+                $mes_vencimento = $data_vencimento->month;
+                $ano_vencimento = $data_vencimento->year;
 
                 for ($i = 0; $i < $data['quantidade_parcelas']; $i++) {
+                    // Calcula o mês e ano destino sem mexer no dia ainda
+                    $data_base = Carbon::createFromDate($ano_vencimento, $mes_vencimento, 1)->addMonths($i);
+                    
+                    // Pega o menor valor entre o dia original e o último dia do mês destino
+                    $dia_final = min($dia_vencimento, $data_base->daysInMonth);
+                    
+                    $data_parcela = Carbon::createFromDate($data_base->year, $data_base->month, $dia_final);
+                    
                     Parcela::create([
                         'pagamento_id' => $pagamento->id,
                         'numero_parcela' => $i + 1,
                         'valor_parcela' => $valor_parcela,
                         'valor_restante' => $valor_parcela,
-                        'vencimento' => $data_vencimento->copy()->addMonths($i),
+                        'vencimento' => $data_parcela,
                     ]);
                 }
             } else if ($data['tipo_pagamento'] === 'avista') { // Criar parcela única
