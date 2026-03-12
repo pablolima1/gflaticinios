@@ -30,6 +30,7 @@ class ProcessoRepository
         $parcela = Parcela::with('pagamento', 'pagamento.cliente')
             ->whereYear('vencimento', $ano)
             ->whereMonth('vencimento', $mes)
+            ->orderBy('vencimento', 'asc')
             ->get();
 
         return $parcela;
