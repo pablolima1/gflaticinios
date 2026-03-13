@@ -16,7 +16,7 @@ class MenuHelper
             ], */
             [
                 'icon' => 'pages',
-                'name' => 'Processos',
+                'name' => 'Minha Produção',
                 'subItems' => [
                     ['name' => 'Processos', 'path' => '/processos'],
                     ['name' => 'Balanço/Balancete', 'path' => '/balanco-balancete'],
@@ -27,8 +27,7 @@ class MenuHelper
                 'name' => 'Administração',
                 'subItems' => [
                     ['name' => 'Clientes', 'path' => '/clientes'],
-                    ['name' => 'Processos', 'path' => '/tipos-processos'],
-                    ['name' => 'Despesas', 'path' => '/tipos-despesas'],
+                    ['name' => 'Produtos', 'path' => '/tipos-processos'],
                 ],
             ],
             /* [

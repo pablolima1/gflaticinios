@@ -131,10 +131,10 @@
                     <x-common.common-grid-shape />
                     <div class="flex max-w-xs flex-col items-center">
                         <a href="/" class="mb-4 block">
-                            <img src="./images/logo/bml-logo.png" alt="Logo" />
+                            <img src="./images/logo/logo-transparente.png" alt="Logo" />
                         </a>
                         <p class="text-center text-gray-400 dark:text-white/60">
-                            Grupo BML Advogados - Todos os direitos reservados
+                            GF Laticinios - Todos os direitos reservados
                         </p>
                     </div>
                 </div>
