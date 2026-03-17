@@ -3,10 +3,10 @@
     <div class="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div class="w-full">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                Statistics
+                Estatísticas
             </h3>
             <p class="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                Target you’ve set for each month
+                Meta definida para cada mês
             </p>
         </div>
 
@@ -16,9 +16,9 @@
 
                 @php
                     $options = [
-                        ['value' => 'overview', 'label' => 'Overview'],
-                        ['value' => 'sales', 'label' => 'Sales'],
-                        ['value' => 'revenue', 'label' => 'Revenue'],
+                        ['value' => 'overview', 'label' => 'Visão geral'],
+                        ['value' => 'sales', 'label' => 'Vendas'],
+                        ['value' => 'revenue', 'label' => 'Receita'],
                     ];
                 @endphp
 
