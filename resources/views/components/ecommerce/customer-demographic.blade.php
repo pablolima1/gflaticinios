@@ -23,10 +23,10 @@
     <div class="flex justify-between">
         <div>
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                Customers Demographic
+                Demografia de Clientes
             </h3>
             <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-                Number of customer based on country
+                Número de clientes por país
             </p>
         </div>
 
@@ -51,7 +51,7 @@
                             {{ $country['name'] }}
                         </p>
                         <span class="block text-theme-xs text-gray-500 dark:text-gray-400">
-                            {{ $country['customers'] }} Customers
+                            {{ $country['customers'] }} Clientes
                         </span>
                     </div>
                 </div>

@@ -2,38 +2,45 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
 {
+    use HasFactory;
+
     protected $table = 'clientes';
 
     protected $fillable = [
-        'nome',
-        'rg',
-        'cpf',
-        'telefone',
-        'email',
-        'responsavel_criacao'
+        'nome', 'telefone', 'email', 'data_nascimento', 'endereco', 'observacoes'
     ];
 
-    public function responsavelCriacao()
+    protected $casts = [
+        'data_nascimento' => 'date',
+    ];
+
+    public function vendas()
     {
-        return $this->belongsTo(User::class, 'responsavel_criacao');
+        return $this->hasMany(Venda::class, 'cliente_id');
     }
 
-    public function endereco()
+    public function pedidos()
     {
-        return $this->hasOne(EnderecoCliente::class, 'cliente_id');
+        return $this->hasMany(Pedido::class, 'cliente_id');
     }
 
-    public function processos()
+    public function pedidosRecorrentes()
     {
-        return $this->hasMany(Processo::class, 'cliente_id');
+        return $this->hasMany(PedidoRecorrente::class, 'cliente_id');
     }
 
-    public function pagamentos()
+    public function brindesClientes()
     {
-        return $this->hasMany(Pagamento::class, 'cliente_id');
+        return $this->hasMany(BrindeCliente::class, 'cliente_id');
+    }
+
+    public function getAllClientes()
+    {
+        return Cliente::paginate('10');
     }
 }

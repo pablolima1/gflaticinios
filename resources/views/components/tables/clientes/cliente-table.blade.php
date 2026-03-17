@@ -1,6 +1,6 @@
 @props(['clientes'])
 
-<div x-data='{ clientes: @json($clientes->items()) }'>
+<div>
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -35,17 +35,20 @@
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Nome</th>
                             <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                RG</th>
-                            <th scope="col"
-                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                CPF</th>
-                            <th scope="col"
                                 class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 capitalize">
                                 Telefone</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Email</th>
+                                <th scope="col"
+                                    class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    Data de Nascimento</th>
+                                <th scope="col"
+                                    class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    Endereço</th>
+                                <th scope="col"
+                                    class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    Observações</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Data de Criação</th>    
@@ -55,32 +58,32 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <template x-for="cliente in clientes" :key="cliente.id">
+                        @foreach ($clientes as $cliente)
                             <tr>
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="shrink-0 w-8 h-8">
-                                            <img class="w-8 h-8 rounded-full" :src="`/images/support/user.jpg`" alt="">
-                                        </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="cliente.nome"></div>
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $cliente->nome }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.rg"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->telefone }}</div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.cpf"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->email }}</div>
                                 </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->data_nascimento ? $cliente->data_nascimento->format('d/m/Y') : '-' }}</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->endereco }}</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->observacoes }}</div>
+                                    </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.telefone"></div>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.email"></div>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400" x-text="cliente.created_at"></div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->created_at }}</div>
                                 </td>
                                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
                                     <div class="flex justify-center relative">
@@ -99,17 +102,17 @@
                                             </x-slot>
 
                                             <x-slot name="content">
-                                                <a :href="`/clientes/${cliente.id}`"
+                                                <a href="/clientes/{{ $cliente->id }}"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Ver Mais
                                                 </a>
-                                                <a :href="`/clientes/${cliente.id}/edit`"
+                                                <a href="/clientes/{{ $cliente->id }}/edit"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Editar
                                                 </a>
-                                                <a :href="`/clientes/${cliente.id}/delete`"
+                                                <a href="/clientes/{{ $cliente->id }}/delete"
                                                     class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                     role="menuitem">
                                                     Deletar
@@ -119,13 +122,13 @@
                                     </div>
                                 </td>
                             </tr>
-                        </template>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Pagination Laravel -->
+        <!-- Paginação Laravel -->
         <div class="mt-4">
             {!! $clientes->links() !!}
         </div>

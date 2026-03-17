@@ -3,44 +3,44 @@
 @php
     $defaultProducts = [
         [
-            'name' => 'Macbook pro 13"',
+            'name' => 'Macbook Pro 13"',
             'variants' => 2,
             'image' => '/images/product/product-01.jpg',
-            'category' => 'Laptop',
-            'price' => '$2399.00',
-            'status' => 'Delivered',
+            'category' => 'Notebook',
+            'price' => 'R$2399,00',
+            'status' => 'Entregue',
         ],
         [
             'name' => 'Apple Watch Ultra',
             'variants' => 1,
             'image' => '/images/product/product-02.jpg',
-            'category' => 'Watch',
-            'price' => '$879.00',
-            'status' => 'Pending',
+            'category' => 'Relógio',
+            'price' => 'R$879,00',
+            'status' => 'Pendente',
         ],
         [
             'name' => 'iPhone 15 Pro Max',
             'variants' => 2,
             'image' => '/images/product/product-03.jpg',
-            'category' => 'SmartPhone',
-            'price' => '$1869.00',
-            'status' => 'Delivered',
+            'category' => 'Smartphone',
+            'price' => 'R$1869,00',
+            'status' => 'Entregue',
         ],
         [
-            'name' => 'iPad Pro 3rd Gen',
+            'name' => 'iPad Pro 3ª Geração',
             'variants' => 2,
             'image' => '/images/product/product-04.jpg',
-            'category' => 'Electronics',
-            'price' => '$1699.00',
-            'status' => 'Canceled',
+            'category' => 'Eletrônicos',
+            'price' => 'R$1699,00',
+            'status' => 'Cancelado',
         ],
         [
-            'name' => 'Airpods Pro 2nd Gen',
+            'name' => 'Airpods Pro 2ª Geração',
             'variants' => 1,
             'image' => '/images/product/product-05.jpg',
-            'category' => 'Accessories',
-            'price' => '$240.00',
-            'status' => 'Delivered',
+            'category' => 'Acessórios',
+            'price' => 'R$240,00',
+            'status' => 'Entregue',
         ],
     ];
     
@@ -51,9 +51,9 @@
         $baseClasses = 'rounded-full px-2 py-0.5 text-theme-xs font-medium';
         
         return match($status) {
-            'Delivered' => $baseClasses . ' bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
-            'Pending' => $baseClasses . ' bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400',
-            'Canceled' => $baseClasses . ' bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
+            'Entregue' => $baseClasses . ' bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
+            'Pendente' => $baseClasses . ' bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400',
+            'Cancelado' => $baseClasses . ' bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
             default => $baseClasses . ' bg-gray-50 text-gray-600 dark:bg-gray-500/15 dark:text-gray-400',
         };
     };

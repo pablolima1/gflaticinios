@@ -2,83 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ClienteService;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-
-    public function __construct(private ClienteService $clienteService)
+    public function __construct(private Cliente $cliente)
     {
     }
-
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        $clientes = $this->clienteService->all();
-
-        return view('pages.administracao.clientes.index', compact('clientes'));
+        $clientes = $this->cliente->getAllClientes();
+        return view('clientes.index', compact('clientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('pages.administracao.clientes.create');
+        return view('clientes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'cpf' => 'required|string|max:20|unique:clientes,cpf',
-            'email' => 'required|email|unique:clientes,email',
             'telefone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'data_nascimento' => 'nullable|date',
+            'endereco' => 'nullable|string|max:255',
+            'observacoes' => 'nullable|string',
         ]);
 
-        $this->clienteService->registerUser($data);
+        $this->cliente->create($validatedData);
 
         return redirect()->route('clientes.index')->with('success', 'Cliente criado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, Cliente $cliente)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'nome' => 'required|string|max:255',
+            'telefone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'data_nascimento' => 'nullable|date',
+            'endereco' => 'nullable|string|max:255',
+            'observacoes' => 'nullable|string',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $cliente = $this->clienteService->find($id);
-        return view('pages.administracao.clientes.edit', compact('cliente'));
-    }
+        $cliente->update($validatedData);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $this->clienteService->update($request->all(), $id);
         return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Cliente $cliente)
     {
-        $this->clienteService->delete($id);
+        $cliente->delete();
+
         return redirect()->route('clientes.index')->with('success', 'Cliente deletado com sucesso!');
     }
 }

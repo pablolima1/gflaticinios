@@ -16,7 +16,7 @@ class CreateNewUser implements CreatesNewUsers
     public function index()
     {
     
-        if (auth()->user() && auth()->user()->tipo_usuario_id === 1) {
+        if (auth()->user()) {
             return view('pages.auth.signup', ['title' => 'Sign Up']);
         } else {
             return redirect()->route('dashboard')->with('error', 'Acesso negado.');
@@ -45,8 +45,7 @@ class CreateNewUser implements CreatesNewUsers
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'tipo_usuario_id' => 2, // Definindo o tipo de usuário padrão como 2 (Cliente)
+            'password' => Hash::make($input['password'])
         ]);
     }
 }

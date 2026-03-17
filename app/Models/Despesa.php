@@ -2,32 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Despesa extends Model
 {
+    use HasFactory;
+
+    protected $table = 'despesas';
+
     protected $fillable = [
-        'tipo_despesa_id',
-        'descricao',
-        'valor',
-        'data_despesa',
-        'status',
-        'usuario_criador_id',
+        'descricao', 'valor', 'data_despesa', 'observacoes'
     ];
 
-    /**
-     * A despesa pertence a um tipo
-     */
-    public function tipo()
-    {
-        return $this->belongsTo(TipoDespesa::class, 'tipo_despesa_id');
-    }
-
-    /**
-     * A despesa foi criada por um usuário
-     */
-    public function usuarioCriador()
-    {
-        return $this->belongsTo(User::class, 'usuario_criador_id');
-    }
+    protected $casts = [
+        'valor' => 'decimal:2',
+        'data_despesa' => 'date',
+    ];
 }

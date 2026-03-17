@@ -2,156 +2,77 @@
 
 use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\DespesaController;
-use App\Http\Controllers\PagamentoController;
-use App\Http\Controllers\ProcessoController;
-use App\Http\Controllers\TipoDespesaController;
-use App\Http\Controllers\TipoProcessoController;
-use App\Models\TipoDespesa;
 
-Route::group(['middleware' => ['auth']], function () {
-    // dashboard pages
-    /* Route::get('/', function () {
-        return view('pages.dashboard.ecommerce', ['title' => 'BML Advogados']);
-    })->name('dashboard'); */
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| A minimal set of routes for a clean project with authentication.
+| Keep only login/signup and a single authenticated home view.
+|
+*/
 
-    Route::get('/home', function () {
-        return view('pages.dashboard.ecommerce', ['title' => 'BML Advogados']);
-    })->name('dashboard');
+// redirect root to login page
+Route::get('/', fn () => redirect()->route('signin'));
 
-    Route::get('/', [ProcessoController::class, 'index'])->name('dashboard');
-
-    Route::group(['prefix' => 'clientes'], function () {
-        Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
-        Route::get('/create', [ClienteController::class, 'create'])->name('clientes.create');
-        Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
-        Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
-        Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
-        Route::post('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
-        Route::get('/{id}/delete', [ClienteController::class, 'destroy'])->name('clientes.destroy');
-    });
-
-    Route::group(['prefix' => 'tipos-processos'], function () {
-        Route::get('/', [TipoProcessoController::class, 'index'])->name('tipos-processos.index');
-        Route::get('/create', [TipoProcessoController::class, 'create'])->name('tipos-processos.create');
-        Route::post('/', [TipoProcessoController::class, 'store'])->name('tipos-processos.store');
-        Route::get('/{id}', [TipoProcessoController::class, 'show'])->name('tipos-processos.show');
-        Route::get('/{id}/edit', [TipoProcessoController::class, 'edit'])->name('tipos-processos.edit');
-        Route::post('/{id}', [TipoProcessoController::class, 'update'])->name('tipos-processos.update');
-        Route::get('/{id}/delete', [TipoProcessoController::class, 'destroy'])->name('tipos-processos.destroy');
-    });
-
-    Route::group(['prefix' => 'processos'], function () {
-        Route::get('/', [ProcessoController::class, 'index'])->name('processos.index');
-        Route::get('/create', [ProcessoController::class, 'create'])->name('processos.create');
-        Route::post('/', [ProcessoController::class, 'store'])->name('processos.store');
-        Route::get('/{id}', [ProcessoController::class, 'show'])->name('processos.show');
-        Route::get('/{id}/edit', [ProcessoController::class, 'edit'])->name('processos.edit');
-        Route::post('/{id}', [ProcessoController::class, 'update'])->name('processos.update');
-        Route::post('/{id}/delete', [ProcessoController::class, 'destroy'])->name('processos.destroy');
-        Route::get('/{id}/detalhes', [ProcessoController::class, 'detalhes'])->name('processos.detalhes');
-
-        
-    });
-
-    Route::group(['prefix' => 'tipos-despesas'], function () {
-        Route::get('/', [TipoDespesaController::class, 'index'])->name('tipos-despesas.index');
-        Route::get('/create', [TipoDespesaController::class, 'create'])->name('tipos-despesas.create');
-        Route::post('/', [TipoDespesaController::class, 'store'])->name('tipos-despesas.store');
-        Route::get('/{id}', [TipoDespesaController::class, 'show'])->name('tipos-despesas.show');
-        Route::get('/{id}/edit', [TipoDespesaController::class, 'edit'])->name('tipos-despesas.edit');
-        Route::post('/{id}', [TipoDespesaController::class, 'update'])->name('tipos-despesas.update');
-        Route::get('/{id}/delete', [TipoDespesaController::class, 'destroy'])->name('tipos-despesas.destroy');
-    });
-
-    Route::group(['prefix' => 'despesa'], function () {
-        Route::get('/', [DespesaController::class, 'index'])->name('despesa.index');
-        Route::get('/create', [DespesaController::class, 'create'])->name('despesa.create');
-        Route::post('/', [DespesaController::class, 'store'])->name('despesa.store');
-        Route::get('/{id}', [DespesaController::class, 'show'])->name('despesa.show');
-        Route::get('/{id}/edit', [DespesaController::class, 'edit'])->name('despesa.edit');
-        Route::post('/{id}', [DespesaController::class, 'update'])->name('despesa.update');
-        Route::post('/{id}/delete', [DespesaController::class, 'destroy'])->name('despesa.destroy');
-    });
-
-    Route::group(['prefix' => 'pagamentos'], function () {
-        Route::post('registrar-pagamento', [PagamentoController::class, 'registrarPagamento'])->name('pagamentos.registrar-pagamento');
-        Route::get('detalhes-pagamento/{id}', [PagamentoController::class, 'detalhesPagamento'])->name('pagamentos.detalhes-pagamento');
-    });
-
-    Route::get('/balanco-balancete', [ProcessoController::class, 'balancoBalancete'])->name('processos.balanco-balancete');
-
-// calender pages
-    Route::get('/calendar', function () {
-        return view('pages.calender', ['title' => 'Calendar']);
-    })->name('calendar');
-
-// profile pages
-    Route::get('/profile', function () {
-        return view('pages.profile', ['title' => 'Profile']);
-    })->name('profile');
-
-// form pages
-    Route::get('/form-elements', function () {
-        return view('pages.form.form-elements', ['title' => 'Form Elements']);
-    })->name('form-elements');
-
-// tables pages
-    Route::get('/basic-tables', function () {
-        return view('pages.tables.basic-tables', ['title' => 'Basic Tables']);
-    })->name('basic-tables');
-
-// pages
-
-    Route::get('/blank', function () {
-        return view('pages.blank', ['title' => 'Blank']);
-    })->name('blank');
-
-// error pages
-    Route::get('/error-404', function () {
-        return view('pages.errors.error-404', ['title' => 'Error 404']);
-    })->name('error-404');
-
-// chart pages
-    Route::get('/line-chart', function () {
-        return view('pages.chart.line-chart', ['title' => 'Line Chart']);
-    })->name('line-chart');
-
-    Route::get('/bar-chart', function () {
-        return view('pages.chart.bar-chart', ['title' => 'Bar Chart']);
-    })->name('bar-chart');
-
-    // ui elements pages
-    Route::get('/alerts', function () {
-        return view('pages.ui-elements.alerts', ['title' => 'Alerts']);
-    })->name('alerts');
-
-    Route::get('/avatars', function () {
-        return view('pages.ui-elements.avatars', ['title' => 'Avatars']);
-    })->name('avatars');
-
-    Route::get('/badge', function () {
-        return view('pages.ui-elements.badges', ['title' => 'Badges']);
-    })->name('badges');
-
-    Route::get('/buttons', function () {
-        return view('pages.ui-elements.buttons', ['title' => 'Buttons']);
-    })->name('buttons');
-
-    Route::get('/image', function () {
-        return view('pages.ui-elements.images', ['title' => 'Images']);
-    })->name('images');
-
-    Route::get('/videos', function () {
-        return view('pages.ui-elements.videos', ['title' => 'Videos']);
-    })->name('videos');
-
-});
-
-// authentication pages
+// authentication pages (Tailadmin login/signup views)
 Route::get('/signin', function () {
     return view('pages.auth.signin', ['title' => 'Sign In']);
 })->name('signin');
 
 Route::get('/signup', [CreateNewUser::class, 'index'])->name('signup');
+
+// any routes below require authentication
+Route::middleware('auth')->group(function () {
+    // simple dashboard placeholder
+    Route::get('/home', function () {
+        return view('pages.dashboard.ecommerce'); // or replace with Tailadmin home
+    })->name('home');
+
+        // Rotas de relatórios
+        Route::group(['prefix' => 'relatorios'], function () {
+            Route::get('/vendas', [\App\Http\Controllers\RelatorioController::class, 'vendas'])->name('relatorios.vendas');
+            Route::get('/despesas', [\App\Http\Controllers\RelatorioController::class, 'despesas'])->name('relatorios.despesas');
+            Route::get('/pedidos-recorrentes', [\App\Http\Controllers\RelatorioController::class, 'pedidosRecorrentes'])->name('relatorios.pedidosRecorrentes');
+            Route::get('/pagamentos', [\App\Http\Controllers\RelatorioController::class, 'pagamentos'])->name('relatorios.pagamentos');
+            Route::get('/clientes', [\App\Http\Controllers\RelatorioController::class, 'clientes'])->name('relatorios.clientes');
+            Route::get('/produtos', [\App\Http\Controllers\RelatorioController::class, 'produtos'])->name('relatorios.produtos');
+        });
+    Route::group(['prefix' => 'clientes'], function () {
+        Route::get('/', [\App\Http\Controllers\ClienteController::class, 'index'])->name('clientes.index');
+        Route::get('/create', [\App\Http\Controllers\ClienteController::class, 'create'])->name('clientes.create');
+        Route::post('/', [\App\Http\Controllers\ClienteController::class, 'store'])->name('clientes.store');
+        Route::put('/{cliente}', [\App\Http\Controllers\ClienteController::class, 'update'])->name('clientes.update');
+        Route::delete('/{cliente}', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('clientes.destroy');
+    });
+
+    Route::group(['prefix' => 'produtos'], function () {
+        Route::get('/', [\App\Http\Controllers\ProdutoController::class, 'index'])->name('produtos.index');
+        Route::get('/create', [\App\Http\Controllers\ProdutoController::class, 'create'])->name('produtos.create');
+        Route::post('/', [\App\Http\Controllers\ProdutoController::class, 'store'])->name('produtos.store');
+        Route::put('/{produto}', [\App\Http\Controllers\ProdutoController::class, 'update'])->name('produtos.update');
+        Route::delete('/{produto}', [\App\Http\Controllers\ProdutoController::class, 'destroy'])->name('produtos.destroy');
+    });
+
+    Route::group(['prefix' => 'usuarios'], function () {
+        Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('usuarios.index');
+        Route::get('/create', [\App\Http\Controllers\UserController::class, 'create'])->name('usuarios.create');
+        Route::post('/', [\App\Http\Controllers\UserController::class, 'store'])->name('usuarios.store');
+        Route::put('/{usuario}', [\App\Http\Controllers\UserController::class, 'update'])->name('usuarios.update');
+        Route::delete('/{usuario}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('usuarios.destroy');
+    });
+
+    Route::group(['prefix' => 'vendas'], function () {
+        Route::group(['prefix' => 'pagamentos'], function () {
+            Route::get('/', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos.index');
+            Route::get('/create', [\App\Http\Controllers\PagamentoController::class, 'create'])->name('pagamentos.create');
+            Route::post('/', [\App\Http\Controllers\PagamentoController::class, 'store'])->name('pagamentos.store');
+            Route::put('/{pagamento}', [\App\Http\Controllers\PagamentoController::class, 'update'])->name('pagamentos.update');
+            Route::delete('/{pagamento}', [\App\Http\Controllers\PagamentoController::class, 'destroy'])->name('pagamentos.destroy');
+        });
+    });
+
+    // add additional authenticated routes here as needed
+});
+

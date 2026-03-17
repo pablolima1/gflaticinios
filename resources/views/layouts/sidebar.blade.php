@@ -59,18 +59,18 @@
     @mouseenter="if (!$store.sidebar.isExpanded) $store.sidebar.setHovered(true)"
     @mouseleave="$store.sidebar.setHovered(false)">
     <!-- Logo Section -->
-    <div class="pt-8 pb-7 flex"
+    <div class="pt-4 pb-3 flex justify-center"
         :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
         'xl:justify-center' :
-        'justify-start'">
+        'justify-center'">
         <a href="/">
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                class="dark:hidden" src="/images/logo/bml-logo-black.png" alt="Logo" width="150" height="40" />
+                class="dark:hidden" src="/images/logo/logo-transparente.png" alt="Logo" width="200" height="60" />
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                class="hidden dark:block" src="/images/logo/bml-logo.png" alt="Logo" width="150"
-                height="40" />
+                class="hidden dark:block" src="/images/logo/logo-transparente.png" alt="Logo" width="120"
+                height="80" />
             <img x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen"
-                src="/images/logo/logo-icon.svg" alt="Logo" width="32" height="32" />
+                src="/images/logo/logo-icon.svg" alt="Logo" width="48" height="48" />
             <!-- <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                 class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" width="150" height="40" />
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"

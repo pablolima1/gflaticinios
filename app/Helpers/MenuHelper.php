@@ -7,62 +7,64 @@ class MenuHelper
     public static function getMainNavItems()
     {
         return [
-            /* [
+            [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'subItems' => [
-                    ['name' => 'Ecommerce', 'path' => '/'],
+                    ['name' => 'Visão Geral', 'path' => '/dashboard'],
                 ],
-            ], */
+            ],
             [
                 'icon' => 'pages',
-                'name' => 'Processos',
+                'name' => 'Produção',
                 'subItems' => [
                     ['name' => 'Processos', 'path' => '/processos'],
-                    ['name' => 'Balanço/Balancete', 'path' => '/balanco-balancete'],
+                    ['name' => 'Balanço', 'path' => '/balanco'],
                 ],
             ],
             [
-                'icon' => 'dashboard',
-                'name' => 'Administração',
+                'icon' => 'tables',
+                'name' => 'Clientes',
                 'subItems' => [
-                    ['name' => 'Clientes', 'path' => '/clientes'],
-                    ['name' => 'Processos', 'path' => '/tipos-processos'],
-                    ['name' => 'Despesas', 'path' => '/tipos-despesas'],
+                    ['name' => 'Lista de Clientes', 'path' => '/clientes'],
+                    ['name' => 'Brindes', 'path' => '/brindes'],
                 ],
             ],
-            /* [
-                'icon' => 'calendar',
-                'name' => 'Calendar',
-                'path' => '/calendar',
+            [
+                'icon' => 'forms',
+                'name' => 'Produtos',
+                'subItems' => [
+                    ['name' => 'Lista de Produtos', 'path' => '/produtos'],
+                ],
+            ],
+            [
+                'icon' => 'task',
+                'name' => 'Vendas',
+                'subItems' => [
+                    ['name' => 'Pedidos', 'path' => '/pedidos'],
+                    ['name' => 'Itens de Venda', 'path' => '/itens-venda'],
+                    ['name' => 'Pagamentos', 'path' => '/vendas/pagamentos'],
+                ],
+            ],
+            [
+                'icon' => 'charts',
+                'name' => 'Relatórios',
+                'subItems' => [
+                    ['name' => 'Vendas', 'path' => '/relatorios/vendas'],
+                    ['name' => 'Despesas', 'path' => '/relatorios/despesas'],
+                    ['name' => 'Pedidos Recorrentes', 'path' => '/relatorios/pedidos-recorrentes'],
+                    ['name' => 'Pagamentos', 'path' => '/relatorios/pagamentos'],
+                    ['name' => 'Clientes', 'path' => '/relatorios/clientes'],
+                    ['name' => 'Produtos', 'path' => '/relatorios/produtos'],
+                ],
             ],
             [
                 'icon' => 'user-profile',
-                'name' => 'Perfil do Usuário',
-                'path' => '/profile',
-            ],
-            [
-                'name' => 'Forms',
-                'icon' => 'forms',
+                'name' => 'Usuários',
                 'subItems' => [
-                    ['name' => 'Form Elements', 'path' => '/form-elements', 'pro' => false],
+                    ['name' => 'Gestão de Usuários', 'path' => '/usuarios'],
                 ],
             ],
-            [
-                'name' => 'Tables',
-                'icon' => 'tables',
-                'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => '/basic-tables', 'pro' => false]
-                ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/blank', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
-                ],
-            ], */
         ];
     }
 

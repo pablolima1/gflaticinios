@@ -3,87 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\Despesa;
-use App\Services\DespesaService;
 use Illuminate\Http\Request;
 
 class DespesaController extends Controller
 {
+    public function __construct(private Despesa $despesa)
+    {
+    }
 
-    public function __construct(private DespesaService $despesaService) {}
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $despesas = $this->despesa->all();
+        return view('despesas.index', compact('despesas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('despesas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'tipo_despesa_id' => 'required|integer|exists:tipos_despesas,id',
-            'valor' => 'required|numeric',
-            'data_despesa' => 'required',
+        $validatedData = $request->validate([
+            // Adicione regras de validação conforme o modelo
         ]);
 
-        $this->despesaService->store($data);
+        $this->despesa->create($validatedData);
 
-        return response()->json(['message' => 'Despesa criada com sucesso!'], 201);
+        return redirect()->route('despesas.index')->with('success', 'Despesa criada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, Despesa $despesa)
     {
-        $despesa = $this->despesaService->find($id);
+        $validatedData = $request->validate([
+            // Adicione regras de validação conforme o modelo
+        ]);
 
-        return response()->json($despesa);
+        $despesa->update($validatedData);
+
+        return redirect()->route('despesas.index')->with('success', 'Despesa atualizada com sucesso!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(Despesa $despesa)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $this->despesaService->update($request->all(), $id);
-        return response()->json(['message' => 'Despesa atualizada com sucesso!'], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try {
-            $this->despesaService->delete($id);
-
-            return redirect()
-                ->back()
-                ->with('success', 'Despesa deletada com sucesso!');
-        } catch (\Exception $e) {
-            return redirect()
-                ->route('despesa.index')
-                ->with('error', $e->getMessage());
-        }
+        $despesa->delete();
+        return redirect()->route('despesas.index')->with('success', 'Despesa removida com sucesso!');
     }
 }
