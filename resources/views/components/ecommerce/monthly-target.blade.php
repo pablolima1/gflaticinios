@@ -1,37 +1,54 @@
+@php
+    use App\Models\Meta;
+    $meta = Meta::where('status', 'ativa')
+        ->where('data_inicio', '<=', now())
+        ->where('data_fim', '>=', now())
+        ->first();
+    $valorMeta = $meta ? $meta->valor_meta : 0;
+    $progresso = $meta ? $meta->progresso() : 0;
+    $percentual = $valorMeta > 0 ? round(($progresso / $valorMeta) * 100, 2) : 0;
+@endphp
 <div class="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
     <div class="shadow-default rounded-2xl bg-white px-5 pb-11 pt-5 dark:bg-gray-900 sm:px-6 sm:pt-6">
         <div class="flex justify-between">
             <div>
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                    Meta Mensal
+                    Meta do Período
                 </h3>
                 <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-                    Meta definida para cada mês
+                    @if($meta)
+                        De {{ $meta->data_inicio->format('d/m/Y') }} até {{ $meta->data_fim->format('d/m/Y') }}
+                    @else
+                        Nenhuma meta ativa para o período atual.
+                    @endif
                 </p>
             </div>
             <!-- Dropdown Menu -->
             <x-common.dropdown-menu />
             <!-- End Dropdown Menu -->
-
         </div>
         <div class="relative max-h-[195px]">
             {{-- Chart --}}
             <div id="chartTwo" class="h-full"></div>
-            <span class="absolute left-1/2 top-[85%] -translate-x-1/2 -translate-y-[85%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">+10%</span>
+            <span class="absolute left-1/2 top-[85%] -translate-x-1/2 -translate-y-[85%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">
+                {{ $percentual }}%
+            </span>
         </div>
         <p class="mx-auto mt-1.5 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-            Você ganhou R$3287 hoje, está acima do mês passado. Continue com o bom trabalho!
+            @if($meta)
+                Progresso: R${{ number_format($progresso, 2, ',', '.') }} de R${{ number_format($valorMeta, 2, ',', '.') }}
+            @else
+                Defina uma meta para acompanhar o progresso das vendas.
+            @endif
         </p>
     </div>
-
     <div class="flex items-center justify-center gap-5 px-6 py-3.5 sm:gap-8 sm:py-5">
         <div>
             <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">
                 Meta
             </p>
-            <p
-                class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-                $20K
+            <p class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
+                R${{ number_format($valorMeta, 2, ',', '.') }}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -47,9 +64,8 @@
             <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">
                 Receita
             </p>
-            <p
-                class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-                $20K
+            <p class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
+                R${{ number_format($progresso, 2, ',', '.') }}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -63,11 +79,15 @@
 
         <div>
             <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">
-                Today
+                Hoje
             </p>
-            <p
-                class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-                $20K
+            <p class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
+                @php
+                    use App\Models\Venda;
+                    $hoje = now()->format('Y-m-d');
+                    $vendasHoje = Venda::whereDate('data_venda', $hoje)->sum('valor_total');
+                @endphp
+                R${{ number_format($vendasHoje, 2, ',', '.') }}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"

@@ -39,4 +39,15 @@ class Venda extends Model
     {
         return $this->hasMany(Pagamento::class, 'venda_id');
     }
+
+    /**
+     * Retorna a meta vigente para a data da venda
+     */
+    public function metaVigente()
+    {
+        return \App\Models\Meta::where('data_inicio', '<=', $this->data_venda)
+            ->where('data_fim', '>=', $this->data_venda)
+            ->where('status', 'ativa')
+            ->first();
+    }
 }
