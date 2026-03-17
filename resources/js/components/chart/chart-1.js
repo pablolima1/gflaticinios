@@ -4,11 +4,15 @@ export const initChartOne = () => {
     const chartElement = document.querySelector('#chartOne');
     if (!chartElement) return;
 
+    // Obter dados dinâmicos do Blade
+    const meses = chartElement.dataset.meses ? JSON.parse(chartElement.dataset.meses) : [];
+    const valores = chartElement.dataset.valores ? JSON.parse(chartElement.dataset.valores) : [];
+
     const chartOneOptions = {
         series: [{
-            name: "Sales",
-            data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
-        },],
+            name: "Vendas",
+            data: valores,
+        }],
         colors: ["#465fff"],
         chart: {
             fontFamily: "Outfit, sans-serif",
@@ -35,20 +39,7 @@ export const initChartOne = () => {
             colors: ["transparent"],
         },
         xaxis: {
-            categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
+            categories: meses,
             axisBorder: {
                 show: false,
             },
