@@ -38,4 +38,9 @@ class Cliente extends Model
     {
         return $this->hasMany(BrindeCliente::class, 'cliente_id');
     }
+
+    public function getAllClientes()
+    {
+        return Cliente::paginate('10');
+    }
 }

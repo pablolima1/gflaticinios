@@ -34,7 +34,7 @@ class MenuHelper
                 'icon' => 'forms',
                 'name' => 'Produtos',
                 'subItems' => [
-                    ['name' => 'Tipos de Produtos', 'path' => '/produtos'],
+                    ['name' => 'Lista de Produtos', 'path' => '/produtos'],
                 ],
             ],
             [
@@ -43,15 +43,19 @@ class MenuHelper
                 'subItems' => [
                     ['name' => 'Pedidos', 'path' => '/pedidos'],
                     ['name' => 'Itens de Venda', 'path' => '/itens-venda'],
-                    ['name' => 'Pagamentos', 'path' => '/pagamentos'],
+                    ['name' => 'Pagamentos', 'path' => '/vendas/pagamentos'],
                 ],
             ],
             [
                 'icon' => 'charts',
                 'name' => 'Relatórios',
                 'subItems' => [
-                    ['name' => 'Despesas', 'path' => '/despesas'],
-                    ['name' => 'Financeiro', 'path' => '/financeiro'],
+                    ['name' => 'Vendas', 'path' => '/relatorios/vendas'],
+                    ['name' => 'Despesas', 'path' => '/relatorios/despesas'],
+                    ['name' => 'Pedidos Recorrentes', 'path' => '/relatorios/pedidos-recorrentes'],
+                    ['name' => 'Pagamentos', 'path' => '/relatorios/pagamentos'],
+                    ['name' => 'Clientes', 'path' => '/relatorios/clientes'],
+                    ['name' => 'Produtos', 'path' => '/relatorios/produtos'],
                 ],
             ],
             [
