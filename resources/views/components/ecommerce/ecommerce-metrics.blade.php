@@ -24,8 +24,12 @@
 
       <div class="flex items-end justify-between mt-5">
         <div>
-          <span class="text-sm text-gray-500 dark:text-gray-400">Clientes</span>
-          <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">3,782</h4>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Clientes</span>
+            @php
+              use App\Models\Cliente;
+              $totalClientes = Cliente::count();
+            @endphp
+            <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{{ $totalClientes }}</h4>
         </div>
 
         <span
@@ -47,7 +51,16 @@
             />
           </svg>
 
-          11.01%
+            @php
+              $hoje = now();
+              $inicioMesAtual = $hoje->copy()->startOfMonth();
+              $fimMesAnterior = $inicioMesAtual->copy()->subDay();
+              $inicioMesAnterior = $fimMesAnterior->copy()->startOfMonth();
+              $clientesMesAtual = Cliente::whereBetween('created_at', [$inicioMesAtual, $hoje])->count();
+              $clientesMesAnterior = Cliente::whereBetween('created_at', [$inicioMesAnterior, $fimMesAnterior])->count();
+              $percentGrowth = $clientesMesAnterior > 0 ? round((($clientesMesAtual - $clientesMesAnterior) / $clientesMesAnterior) * 100, 2) : 0;
+            @endphp
+            {{ $percentGrowth }}%
         </span>
       </div>
     </div>
@@ -77,8 +90,17 @@
 
       <div class="flex items-end justify-between mt-5">
         <div>
-          <span class="text-sm text-gray-500 dark:text-gray-400">Pedidos</span>
-          <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">5,359</h4>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Pedidos</span>
+            @php
+              use App\Models\Venda;
+              $inicioMesAtual = now()->startOfMonth();
+              $fimMesAnterior = $inicioMesAtual->copy()->subDay();
+              $inicioMesAnterior = $fimMesAnterior->copy()->startOfMonth();
+              $vendasMesAtual = Venda::whereBetween('data_venda', [$inicioMesAtual, now()])->count();
+              $vendasMesAnterior = Venda::whereBetween('data_venda', [$inicioMesAnterior, $fimMesAnterior])->count();
+              $percentGrowthVendas = $vendasMesAnterior > 0 ? round((($vendasMesAtual - $vendasMesAnterior) / $vendasMesAnterior) * 100, 2) : 0;
+            @endphp
+            <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{{ $vendasMesAtual }}</h4>
         </div>
 
         <span
@@ -100,7 +122,7 @@
             />
           </svg>
 
-          9.05%
+          {{ $percentGrowthVendas }}%
         </span>
       </div>
     </div>
