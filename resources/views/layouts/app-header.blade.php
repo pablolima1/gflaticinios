@@ -50,8 +50,9 @@
 
             <!-- Logo (mobile only) -->
             <a href="/" class="xl:hidden">
-                <img class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" />
-                <img class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" />
+                {{-- <img class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" />
+                <img class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" /> --}}
+                <span class="font-bold text-xl text-brand-500 dark:text-white">GF Laticínios</span>
             </a>
 
             <!-- Application Menu Toggle (mobile only) -->
