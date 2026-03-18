@@ -18,7 +18,7 @@ Route::get('/', fn () => redirect()->route('signin'));
 
 // authentication pages (Tailadmin login/signup views)
 Route::get('/signin', function () {
-    return view('pages.auth.signin', ['title' => 'Sign In']);
+    return view('pages.auth.signin', ['title' => 'Login']);
 })->name('signin');
 
 Route::get('/signup', [CreateNewUser::class, 'index'])->name('signup');
