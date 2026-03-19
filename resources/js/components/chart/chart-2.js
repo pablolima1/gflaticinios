@@ -3,8 +3,10 @@ export const initChartTwo = () => {
     const chartElement = document.querySelector('#chartTwo');
 
     if (chartElement) {
+        // Obtém o valor percentual do atributo data-percentual
+        const percentual = parseFloat(chartElement.getAttribute('data-percentual')) || 0;
         const chartTwoOptions = {
-            series: [75.55],
+            series: [percentual],
             colors: ["#465FFF"],
             chart: {
                 fontFamily: "Outfit, sans-serif",

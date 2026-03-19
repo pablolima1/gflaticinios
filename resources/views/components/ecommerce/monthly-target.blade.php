@@ -29,7 +29,7 @@
         </div>
         <div class="relative max-h-[195px]">
             {{-- Chart --}}
-            <div id="chartTwo" class="h-full"></div>
+            <div id="chartTwo" class="h-full" data-percentual="{{ $percentual }}"></div>
             <span class="absolute left-1/2 top-[85%] -translate-x-1/2 -translate-y-[85%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">
                 {{ $percentual }}%
             </span>
