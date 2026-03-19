@@ -23,6 +23,16 @@
                     </div>
                 </form>
             </div>
+                <!-- Modal de Cadastro de Produto -->
+                <x-ui.modal x-show="openProdutoModal" @close-modal-produto.window="openProdutoModal = false" class="max-w-[700px] max-h-[90vh] overflow-y-auto" x-data="{ openProdutoModal: false }" @open-modal-produto.window="openProdutoModal = true">
+                    <div class="relative w-full rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10">
+                        <h2 class="mb-6 text-lg font-bold text-gray-800 dark:text-white">Cadastro de Produto</h2>
+                        <x-form.produtos.produto-form />
+                        <div class="flex justify-end mt-2">
+                            <x-ui.button type="button" variant="secondary" size="sm" x-on:click="openProdutoModal = false">Fechar</x-ui.button>
+                        </div>
+                    </div>
+                </x-ui.modal>
         </div>
 
         <!-- Table -->

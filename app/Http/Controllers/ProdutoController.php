@@ -25,12 +25,16 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            // Adicione regras de validação conforme o modelo
+            'nome' => 'required|string|max:255',
+            'descricao' => 'nullable|string',
+            'preco' => 'required|numeric',
+            'unidade_medida' => 'nullable|string|max:50',
+            'ativo' => 'required|boolean',
         ]);
 
         $this->produto->create($validatedData);
 
-        return redirect()->route('produtos.index')->with('success', 'Produto criado com sucesso!');
+        return response()->json(['message' => 'Produto criado com sucesso!'], 201);
     }
 
     public function update(Request $request, Produto $produto)
