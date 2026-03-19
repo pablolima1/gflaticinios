@@ -28,14 +28,19 @@ class ClienteController extends Controller
             'nome' => 'required|string|max:255',
             'telefone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
-            'data_nascimento' => 'nullable|date',
+            'data_nascimento' => 'nullable',
             'endereco' => 'nullable|string|max:255',
             'observacoes' => 'nullable|string',
         ]);
 
-        $this->cliente->create($validatedData);
+        $dataNascimentoOriginal = str_replace('/', '-', $request->input('data_nascimento'));
+        $dataNascimento = date('Y-m-d', strtotime($dataNascimentoOriginal));
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente criado com sucesso!');
+        $data = array_merge($validatedData, ['data_nascimento' => $dataNascimento]);
+
+        $this->cliente->create($data);
+
+        return response()->json(['message' => 'Cliente criado com sucesso!'], 201);
     }
 
     public function update(Request $request, Cliente $cliente)
