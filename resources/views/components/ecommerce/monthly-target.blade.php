@@ -36,7 +36,7 @@
         </div>
         <p class="mx-auto mt-1.5 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
             @if($meta)
-                Progresso: R${{ number_format($progresso, 2, ',', '.') }} de R${{ number_format($valorMeta, 2, ',', '.') }}
+                Já atingimos R${{ number_format($progresso, 2, ',', '.') }} e a nossa meta é R${{ number_format($valorMeta, 2, ',', '.') }}
             @else
                 Defina uma meta para acompanhar o progresso das vendas.
             @endif

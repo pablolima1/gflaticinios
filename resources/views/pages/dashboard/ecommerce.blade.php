@@ -17,11 +17,11 @@
     </div>
     
     <div class="col-span-12 xl:col-span-7">
-      <x-ecommerce.recent-orders />
+      <x-ecommerce.recent-orders :clients="$topClientes" />
     </div>
     
     <div class="col-span-12 xl:col-span-5">
-      <x-ecommerce.customer-demographic />
+      <x-ecommerce.customer-demographic :birthdays="$birthdays" />
     </div>
 
   </div>

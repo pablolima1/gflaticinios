@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,9 +27,7 @@ Route::get('/signup', [CreateNewUser::class, 'index'])->name('signup');
 // any routes below require authentication
 Route::middleware('auth')->group(function () {
     // simple dashboard placeholder
-    Route::get('/home', function () {
-        return view('pages.dashboard.ecommerce'); // or replace with Tailadmin home
-    })->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
         // Rotas de relatórios
         Route::group(['prefix' => 'relatorios'], function () {
