@@ -1,3 +1,21 @@
+// Máscara de telefone (31) 99999-9999
+Alpine.magic('telefoneMask', () => {
+    return (value) => {
+        if (!value) return '';
+        // Remove tudo que não for dígito
+        value = value.replace(/\D/g, '');
+        // Aplica a máscara
+        if (value.length > 11) value = value.slice(0, 11);
+        if (value.length > 6) {
+            return `(${value.slice(0,2)}) ${value.slice(2,7)}-${value.slice(7)}`;
+        } else if (value.length > 2) {
+            return `(${value.slice(0,2)}) ${value.slice(2)}`;
+        } else if (value.length > 0) {
+            return `(${value}`;
+        }
+        return value;
+    };
+});
 import './bootstrap';
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';

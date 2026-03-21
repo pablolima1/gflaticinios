@@ -63,12 +63,12 @@
         :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
         'xl:justify-center' :
         'justify-center'">
-        <a href="/">
+        <a href="/home">
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                 class="dark:hidden" src="/images/logo/logo-transparente.png" alt="Logo" width="200" height="60" />
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                class="hidden dark:block" src="/images/logo/logo-transparente.png" alt="Logo" width="120"
-                height="80" />
+                class="hidden dark:block" src="/images/logo/logo-transparente.png" alt="Logo" width="200"
+                height="60" />
             <img x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen"
                 src="/images/logo/logo-icon.svg" alt="Logo" width="48" height="48" />
             <!-- <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"

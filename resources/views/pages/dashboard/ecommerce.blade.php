@@ -12,9 +12,9 @@
       <x-ecommerce.ecommerce-metrics />
     </div>
 
-    <div class="col-span-12">
+    <!-- <div class="col-span-12">
       <x-ecommerce.statistics-chart />
-    </div>
+    </div> -->
     
     <div class="col-span-12 xl:col-span-7">
       <x-ecommerce.recent-orders :clients="$topClientes" />

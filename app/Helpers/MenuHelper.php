@@ -11,17 +11,17 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'subItems' => [
-                    ['name' => 'Visão Geral', 'path' => '/dashboard'],
+                    ['name' => 'Visão Geral', 'path' => '/home'],
                 ],
             ],
-            [
+            /* [
                 'icon' => 'pages',
                 'name' => 'Produção',
                 'subItems' => [
                     ['name' => 'Processos', 'path' => '/processos'],
                     ['name' => 'Balanço', 'path' => '/balanco'],
                 ],
-            ],
+            ], */
             [
                 'icon' => 'tables',
                 'name' => 'Clientes',
@@ -37,7 +37,7 @@ class MenuHelper
                     ['name' => 'Lista de Produtos', 'path' => '/produtos'],
                 ],
             ],
-            [
+            /* [
                 'icon' => 'task',
                 'name' => 'Vendas',
                 'subItems' => [
@@ -45,8 +45,8 @@ class MenuHelper
                     ['name' => 'Itens de Venda', 'path' => '/itens-venda'],
                     ['name' => 'Pagamentos', 'path' => '/vendas/pagamentos'],
                 ],
-            ],
-            [
+            ], */
+            /* [
                 'icon' => 'charts',
                 'name' => 'Relatórios',
                 'subItems' => [
@@ -57,7 +57,7 @@ class MenuHelper
                     ['name' => 'Clientes', 'path' => '/relatorios/clientes'],
                     ['name' => 'Produtos', 'path' => '/relatorios/produtos'],
                 ],
-            ],
+            ], */
             [
                 'icon' => 'user-profile',
                 'name' => 'Usuários',
