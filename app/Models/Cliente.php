@@ -41,6 +41,6 @@ class Cliente extends Model
 
     public function getAllClientes()
     {
-        return Cliente::paginate('10');
+        return Cliente::orderBy('nome')->paginate('100');
     }
 }
