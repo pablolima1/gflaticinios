@@ -8,6 +8,13 @@ class MenuHelper
     {
         return [
             [
+                'icon' => 'task',
+                'name' => 'Vendas',
+                'subItems' => [
+                    ['name' => 'Início de Vendas', 'path' => '/vendas'],
+                ],
+            ],
+            [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'subItems' => [
@@ -37,15 +44,6 @@ class MenuHelper
                     ['name' => 'Lista de Produtos', 'path' => '/produtos'],
                 ],
             ],
-            /* [
-                'icon' => 'task',
-                'name' => 'Vendas',
-                'subItems' => [
-                    ['name' => 'Pedidos', 'path' => '/pedidos'],
-                    ['name' => 'Itens de Venda', 'path' => '/itens-venda'],
-                    ['name' => 'Pagamentos', 'path' => '/vendas/pagamentos'],
-                ],
-            ], */
             /* [
                 'icon' => 'charts',
                 'name' => 'Relatórios',

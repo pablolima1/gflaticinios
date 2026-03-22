@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/clientes', [\App\Http\Controllers\RelatorioController::class, 'clientes'])->name('relatorios.clientes');
             Route::get('/produtos', [\App\Http\Controllers\RelatorioController::class, 'produtos'])->name('relatorios.produtos');
         });
+
+        // Tela inicial de vendas/pedidos
+        Route::get('/vendas', [\App\Http\Controllers\VendaController::class, 'index'])->name('vendas.index');
     Route::group(['prefix' => 'clientes'], function () {
         Route::get('/', [\App\Http\Controllers\ClienteController::class, 'index'])->name('clientes.index');
         Route::get('/create', [\App\Http\Controllers\ClienteController::class, 'create'])->name('clientes.create');

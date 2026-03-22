@@ -13,8 +13,8 @@ class VendaController extends Controller
 
     public function index()
     {
-        $vendas = $this->venda->all();
-        return view('vendas.index', compact('vendas'));
+        // Aqui futuramente pode-se buscar vendas recentes, clientes, produtos, etc.
+        return view('pages.vendas.index');
     }
 
     public function create()
