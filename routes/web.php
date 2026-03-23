@@ -75,6 +75,11 @@ Route::middleware('auth')->group(function () {
         });
     });
 
+    // Rotas API para selects dinâmicos
+    Route::get('/api/clientes', [\App\Http\Controllers\ClienteController::class, 'apiList'])->name('api.clientes');
+    Route::get('/api/produtos', [\App\Http\Controllers\ProdutoController::class, 'apiList'])->name('api.produtos');
+
+
     // add additional authenticated routes here as needed
 });
 

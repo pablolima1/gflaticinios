@@ -65,4 +65,11 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.index')->with('success', 'Cliente deletado com sucesso!');
     }
+
+    // Retorna todos os clientes para uso em selects AJAX
+    public function apiList()
+    {
+        $clientes = $this->cliente->select('id', 'nome')->orderBy('nome')->get();
+        return response()->json($clientes);
+    }
 }

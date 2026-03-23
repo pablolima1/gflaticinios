@@ -53,4 +53,11 @@ class ProdutoController extends Controller
         $produto->delete();
         return redirect()->route('produtos.index')->with('success', 'Produto removido com sucesso!');
     }
+
+    // Retorna todos os produtos para uso em selects AJAX
+    public function apiList()
+    {
+        $produtos = $this->produto->select('id', 'nome', 'preco')->orderBy('nome')->get();
+        return response()->json($produtos);
+    }
 }
