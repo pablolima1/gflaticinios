@@ -1,6 +1,11 @@
 <div class="p-6 dark:bg-transparent lg:p-10">
     <h2 class="mb-6 text-lg font-bold text-gray-800 dark:text-white">Nova Venda</h2>
     <form id="vendaForm" class="grid grid-cols-1 gap-4" x-data="novaVendaFormHandler()" @submit.prevent="submitVenda">
+                <template x-if="mensagem">
+                    <div :class="{'bg-green-100 text-green-800': sucesso, 'bg-red-100 text-red-800': !sucesso}" class="rounded-lg px-4 py-2 mb-2 text-sm font-semibold">
+                        <span x-text="mensagem"></span>
+                    </div>
+                </template>
         <div class="col-span-1">
             <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Cliente</label>
             <select name="cliente_id" x-model="cliente_id" required
@@ -46,7 +51,7 @@
         </div>
         <div class="col-span-1">
             <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Data</label>
-            <x-form.date-picker-custom name="data" label="" placeholder="Selecione a data" />
+            <x-form.date-picker-custom name="data" label="" placeholder="Selecione a data" defaultDate="{{ date('d/m/Y') }}" dateFormat="d/m/Y" />
         </div>
         <div class="flex justify-end mt-2">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Salvar</button>
@@ -55,6 +60,8 @@
     <script>
         function novaVendaFormHandler() {
             return {
+                mensagem: '',
+                sucesso: false,
                 clientes: [],
                 produtos: [],
                 cliente_id: '',
@@ -62,6 +69,7 @@
                 quantidade: 1,
                 valor: '',
                 status_pagamento: 'pago',
+                data: new Date().toISOString().slice(0, 10),
                 async fetchClientes() {
                     const res = await fetch('/api/clientes');
                     this.clientes = await res.json();
@@ -75,17 +83,37 @@
                     if (prod) this.valor = prod.preco;
                 },
                 async submitVenda() {
-                    const data = {
-                        cliente_id: this.cliente_id,
-                        produto_id: this.produto_id,
-                        quantidade: this.quantidade,
-                        valor: this.valor,
-                        status_pagamento: this.status_pagamento,
-                        data: document.querySelector('[name="data"]').value
-                    };
-                    // Aqui você pode enviar via fetch/ajax para o backend
-                    // Exemplo:
-                    // await fetch('/vendas', { method: 'POST', headers: {...}, body: JSON.stringify(data) })
+                    const form = document.getElementById('vendaForm');
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+                    // O valor do campo data será enviado conforme selecionado no input
+                    try {
+                        const response = await fetch('/vendas', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        if (response.ok) {
+                            this.mensagem = 'Venda cadastrada com sucesso!';
+                            this.sucesso = true;
+                            form.reset();
+                            setTimeout(() => {
+                                this.mensagem = '';
+                                window.dispatchEvent(new CustomEvent('close-modal'));
+                                window.location.reload();
+                            }, 1200);
+                        } else {
+                            this.mensagem = 'Erro ao cadastrar venda.';
+                            this.sucesso = false;
+                        }
+                    } catch (err) {
+                        this.mensagem = 'Erro ao cadastrar venda.';
+                        this.sucesso = false;
+                    }
                 },
                 init() {
                     this.fetchClientes();

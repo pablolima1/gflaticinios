@@ -25,12 +25,40 @@ class VendaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            // Adicione regras de validação conforme o modelo
+            'cliente_id' => 'required|exists:clientes,id',
+            'produto_id' => 'required|exists:produtos,id',
+            'quantidade' => 'required|integer|min:1',
+            'valor' => 'required|numeric|min:0',
+            'status_pagamento' => 'required|in:pago,anotado',
         ]);
 
-        $this->venda->create($validatedData);
+        try {
+            $userId = auth()->id();
+            $dataOriginal = str_replace('/', '-', $request->input('data'));
+            $dataFormatada = date('Y-m-d', strtotime($dataOriginal));
+            
+            $venda = $this->venda->create([
+                'cliente_id' => $validatedData['cliente_id'],
+                'usuario_id' => $userId,
+                'data_venda' => $dataFormatada,
+                'tipo_pagamento' => $validatedData['status_pagamento'] === 'pago' ? 'vista' : 'prazo',
+                'status' => $validatedData['status_pagamento'] === 'pago' ? 'pago' : 'pendente',
+                'valor_total' => $validatedData['valor'] * $validatedData['quantidade'],
+                'observacoes' => null,
+            ]);
 
-        return redirect()->route('vendas.index')->with('success', 'Venda criada com sucesso!');
+            // Cria o item da venda
+            $venda->itensVenda()->create([
+                'produto_id' => $validatedData['produto_id'],
+                'quantidade' => $validatedData['quantidade'],
+                'preco_unitario' => $validatedData['valor'],
+                'subtotal' => $validatedData['valor'] * $validatedData['quantidade'],
+            ]);
+
+            return response()->json(['message' => 'Venda cadastrada com sucesso!'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erro ao cadastrar venda.', 'error' => $e->getMessage()], 500);
+        }
     }
 
     public function update(Request $request, Venda $venda)

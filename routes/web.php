@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // redirect root to login page
-Route::get('/', fn () => redirect()->route('signin'));
+Route::get('/', fn() => redirect()->route('signin'));
 
 // authentication pages (Tailadmin login/signup views)
 Route::get('/signin', function () {
@@ -29,18 +29,33 @@ Route::middleware('auth')->group(function () {
     // simple dashboard placeholder
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        // Rotas de relatórios
-        Route::group(['prefix' => 'relatorios'], function () {
-            Route::get('/vendas', [\App\Http\Controllers\RelatorioController::class, 'vendas'])->name('relatorios.vendas');
-            Route::get('/despesas', [\App\Http\Controllers\RelatorioController::class, 'despesas'])->name('relatorios.despesas');
-            Route::get('/pedidos-recorrentes', [\App\Http\Controllers\RelatorioController::class, 'pedidosRecorrentes'])->name('relatorios.pedidosRecorrentes');
-            Route::get('/pagamentos', [\App\Http\Controllers\RelatorioController::class, 'pagamentos'])->name('relatorios.pagamentos');
-            Route::get('/clientes', [\App\Http\Controllers\RelatorioController::class, 'clientes'])->name('relatorios.clientes');
-            Route::get('/produtos', [\App\Http\Controllers\RelatorioController::class, 'produtos'])->name('relatorios.produtos');
-        });
+    // Rotas de relatórios
+    Route::group(['prefix' => 'relatorios'], function () {
+        Route::get('/vendas', [\App\Http\Controllers\RelatorioController::class, 'vendas'])->name('relatorios.vendas');
+        Route::get('/despesas', [\App\Http\Controllers\RelatorioController::class, 'despesas'])->name('relatorios.despesas');
+        Route::get('/pedidos-recorrentes', [\App\Http\Controllers\RelatorioController::class, 'pedidosRecorrentes'])->name('relatorios.pedidosRecorrentes');
+        Route::get('/pagamentos', [\App\Http\Controllers\RelatorioController::class, 'pagamentos'])->name('relatorios.pagamentos');
+        Route::get('/clientes', [\App\Http\Controllers\RelatorioController::class, 'clientes'])->name('relatorios.clientes');
+        Route::get('/produtos', [\App\Http\Controllers\RelatorioController::class, 'produtos'])->name('relatorios.produtos');
+    });
 
-        // Tela inicial de vendas/pedidos
-        Route::get('/vendas', [\App\Http\Controllers\VendaController::class, 'index'])->name('vendas.index');
+    // Grupo de rotas de vendas
+    Route::group(['prefix' => 'vendas'], function () {
+        Route::get('/', [\App\Http\Controllers\VendaController::class, 'index'])->name('vendas.index');
+        Route::get('/create', [\App\Http\Controllers\VendaController::class, 'create'])->name('vendas.create');
+        Route::post('/', [\App\Http\Controllers\VendaController::class, 'store'])->name('vendas.store');
+        Route::put('/{venda}', [\App\Http\Controllers\VendaController::class, 'update'])->name('vendas.update');
+        Route::delete('/{venda}', [\App\Http\Controllers\VendaController::class, 'destroy'])->name('vendas.destroy');
+
+        // Subgrupo de pagamentos
+        Route::group(['prefix' => 'pagamentos'], function () {
+            Route::get('/', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos.index');
+            Route::get('/create', [\App\Http\Controllers\PagamentoController::class, 'create'])->name('pagamentos.create');
+            Route::post('/', [\App\Http\Controllers\PagamentoController::class, 'store'])->name('pagamentos.store');
+            Route::put('/{pagamento}', [\App\Http\Controllers\PagamentoController::class, 'update'])->name('pagamentos.update');
+            Route::delete('/{pagamento}', [\App\Http\Controllers\PagamentoController::class, 'destroy'])->name('pagamentos.destroy');
+        });
+    });
     Route::group(['prefix' => 'clientes'], function () {
         Route::get('/', [\App\Http\Controllers\ClienteController::class, 'index'])->name('clientes.index');
         Route::get('/create', [\App\Http\Controllers\ClienteController::class, 'create'])->name('clientes.create');
@@ -82,4 +97,3 @@ Route::middleware('auth')->group(function () {
 
     // add additional authenticated routes here as needed
 });
-
