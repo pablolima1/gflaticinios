@@ -66,58 +66,105 @@
     <!-- Card Body -->
     <div class="overflow-hidden">
         <div class="max-w-full px-5 overflow-x-auto sm:px-6">
-            @if($vendasRecentes->count() > 0)
+            @if($vendasRecentes['hoje']->count() > 0 || $vendasRecentes['outrosDias']->count() > 0)
                 <table class="min-w-full">
                     <thead>
                         <tr class="border-gray-200 border-y dark:border-gray-700">
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Cliente
+                            </th>
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Produto
+                            </th>
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Valor
+                            </th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Usuário
                             </th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Data e Horário
                             </th>
-                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Produto
-                            </th>
-                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Cliente
-                            </th>
-                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                Valor
-                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach ($vendasRecentes as $venda)
-                            <tr>
-                                <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80">
-                                    {{ $venda->usuario->name ?? 'N/A' }}
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap text-gray-700 dark:text-white/70">
-                                    {{ $venda->created_at->format('d/m/Y H:i') }}
-                                </td>
-                                <td class="px-4 py-4 text-gray-700 dark:text-white/70">
-                                    @if($venda->itensVenda->count() > 0)
-                                        {{ $venda->itensVenda->first()->produto->nome ?? 'N/A' }}
-                                        @if($venda->itensVenda->count() > 1)
-                                            <span class="text-gray-500 dark:text-gray-400"> +{{ $venda->itensVenda->count() - 1 }}</span>
-                                        @endif
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td class="px-4 py-4 text-gray-800 dark:text-white/80">
-                                    {{ $venda->cliente->nome ?? 'N/A' }}
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80 font-medium">
-                                    @if($venda->itensVenda->count() > 0)
-                                        R$ {{ number_format($venda->itensVenda->first()->subtotal, 2, ',', '.') }}
-                                    @else
-                                        N/A
-                                    @endif
+                        <!-- Vendas de Hoje -->
+                        @if($vendasRecentes['hoje']->count() > 0)
+                            <tr class="bg-gray-50 dark:bg-gray-900">
+                                <td colspan="5" class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white">
+                                    📅 Hoje
                                 </td>
                             </tr>
-                        @endforeach
+                            @foreach ($vendasRecentes['hoje'] as $venda)
+                                <tr>
+                                    <td class="px-4 py-4 text-gray-800 dark:text-white/80">
+                                        {{ $venda->cliente->nome ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-4 text-gray-700 dark:text-white/70">
+                                        @if($venda->itensVenda->count() > 0)
+                                            {{ $venda->itensVenda->first()->produto->nome ?? 'N/A' }}
+                                            @if($venda->itensVenda->count() > 1)
+                                                <span class="text-gray-500 dark:text-gray-400"> +{{ $venda->itensVenda->count() - 1 }}</span>
+                                            @endif
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80 font-medium">
+                                        @if($venda->itensVenda->count() > 0)
+                                            R$ {{ number_format($venda->itensVenda->first()->subtotal, 2, ',', '.') }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80">
+                                        {{ $venda->usuario->name ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-700 dark:text-white/70">
+                                        {{ $venda->created_at->format('d/m/Y H:i') }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+
+                        <!-- Vendas de Outros Dias -->
+                        @if($vendasRecentes['outrosDias']->count() > 0)
+                            <tr class="bg-gray-50 dark:bg-gray-900">
+                                <td colspan="5" class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white">
+                                    📋 Outras Datas
+                                </td>
+                            </tr>
+                            @foreach ($vendasRecentes['outrosDias'] as $venda)
+                                <tr>
+                                    <td class="px-4 py-4 text-gray-800 dark:text-white/80">
+                                        {{ $venda->cliente->nome ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-4 text-gray-700 dark:text-white/70">
+                                        @if($venda->itensVenda->count() > 0)
+                                            {{ $venda->itensVenda->first()->produto->nome ?? 'N/A' }}
+                                            @if($venda->itensVenda->count() > 1)
+                                                <span class="text-gray-500 dark:text-gray-400"> +{{ $venda->itensVenda->count() - 1 }}</span>
+                                            @endif
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80 font-medium">
+                                        @if($venda->itensVenda->count() > 0)
+                                            R$ {{ number_format($venda->itensVenda->first()->subtotal, 2, ',', '.') }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80">
+                                        {{ $venda->usuario->name ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-gray-700 dark:text-white/70">
+                                        {{ $venda->created_at->format('d/m/Y H:i') }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             @else

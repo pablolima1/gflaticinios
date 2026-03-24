@@ -14,11 +14,18 @@ class VendaController extends Controller
     public function index()
     {
         // Busca as últimas 10 vendas registradas com seus relacionamentos, em ordem decrescente de cadastro
-        $vendasRecentes = $this->venda
+        $vendas = $this->venda
             ->with(['cliente', 'usuario', 'itensVenda.produto'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
+
+        // Separa vendas de hoje das outras datas
+        $hoje = now()->startOfDay();
+        $vendasRecentes = [
+            'hoje' => $vendas->filter(fn($v) => $v->created_at->startOfDay()->eq($hoje)),
+            'outrosDias' => $vendas->filter(fn($v) => !$v->created_at->startOfDay()->eq($hoje))
+        ];
 
         return view('pages.vendas.index', compact('vendasRecentes'));
     }
