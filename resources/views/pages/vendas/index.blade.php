@@ -32,7 +32,7 @@
                 </div>
             </div>
             <!-- Card Item: Cadastro Múltiplo -->
-            <div>
+            <!-- <div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 cursor-pointer hover:shadow-lg transition" data-modal-target="#modalCadastroMultiplo">
                     <div class="mb-5 flex h-14 max-w-14 items-center justify-center rounded-[10.5px] bg-brand-50 text-brand-500 dark:bg-brand-500/10">
                         <span class="text-2xl">➕</span>
@@ -40,9 +40,9 @@
                     <h4 class="mb-1 font-medium text-gray-800 text-theme-xl dark:text-white/90">Cadastro Múltiplo</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Adicionar várias vendas/pedidos</p>
                 </div>
-            </div>
+            </div> -->
             <!-- Card Item: Vendas Recentes -->
-            <div>
+            <!-- <div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
                     <div class="mb-5 flex h-14 max-w-14 items-center justify-center rounded-[10.5px] bg-brand-50 text-brand-500 dark:bg-brand-500/10">
                         <span class="text-2xl">📈</span>
@@ -50,7 +50,81 @@
                     <h4 class="mb-1 font-medium text-gray-800 text-theme-xl dark:text-white/90">Vendas Recentes</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Veja as últimas vendas registradas</p>
                 </div>
-            </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<!-- Card: Últimas Vendas Registradas -->
+<div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] max-w-5xl mx-auto mt-6">
+    <!-- Card Header -->
+    <div class="px-6 py-5">
+        <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+            Últimas Vendas Registradas
+        </h3>
+    </div>
+    <!-- Card Body -->
+    <div class="overflow-hidden">
+        <div class="max-w-full px-5 overflow-x-auto sm:px-6">
+            @if($vendasRecentes->count() > 0)
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-gray-200 border-y dark:border-gray-700">
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Usuário
+                            </th>
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Data e Horário
+                            </th>
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Produto
+                            </th>
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Cliente
+                            </th>
+                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Valor
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach ($vendasRecentes as $venda)
+                            <tr>
+                                <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80">
+                                    {{ $venda->usuario->name ?? 'N/A' }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-gray-700 dark:text-white/70">
+                                    {{ $venda->created_at->format('d/m/Y H:i') }}
+                                </td>
+                                <td class="px-4 py-4 text-gray-700 dark:text-white/70">
+                                    @if($venda->itensVenda->count() > 0)
+                                        {{ $venda->itensVenda->first()->produto->nome ?? 'N/A' }}
+                                        @if($venda->itensVenda->count() > 1)
+                                            <span class="text-gray-500 dark:text-gray-400"> +{{ $venda->itensVenda->count() - 1 }}</span>
+                                        @endif
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td class="px-4 py-4 text-gray-800 dark:text-white/80">
+                                    {{ $venda->cliente->nome ?? 'N/A' }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-gray-800 dark:text-white/80 font-medium">
+                                    @if($venda->itensVenda->count() > 0)
+                                        R$ {{ number_format($venda->itensVenda->first()->subtotal, 2, ',', '.') }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="py-12 text-center">
+                    <p class="text-gray-500 dark:text-gray-400">Nenhuma venda registrada</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>

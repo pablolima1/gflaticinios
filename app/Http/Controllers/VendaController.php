@@ -13,8 +13,14 @@ class VendaController extends Controller
 
     public function index()
     {
-        // Aqui futuramente pode-se buscar vendas recentes, clientes, produtos, etc.
-        return view('pages.vendas.index');
+        // Busca as últimas 10 vendas registradas com seus relacionamentos, em ordem decrescente de cadastro
+        $vendasRecentes = $this->venda
+            ->with(['cliente', 'usuario', 'itensVenda.produto'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('pages.vendas.index', compact('vendasRecentes'));
     }
 
     public function create()
