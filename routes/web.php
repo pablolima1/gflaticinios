@@ -46,7 +46,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [\App\Http\Controllers\VendaController::class, 'store'])->name('vendas.store');
         Route::put('/{venda}', [\App\Http\Controllers\VendaController::class, 'update'])->name('vendas.update');
         Route::delete('/{venda}', [\App\Http\Controllers\VendaController::class, 'destroy'])->name('vendas.destroy');
-
+        Route::get('/pendentes', [\App\Http\Controllers\VendaController::class, 'pendentes'])->name('vendas.pendentes');
+        Route::get('/concluidas', [\App\Http\Controllers\VendaController::class, 'concluidas'])->name('vendas.concluidas');
         // Subgrupo de pagamentos
         Route::group(['prefix' => 'pagamentos'], function () {
             Route::get('/', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos.index');

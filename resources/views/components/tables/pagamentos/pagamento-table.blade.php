@@ -34,7 +34,6 @@
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Venda</th>
                             <th scope="col" class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 capitalize">Cliente</th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Valor</th>
-                            <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Forma de Pagamento</th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Data</th>
                             <th scope="col" class="relative px-4 py-3 capitalize"><span class="sr-only">Ações</span></th>
                         </tr>
@@ -50,9 +49,6 @@
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400">R$ {{ number_format($pagamento->valor, 2, ',', '.') }}</div>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $pagamento->forma_pagamento }}</div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400">{{ $pagamento->created_at }}</div>

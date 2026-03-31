@@ -11,7 +11,9 @@ class MenuHelper
                 'icon' => 'task',
                 'name' => 'Vendas',
                 'subItems' => [
-                    ['name' => 'Início de Vendas', 'path' => '/vendas'],
+                    ['name' => 'Cadastrar', 'path' => '/vendas'],
+                    ['name' => 'Pendentes a Receber', 'path' => '/vendas/pendentes'],
+                    ['name' => 'Concluídas', 'path' => '/vendas/concluidas'],
                 ],
             ],
             [
