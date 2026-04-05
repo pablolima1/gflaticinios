@@ -23,7 +23,10 @@
             </div>
             <!-- Card Item: Novo Pedido -->
             <div>
-                <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 cursor-pointer hover:shadow-lg transition" data-modal-target="#modalNovoPedido">
+                <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 relative opacity-50 cursor-not-allowed">
+                    <div class="absolute inset-0 flex items-center justify-center rounded-xl">
+                        <span class="bg-brand-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Em breve</span>
+                    </div>
                     <div class="mb-5 flex h-14 max-w-14 items-center justify-center rounded-[10.5px] bg-brand-50 text-brand-500 dark:bg-brand-500/10">
                         <span class="text-2xl">📦</span>
                     </div>

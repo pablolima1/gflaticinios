@@ -36,7 +36,7 @@ class MenuHelper
                 'name' => 'Clientes',
                 'subItems' => [
                     ['name' => 'Lista de Clientes', 'path' => '/clientes'],
-                    ['name' => 'Brindes', 'path' => '/brindes'],
+                    /* ['name' => 'Brindes', 'path' => '/brindes'], */
                 ],
             ],
             [
@@ -44,6 +44,13 @@ class MenuHelper
                 'name' => 'Produtos',
                 'subItems' => [
                     ['name' => 'Lista de Produtos', 'path' => '/produtos'],
+                ],
+            ],
+            [
+                'icon' => 'calendar',
+                'name' => 'Metas',
+                'subItems' => [
+                    ['name' => 'Gerenciar Metas', 'path' => '/metas'],
                 ],
             ],
             /* [

@@ -9,47 +9,63 @@ class MetaController extends Controller
 {
     public function index()
     {
-        $metas = Meta::orderByDesc('data_inicio')->paginate(10);
+        $metas = Meta::orderByDesc('data_inicio')->get();
         return view('metas.index', compact('metas'));
     }
 
-    public function create()
+    public function show(Meta $meta)
     {
-        return view('metas.create');
+        // Calcula o progresso da meta
+        $progresso = $meta->progresso();
+        $percentual = $meta->valor_meta > 0 ? ($progresso / $meta->valor_meta) * 100 : 0;
+        
+        return response()->json([
+            ...$meta->toArray(),
+            'progresso' => $progresso,
+            'percentual' => round($percentual, 2)
+        ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'valor_meta' => 'required|numeric|min:0',
+            'valor_meta' => 'required|numeric|min:0.01',
             'data_inicio' => 'required|date',
             'data_fim' => 'required|date|after_or_equal:data_inicio',
             'status' => 'required|in:ativa,inativa',
         ]);
-        Meta::create($validated);
-        return redirect()->route('metas.index')->with('success', 'Meta criada com sucesso!');
-    }
 
-    public function edit(Meta $meta)
-    {
-        return view('metas.edit', compact('meta'));
+        $meta = Meta::create($validated);
+
+        return response()->json([
+            'message' => 'Meta criada com sucesso!',
+            'meta' => $meta
+        ], 201);
     }
 
     public function update(Request $request, Meta $meta)
     {
         $validated = $request->validate([
-            'valor_meta' => 'required|numeric|min:0',
+            'valor_meta' => 'required|numeric|min:0.01',
             'data_inicio' => 'required|date',
             'data_fim' => 'required|date|after_or_equal:data_inicio',
             'status' => 'required|in:ativa,inativa',
         ]);
+
         $meta->update($validated);
-        return redirect()->route('metas.index')->with('success', 'Meta atualizada com sucesso!');
+
+        return response()->json([
+            'message' => 'Meta atualizada com sucesso!',
+            'meta' => $meta
+        ], 200);
     }
 
     public function destroy(Meta $meta)
     {
         $meta->delete();
-        return redirect()->route('metas.index')->with('success', 'Meta removida com sucesso!');
+
+        return response()->json([
+            'message' => 'Meta removida com sucesso!'
+        ], 200);
     }
 }

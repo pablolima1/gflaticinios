@@ -83,6 +83,14 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{usuario}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('usuarios.destroy');
     });
 
+    Route::group(['prefix' => 'metas'], function () {
+        Route::get('/', [\App\Http\Controllers\MetaController::class, 'index'])->name('metas.index');
+        Route::get('/{meta}', [\App\Http\Controllers\MetaController::class, 'show'])->name('metas.show');
+        Route::post('/', [\App\Http\Controllers\MetaController::class, 'store'])->name('metas.store');
+        Route::put('/{meta}', [\App\Http\Controllers\MetaController::class, 'update'])->name('metas.update');
+        Route::delete('/{meta}', [\App\Http\Controllers\MetaController::class, 'destroy'])->name('metas.destroy');
+    });
+
     Route::group(['prefix' => 'vendas'], function () {
         Route::group(['prefix' => 'pagamentos'], function () {
             Route::get('/', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos.index');
