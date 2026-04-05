@@ -22,6 +22,11 @@ class ProdutoController extends Controller
         return view('produtos.create');
     }
 
+    public function show(Produto $produto)
+    {
+        return response()->json($produto);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -40,18 +45,22 @@ class ProdutoController extends Controller
     public function update(Request $request, Produto $produto)
     {
         $validatedData = $request->validate([
-            // Adicione regras de validação conforme o modelo
+            'nome' => 'required|string|max:255',
+            'descricao' => 'nullable|string',
+            'preco' => 'required|numeric',
+            'unidade_medida' => 'nullable|string|max:50',
+            'ativo' => 'required|boolean',
         ]);
 
         $produto->update($validatedData);
 
-        return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
+        return response()->json(['message' => 'Produto atualizado com sucesso!'], 200);
     }
 
     public function destroy(Produto $produto)
     {
         $produto->delete();
-        return redirect()->route('produtos.index')->with('success', 'Produto removido com sucesso!');
+        return response()->json(['message' => 'Produto removido com sucesso!'], 200);
     }
 
     // Retorna todos os produtos para uso em selects AJAX

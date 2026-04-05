@@ -1,6 +1,6 @@
 @props(['produtos'])
 
-<div>
+<div x-data="produtoTableHandler()">
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -75,9 +75,8 @@
                                             </x-slot>
 
                                             <x-slot name="content">
-                                                <a href="/produtos/{{ $produto->id }}" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">Ver Mais</a>
-                                                <a href="/produtos/{{ $produto->id }}/edit" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">Editar</a>
-                                                <a href="/produtos/{{ $produto->id }}/delete" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">Deletar</a>
+                                                <button @click="openProdutoEditModal({{ $produto->id }})" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" type="button">Editar</button>
+                                                <button @click="openProdutoDeleteModal({{ $produto->id }}, '{{ $produto->nome }}')" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" type="button">Deletar</button>
                                             </x-slot>
                                         </x-common.table-dropdown>
                                     </div>
@@ -94,4 +93,75 @@
             {!! $produtos->links() !!}
         </div>
     </div>
+
+    <!-- Modal de Edição de Produto -->
+    <x-ui.modal x-on:open-modal-editar-produto.window="open = true" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        @include('components.modals.produtos.modal-editar-produto')
+    </x-ui.modal>
+
+    <!-- Modal de Deleção de Produto -->
+    <x-ui.modal x-on:open-modal-deletar-produto.window="open = true" class="max-w-[500px]">
+        @include('components.modals.produtos.modal-deletar-produto')
+    </x-ui.modal>
+
+    <script>
+        // Inicializar store IMEDIATAMENTE, não esperar pelo alpine:init
+        if (!window.alpineStoreProduct) {
+            window.alpineStoreProduct = {
+                id: '',
+                nome: '',
+                descricao: '',
+                preco: '',
+                unidade_medida: '',
+                ativo: false
+            };
+            console.log('Store de produto inicializado:', window.alpineStoreProduct);
+        }
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('produto', {
+                id: '',
+                nome: '',
+                descricao: '',
+                preco: '',
+                unidade_medida: '',
+                ativo: false
+            });
+            console.log('Alpine.store("produto") criado');
+        });
+
+        function produtoTableHandler() {
+            return {
+                async openProdutoEditModal(id) {
+                    console.log('Abrindo modal de edição para produto:', id);
+                    try {
+                        const response = await fetch(`/produtos/${id}/edit`);
+                        console.log('Response status:', response.status);
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('Dados do produto:', data);
+                            Alpine.store('produto').id = data.id;
+                            Alpine.store('produto').nome = data.nome;
+                            Alpine.store('produto').descricao = data.descricao || '';
+                            Alpine.store('produto').preco = data.preco;
+                            Alpine.store('produto').unidade_medida = data.unidade_medida || '';
+                            Alpine.store('produto').ativo = data.ativo;
+                            console.log('Store atualizado, disparando evento de abertura...');
+                            window.dispatchEvent(new CustomEvent('open-modal-editar-produto'));
+                        } else {
+                            console.error('Erro na resposta:', response.statusText);
+                        }
+                    } catch (err) {
+                        console.error('Erro ao carregar produto:', err);
+                    }
+                },
+                openProdutoDeleteModal(id, nome) {
+                    console.log('Abrindo modal de deleção para produto:', id, nome);
+                    Alpine.store('produto').id = id;
+                    Alpine.store('produto').nome = nome;
+                    window.dispatchEvent(new CustomEvent('open-modal-deletar-produto'));
+                }
+            }
+        }
+    </script>
 </div>

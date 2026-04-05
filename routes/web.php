@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'produtos'], function () {
         Route::get('/', [\App\Http\Controllers\ProdutoController::class, 'index'])->name('produtos.index');
         Route::get('/create', [\App\Http\Controllers\ProdutoController::class, 'create'])->name('produtos.create');
+        Route::get('/{produto}/edit', [\App\Http\Controllers\ProdutoController::class, 'show'])->name('produtos.show');
         Route::post('/', [\App\Http\Controllers\ProdutoController::class, 'store'])->name('produtos.store');
         Route::put('/{produto}', [\App\Http\Controllers\ProdutoController::class, 'update'])->name('produtos.update');
         Route::delete('/{produto}', [\App\Http\Controllers\ProdutoController::class, 'destroy'])->name('produtos.destroy');

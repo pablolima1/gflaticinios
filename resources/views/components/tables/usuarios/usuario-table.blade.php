@@ -50,7 +50,7 @@
                                     <div class="text-sm text-gray-500 dark:text-gray-400">{{ $usuario->created_at }}</div>
                                 </td>
                                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                    <div class="flex justify-center relative">
+                                    <!-- <div class="flex justify-center relative">
                                         <x-common.table-dropdown>
                                             <x-slot name="button">
                                                 <button type="button" id="options-menu" aria-haspopup="true" aria-expanded="true" class="text-gray-500 dark:text-gray-400'">
@@ -66,7 +66,7 @@
                                                 <a href="/usuarios/{{ $usuario->id }}/delete" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">Deletar</a>
                                             </x-slot>
                                         </x-common.table-dropdown>
-                                    </div>
+                                    </div> -->
                                 </td>
                             </tr>
                         @endforeach
