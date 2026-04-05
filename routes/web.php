@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'clientes'], function () {
         Route::get('/', [\App\Http\Controllers\ClienteController::class, 'index'])->name('clientes.index');
         Route::get('/create', [\App\Http\Controllers\ClienteController::class, 'create'])->name('clientes.create');
+        Route::get('/{cliente}/edit', [\App\Http\Controllers\ClienteController::class, 'show'])->name('clientes.show');
         Route::post('/', [\App\Http\Controllers\ClienteController::class, 'store'])->name('clientes.store');
         Route::put('/{cliente}', [\App\Http\Controllers\ClienteController::class, 'update'])->name('clientes.update');
         Route::delete('/{cliente}', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('clientes.destroy');

@@ -1,6 +1,6 @@
 @props(['clientes'])
 
-<div>
+<div x-data="clienteTableHandler()">
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -71,7 +71,7 @@
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->endereco }}</div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->created_at }}</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->created_at->format('d/m/Y H:i:s') }}</div>
                             </td>
                             <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
                                 <div class="flex justify-center relative">
@@ -95,16 +95,12 @@
                                                 role="menuitem">
                                                 Ver Mais
                                             </a> -->
-                                            <a href="/clientes/{{ $cliente->id }}/edit"
-                                                class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                role="menuitem">
+                                            <button @click="openClienteEditModal({{ $cliente->id }})" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" type="button" role="menuitem">
                                                 Editar
-                                            </a>
-                                            <a href="/clientes/{{ $cliente->id }}/delete"
-                                                class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                role="menuitem">
+                                            </button>
+                                            <button @click="openClienteDeleteModal({{ $cliente->id }}, '{{ $cliente->nome }}')" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" type="button" role="menuitem">
                                                 Deletar
-                                            </a>
+                                            </button>
                                         </x-slot>
                                     </x-common.table-dropdown>
                                 </div>
@@ -164,4 +160,78 @@
             </div>
         </div> --}}
     </div>
+
+    <!-- Modal de Edição de Cliente -->
+    <x-ui.modal x-on:open-modal-editar-cliente.window="open = true" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        @include('components.modals.clientes.modal-editar-cliente')
+    </x-ui.modal>
+
+    <!-- Modal de Deleção de Cliente -->
+    <x-ui.modal x-on:open-modal-deletar-cliente.window="open = true" class="max-w-[500px]">
+        @include('components.modals.clientes.modal-deletar-cliente')
+    </x-ui.modal>
+
+    <script>
+        // Inicializar store IMEDIATAMENTE, não esperar pelo alpine:init
+        if (!window.alpineStoreCliente) {
+            window.alpineStoreCliente = {
+                id: '',
+                nome: '',
+                telefone: '',
+                email: '',
+                data_nascimento: '',
+                endereco: '',
+                observacoes: ''
+            };
+            console.log('Store de cliente inicializado:', window.alpineStoreCliente);
+        }
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('cliente', {
+                id: '',
+                nome: '',
+                telefone: '',
+                email: '',
+                data_nascimento: '',
+                endereco: '',
+                observacoes: ''
+            });
+            console.log('Alpine.store("cliente") criado');
+        });
+
+        function clienteTableHandler() {
+            return {
+                async openClienteEditModal(id) {
+                    console.log('Abrindo modal de edição para cliente:', id);
+                    try {
+                        const response = await fetch(`/clientes/${id}/edit`);
+                        console.log('Response status:', response.status);
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('Dados do cliente:', data);
+                            Alpine.store('cliente').id = data.id;
+                            Alpine.store('cliente').nome = data.nome;
+                            Alpine.store('cliente').telefone = data.telefone || '';
+                            Alpine.store('cliente').email = data.email || '';
+                            Alpine.store('cliente').data_nascimento = data.data_nascimento || '';
+                            Alpine.store('cliente').endereco = data.endereco || '';
+                            Alpine.store('cliente').observacoes = data.observacoes || '';
+                            console.log('Store atualizado, disparando evento de abertura...');
+                            window.dispatchEvent(new CustomEvent('open-modal-editar-cliente'));
+                        } else {
+                            console.error('Erro na resposta:', response.statusText);
+                        }
+                    } catch (err) {
+                        console.error('Erro ao carregar cliente:', err);
+                    }
+                },
+                openClienteDeleteModal(id, nome) {
+                    console.log('Abrindo modal de deleção para cliente:', id, nome);
+                    Alpine.store('cliente').id = id;
+                    Alpine.store('cliente').nome = nome;
+                    window.dispatchEvent(new CustomEvent('open-modal-deletar-cliente'));
+                }
+            }
+        }
+    </script>
 </div>

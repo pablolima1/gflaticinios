@@ -22,6 +22,11 @@ class ClienteController extends Controller
         return view('clientes.create');
     }
 
+    public function show(Cliente $cliente)
+    {
+        return response()->json($cliente);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -56,14 +61,14 @@ class ClienteController extends Controller
 
         $cliente->update($validatedData);
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
+        return response()->json(['message' => 'Cliente atualizado com sucesso!'], 200);
     }
 
     public function destroy(Cliente $cliente)
     {
         $cliente->delete();
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente deletado com sucesso!');
+        return response()->json(['message' => 'Cliente removido com sucesso!'], 200);
     }
 
     // Retorna todos os clientes para uso em selects AJAX
