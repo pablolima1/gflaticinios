@@ -9,8 +9,16 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Obter ano selecionado do query parameter ou usar ano atual
+        $year = (int) $request->query('year', now()->year);
+        
+        // Validar se o ano é válido (permitir anos no passado e atual)
+        if ($year < 2000 || $year > now()->addYear()->year) {
+            $year = now()->year;
+        }
+
         // Buscar os clientes que mais compraram
         $topClientes = \App\Models\Cliente::select('clientes.id', 'clientes.nome')
             ->leftJoin('vendas', 'clientes.id', '=', 'vendas.cliente_id')
@@ -24,28 +32,29 @@ class HomeController extends Controller
         $birthdays = \App\Models\Cliente::whereMonth('data_nascimento', now()->month)
             ->orderByRaw('DAY(data_nascimento)')
             ->get();
-
-        // Calcular total anual de vendas
+        
+        // Calcular total anual de vendas para o ano selecionado
         $totalAnualVendas = \App\Models\Venda::whereBetween('data_venda', [
-            now()->startOfYear(),
-            now()->endOfYear()
+            now()->setYear($year)->startOfYear(),
+            now()->setYear($year)->endOfYear()
         ])->sum('valor_total');
-
-        // Calcular total anual de despesas
+        
+        // Calcular total anual de despesas para o ano selecionado
         $totalAnualDespesas = \App\Models\Despesa::whereBetween('data_despesa', [
-            now()->startOfYear(),
-            now()->endOfYear()
+            now()->setYear($year)->startOfYear(),
+            now()->setYear($year)->endOfYear()
         ])->sum('valor');
 
         // Calcular lucro anual
         $lucroAnual = $totalAnualVendas - $totalAnualDespesas;
-
+        
         return view('pages.dashboard.ecommerce', [
             'topClientes' => $topClientes,
             'birthdays' => $birthdays,
             'totalAnualVendas' => $totalAnualVendas,
             'totalAnualDespesas' => $totalAnualDespesas,
-            'lucroAnual' => $lucroAnual
+            'lucroAnual' => $lucroAnual,
+            'anoSelecionado' => (int)$year
         ]);
     }
 

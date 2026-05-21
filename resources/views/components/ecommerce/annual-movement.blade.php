@@ -1,18 +1,27 @@
-@props(['totalAnualVendas' => 0, 'totalAnualDespesas' => 0, 'lucroAnual' => 0])
+@props(['totalAnualVendas' => 0, 'totalAnualDespesas' => 0, 'lucroAnual' => 0, 'anoSelecionado' => null])
 @php
     $anoAtual = now()->year;
+    $anoSelecionado = $anoSelecionado ?? $anoAtual;
     $percentualLucro = $totalAnualVendas > 0 ? round(($lucroAnual / $totalAnualVendas) * 100, 2) : 0;
 @endphp
 <div class="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
     <div class="shadow-default rounded-2xl bg-white px-5 pb-6 pt-5 dark:bg-gray-900 sm:px-6 sm:pt-6">
-        <div class="flex justify-between">
+        <div class="flex justify-between items-start">
             <div>
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
                     Movimentação Anual
                 </h3>
-                <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-                    Ano de {{ $anoAtual }}
-                </p>
+                <div class="mt-3 flex gap-2 items-center">
+                    <label class="text-theme-sm text-gray-500 dark:text-gray-400">Filtrar por ano:</label>
+                    <select onchange="window.location.href='?year=' + this.value" 
+                            class="px-3 py-1 text-theme-sm rounded-lg border border-gray-300 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-white/90">
+                            @for($i = now()->year; $i >= 2020; $i--)
+                            <option value="{{ $i }}" {{ $i == $anoSelecionado ? 'selected' : '' }}>
+                                {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
             </div>
             <!-- Dropdown Menu -->
             <x-common.dropdown-menu />
