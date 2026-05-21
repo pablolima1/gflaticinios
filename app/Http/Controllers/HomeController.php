@@ -25,9 +25,16 @@ class HomeController extends Controller
             ->orderByRaw('DAY(data_nascimento)')
             ->get();
 
+        // Calcular total anual de vendas
+        $totalAnualVendas = \App\Models\Venda::whereBetween('data_venda', [
+            now()->startOfYear(),
+            now()->endOfYear()
+        ])->sum('valor_total');
+
         return view('pages.dashboard.ecommerce', [
             'topClientes' => $topClientes,
-            'birthdays' => $birthdays
+            'birthdays' => $birthdays,
+            'totalAnualVendas' => $totalAnualVendas
         ]);
     }
 
