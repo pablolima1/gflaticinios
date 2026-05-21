@@ -31,12 +31,24 @@ class HomeController extends Controller
             now()->endOfYear()
         ])->sum('valor_total');
 
+        // Calcular total anual de despesas
+        $totalAnualDespesas = \App\Models\Despesa::whereBetween('data_despesa', [
+            now()->startOfYear(),
+            now()->endOfYear()
+        ])->sum('valor');
+
+        // Calcular lucro anual
+        $lucroAnual = $totalAnualVendas - $totalAnualDespesas;
+
         return view('pages.dashboard.ecommerce', [
             'topClientes' => $topClientes,
             'birthdays' => $birthdays,
-            'totalAnualVendas' => $totalAnualVendas
+            'totalAnualVendas' => $totalAnualVendas,
+            'totalAnualDespesas' => $totalAnualDespesas,
+            'lucroAnual' => $lucroAnual
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
