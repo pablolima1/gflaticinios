@@ -10,7 +10,7 @@
     </div>
     <!-- Card Body -->
     <div class="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-6">
             <!-- Card Item: Nova Venda -->
             <div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 cursor-pointer hover:shadow-lg transition" data-modal-target="#modalNovaVenda">
