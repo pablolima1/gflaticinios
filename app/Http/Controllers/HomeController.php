@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\BibliaApiService;
 
 class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, BibliaApiService $bibliaApi)
     {
         // Obter ano selecionado do query parameter ou usar ano atual
         $year = (int) $request->query('year', now()->year);
@@ -47,6 +48,8 @@ class HomeController extends Controller
 
         // Calcular lucro anual
         $lucroAnual = $totalAnualVendas - $totalAnualDespesas;
+
+        $versiculoDoDia = $bibliaApi->versiculoDoDia();
         
         return view('pages.dashboard.ecommerce', [
             'topClientes' => $topClientes,
@@ -54,7 +57,8 @@ class HomeController extends Controller
             'totalAnualVendas' => $totalAnualVendas,
             'totalAnualDespesas' => $totalAnualDespesas,
             'lucroAnual' => $lucroAnual,
-            'anoSelecionado' => (int)$year
+            'anoSelecionado' => (int)$year,
+            'versiculoDoDia' => $versiculoDoDia,
         ]);
     }
 

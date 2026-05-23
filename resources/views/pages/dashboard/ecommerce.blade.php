@@ -4,6 +4,10 @@
 <div class="grid grid-cols-12 gap-4 md:gap-6">
 
   <div class="col-span-12 xl:col-span-12">
+      <x-ecommerce.biblia-verse :versiculo="$versiculoDoDia" />
+  </div>
+
+  <div class="col-span-12 xl:col-span-12">
     <x-ecommerce.annual-movement :totalAnualVendas="$totalAnualVendas" :totalAnualDespesas="$totalAnualDespesas" :lucroAnual="$lucroAnual" :anoSelecionado="$anoSelecionado"  />
   </div>
 

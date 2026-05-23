@@ -105,6 +105,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/clientes', [\App\Http\Controllers\ClienteController::class, 'apiList'])->name('api.clientes');
     Route::get('/api/produtos', [\App\Http\Controllers\ProdutoController::class, 'apiList'])->name('api.produtos');
 
+    // Endpoint para versículo do dia
+    Route::get('/biblia/versiculo-dia', [\App\Http\Controllers\BibliaController::class, 'versiculoDoDia'])->name('biblia.versiculoDoDia');
 
     // add additional authenticated routes here as needed
 });
