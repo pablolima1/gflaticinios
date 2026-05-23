@@ -10,9 +10,9 @@
     </div>
     <!-- Card Body -->
     <div class="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-6">
+        <div class="grid grid-cols-12 gap-5">
             <!-- Card Item: Nova Venda -->
-            <div>
+            <div class="col-span-12 sm:col-span-6">
                 <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 cursor-pointer hover:shadow-lg transition" data-modal-target="#modalNovaVenda">
                     <div class="mb-5 flex h-14 max-w-14 items-center justify-center rounded-[10.5px] bg-brand-50 text-brand-500 dark:bg-brand-500/10">
                         <span class="text-2xl">🛒</span>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <!-- Card Item: Novo Pedido -->
-            <div>
+            <div class="col-span-12 sm:col-span-6">
                 <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6 relative opacity-50 cursor-not-allowed">
                     <div class="absolute inset-0 flex items-center justify-center rounded-xl">
                         <span class="bg-brand-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Em breve</span>

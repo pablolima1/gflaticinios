@@ -17,20 +17,20 @@ class MenuHelper
                 ],
             ],
             [
+                'icon' => 'ecommerce',
+                'name' => 'Despesas',
+                'subItems' => [
+                    ['name' => 'Lista de Despesas', 'path' => '/despesas'],
+                    ['name' => 'Tipos de Despesa', 'path' => '/tipos-despesas'],
+                ],
+            ],
+            [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'subItems' => [
                     ['name' => 'Visão Geral', 'path' => '/home'],
                 ],
             ],
-            /* [
-                'icon' => 'pages',
-                'name' => 'Produção',
-                'subItems' => [
-                    ['name' => 'Processos', 'path' => '/processos'],
-                    ['name' => 'Balanço', 'path' => '/balanco'],
-                ],
-            ], */
             [
                 'icon' => 'tables',
                 'name' => 'Clientes',

@@ -39,6 +39,26 @@ Route::middleware('auth')->group(function () {
         Route::get('/produtos', [\App\Http\Controllers\RelatorioController::class, 'produtos'])->name('relatorios.produtos');
     });
 
+    // Grupo de rotas de despesas
+    Route::group(['prefix' => 'despesas'], function () {
+        Route::get('/', [\App\Http\Controllers\DespesaController::class, 'index'])->name('despesas.index');
+        Route::get('/create', [\App\Http\Controllers\DespesaController::class, 'create'])->name('despesas.create');
+        Route::post('/', [\App\Http\Controllers\DespesaController::class, 'store'])->name('despesas.store');
+        Route::get('/{despesa}/edit', [\App\Http\Controllers\DespesaController::class, 'edit'])->name('despesas.edit');
+        Route::put('/{despesa}', [\App\Http\Controllers\DespesaController::class, 'update'])->name('despesas.update');
+        Route::delete('/{despesa}', [\App\Http\Controllers\DespesaController::class, 'destroy'])->name('despesas.destroy');
+    });
+
+    // Grupo de rotas para gerenciar tipos de despesa
+    Route::group(['prefix' => 'tipos-despesas'], function () {
+        Route::get('/', [\App\Http\Controllers\TipoDespesaController::class, 'index'])->name('tipos-despesas.index');
+        Route::get('/create', [\App\Http\Controllers\TipoDespesaController::class, 'create'])->name('tipos-despesas.create');
+        Route::post('/', [\App\Http\Controllers\TipoDespesaController::class, 'store'])->name('tipos-despesas.store');
+        Route::get('/{tipo}/edit', [\App\Http\Controllers\TipoDespesaController::class, 'edit'])->name('tipos-despesas.edit');
+        Route::put('/{tipo}', [\App\Http\Controllers\TipoDespesaController::class, 'update'])->name('tipos-despesas.update');
+        Route::delete('/{tipo}', [\App\Http\Controllers\TipoDespesaController::class, 'destroy'])->name('tipos-despesas.destroy');
+    });
+
     // Grupo de rotas de vendas
     Route::group(['prefix' => 'vendas'], function () {
         Route::get('/', [\App\Http\Controllers\VendaController::class, 'index'])->name('vendas.index');
