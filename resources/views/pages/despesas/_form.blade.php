@@ -46,7 +46,7 @@
             <input
                 type="date"
                 name="data_despesa"
-                value=""
+                value="{{ old('data_despesa', $despesa->data_despesa ?? now()->format('Y-m-d')) }}"
                 required
                 class="mt-2 h-12 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-900 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
             />

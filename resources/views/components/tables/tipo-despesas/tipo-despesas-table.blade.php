@@ -47,7 +47,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         <template x-for="tipodespesa in tipodespesas" :key="tipodespesa.id">
-                            <tr>
+                            <tr class="hover:bg-transparent dark:hover:bg-transparent">
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="tipodespesa.nome"></div>
