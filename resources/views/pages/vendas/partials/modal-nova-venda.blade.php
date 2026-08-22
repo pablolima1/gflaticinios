@@ -8,13 +8,15 @@
                 </template>
         <div class="col-span-1">
             <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Cliente</label>
-            <select name="cliente_id" x-model="cliente_id" required
-                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:text-white/90 dark:border-gray-700 dark:bg-gray-900 dark:placeholder:text-white/30 transition-all">
-                <option value="" disabled selected>Selecione o cliente</option>
+            <input type="text" name="cliente_nome" x-model="cliente_nome" list="clientes-list" @input="onClienteInput"
+                placeholder="Digite para buscar o cliente"
+                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:text-white/90 dark:border-gray-700 dark:bg-gray-900 dark:placeholder:text-white/30 transition-all" required />
+            <input type="hidden" name="cliente_id" x-model="cliente_id" />
+            <datalist id="clientes-list">
                 <template x-for="cliente in clientes" :key="cliente.id">
-                    <option :value="cliente.id" x-text="cliente.nome"></option>
+                    <option :value="cliente.nome"></option>
                 </template>
-            </select>
+            </datalist>
         </div>
         <div class="col-span-1">
             <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Produto</label>
@@ -66,6 +68,8 @@
                 produtos: [],
                 cliente_id: '',
                 produto_id: '',
+                cliente_nome: '',
+                produto_nome: '',
                 quantidade: 1,
                 valor: '',
                 status_pagamento: 'pago',
@@ -82,7 +86,27 @@
                     const prod = this.produtos.find(p => p.id == this.produto_id);
                     if (prod) this.valor = prod.preco;
                 },
+                onClienteInput() {
+                    const c = this.clientes.find(cl => cl.nome === this.cliente_nome);
+                    this.cliente_id = c ? c.id : '';
+                },
+                onProdutoInput() {
+                    const p = this.produtos.find(pr => pr.nome === this.produto_nome);
+                    this.produto_id = p ? p.id : '';
+                    if (p) this.valor = p.preco;
+                },
                 async submitVenda() {
+                    if (!this.cliente_id) {
+                        this.mensagem = 'Selecione um cliente válido.';
+                        this.sucesso = false;
+                        return;
+                    }
+                    if (!this.produto_id) {
+                        this.mensagem = 'Selecione um produto válido.';
+                        this.sucesso = false;
+                        return;
+                    }
+
                     const form = document.getElementById('vendaForm');
                     const formData = new FormData(form);
                     const data = Object.fromEntries(formData.entries());

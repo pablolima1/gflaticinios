@@ -41,6 +41,15 @@ class Venda extends Model
         return $this->hasMany(Pagamento::class, 'venda_id');
     }
 
+    protected static function booted()
+    {
+        static::deleting(function ($venda) {
+            // Remove itens e pagamentos relacionados antes de excluir a venda
+            $venda->itensVenda()->delete();
+            $venda->pagamentos()->delete();
+        });
+    }
+
     /**
      * Escopo para filtrar vendas pendentes
      * (status = 'pendente' e tipo_pagamento = 'prazo')
