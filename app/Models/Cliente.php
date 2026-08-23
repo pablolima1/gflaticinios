@@ -39,8 +39,16 @@ class Cliente extends Model
         return $this->hasMany(BrindeCliente::class, 'cliente_id');
     }
 
-    public function getAllClientes()
+    public function getAllClientes($search = null)
     {
-        return Cliente::orderBy('nome')->paginate('100');
+        $query = Cliente::query();
+
+        if ($search) {
+            $query->where('nome', 'like', "%{$search}%")
+                ->orWhere('telefone', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        return $query->orderBy('nome')->paginate(100);
     }
 }

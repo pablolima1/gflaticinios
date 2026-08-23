@@ -1,9 +1,9 @@
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6">
     <div
-      class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
+      class="flex h-full items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
     >
       <div
-        class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800"
+        class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800"
       >
         <svg
           class="fill-gray-800 dark:fill-white/90"
@@ -22,7 +22,7 @@
         </svg>
       </div>
 
-      <div class="flex items-end justify-between mt-5">
+      <div class="mt-0 flex flex-1 items-end justify-between gap-3">
         <div>
             <span class="text-sm text-gray-500 dark:text-gray-400">Clientes</span>
             @php
@@ -66,10 +66,10 @@
     </div>
 
     <div
-      class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
+      class="flex h-full items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
     >
       <div
-        class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800"
+        class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800"
       >
         <svg
           class="fill-gray-800 dark:fill-white/90"
@@ -88,19 +88,32 @@
         </svg>
       </div>
 
-      <div class="flex items-end justify-between mt-5">
+      <div class="mt-0 flex flex-1 items-end justify-between gap-3">
         <div>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Pedidos</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Vendas concluídas no ano</span>
             @php
               use App\Models\Venda;
-              $inicioMesAtual = now()->startOfMonth();
-              $fimMesAnterior = $inicioMesAtual->copy()->subDay();
-              $inicioMesAnterior = $fimMesAnterior->copy()->startOfMonth();
-              $vendasMesAtual = Venda::whereBetween('data_venda', [$inicioMesAtual, now()])->count();
-              $vendasMesAnterior = Venda::whereBetween('data_venda', [$inicioMesAnterior, $fimMesAnterior])->count();
-              $percentGrowthVendas = $vendasMesAnterior > 0 ? round((($vendasMesAtual - $vendasMesAnterior) / $vendasMesAnterior) * 100, 2) : 0;
+              $inicioAnoAtual = now()->copy()->startOfYear();
+              $inicioAnoAnterior = now()->copy()->subYear()->startOfYear();
+              $fimAnoAnterior = now()->copy()->subYear()->endOfYear();
+
+              $vendasAnoAtual = Venda::whereBetween('data_venda', [$inicioAnoAtual, now()])
+                  ->where(function ($query) {
+                      $query->where('tipo_pagamento', 'vista')
+                          ->orWhere('status', 'pago');
+                  })
+                  ->count();
+
+              $vendasAnoAnterior = Venda::whereBetween('data_venda', [$inicioAnoAnterior, $fimAnoAnterior])
+                  ->where(function ($query) {
+                      $query->where('tipo_pagamento', 'vista')
+                          ->orWhere('status', 'pago');
+                  })
+                  ->count();
+
+              $percentGrowthVendas = $vendasAnoAnterior > 0 ? round((($vendasAnoAtual - $vendasAnoAnterior) / $vendasAnoAnterior) * 100, 2) : 0;
             @endphp
-            <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{{ $vendasMesAtual }}</h4>
+            <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{{ $vendasAnoAtual }}</h4>
         </div>
 
         <span
@@ -124,6 +137,58 @@
 
           {{ $percentGrowthVendas }}%
         </span>
+      </div>
+    </div>
+
+    <div
+      class="flex h-full items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
+    >
+      <div
+        class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800"
+      >
+        <svg
+          class="fill-gray-800 dark:fill-white/90"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M12 2.75C9.23858 2.75 7 4.98858 7 7.75V8.5H5.5C4.67157 8.5 4 9.17157 4 10V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V10C20 9.17157 19.3284 8.5 18.5 8.5H17V7.75C17 4.98858 14.7614 2.75 12 2.75ZM15.5 8.5V7.75C15.5 6.12665 14.1234 4.75 12 4.75C9.87665 4.75 8.5 6.12665 8.5 7.75V8.5H15.5ZM6 10.5H18V18H6V10.5ZM12.75 12.5C12.75 12.0594 12.3908 11.7 11.95 11.7C11.5092 11.7 11.15 12.0594 11.15 12.5V14.35C11.15 14.7908 11.5092 15.15 11.95 15.15C12.3908 15.15 12.75 14.7908 12.75 14.35V12.5Z"
+            fill=""
+          />
+        </svg>
+      </div>
+
+      <div class="mt-0 flex flex-1 items-end justify-between gap-3">
+        <div>
+            <span class="text-sm text-gray-500 dark:text-gray-400">A receber</span>
+            @php
+              $totalAReceber = Venda::where('status', 'pendente')
+                  ->where('tipo_pagamento', 'prazo')
+                  ->sum('valor_total') ?? 0;
+
+              $inicioAnoAtual = now()->copy()->startOfYear();
+              $inicioAnoAnterior = now()->copy()->subYear()->startOfYear();
+              $fimAnoAnterior = now()->copy()->subYear()->endOfYear();
+
+              $valorReceberAnoAtual = Venda::whereBetween('data_venda', [$inicioAnoAtual, now()])
+                  ->where('status', 'pendente')
+                  ->where('tipo_pagamento', 'prazo')
+                  ->sum('valor_total') ?? 0;
+
+              $valorReceberAnoAnterior = Venda::whereBetween('data_venda', [$inicioAnoAnterior, $fimAnoAnterior])
+                  ->where('status', 'pendente')
+                  ->where('tipo_pagamento', 'prazo')
+                  ->sum('valor_total') ?? 0;
+
+              $percentGrowthReceber = $valorReceberAnoAnterior > 0 ? round((($valorReceberAnoAtual - $valorReceberAnoAnterior) / $valorReceberAnoAnterior) * 100, 2) : 0;
+            @endphp
+            <h4 class="mt-2 text-xl font-bold text-gray-800 dark:text-white/90 sm:text-lg">R$ {{ number_format($totalAReceber, 2, ',', '.') }}</h4>
+        </div>
       </div>
     </div>
   </div>

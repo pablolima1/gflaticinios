@@ -134,7 +134,7 @@ class VendaController extends Controller
         }
 
         // Ordenação e paginação
-        $vendas = $query->orderBy('data_venda', 'desc')->paginate(15);
+        $vendas = $query->orderBy('data_venda', 'desc')->paginate(50);
 
         // Busca clientes únicos do período para o filtro
         $clientesDisponiveis = $this->venda
