@@ -59,6 +59,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{tipo}', [\App\Http\Controllers\TipoDespesaController::class, 'destroy'])->name('tipos-despesas.destroy');
     });
 
+    // Grupo de rotas para gerenciar bairros
+    Route::group(['prefix' => 'bairros'], function () {
+        Route::get('/', [\App\Http\Controllers\BairroController::class, 'index'])->name('bairros.index');
+        Route::get('/create', [\App\Http\Controllers\BairroController::class, 'create'])->name('bairros.create');
+        Route::post('/', [\App\Http\Controllers\BairroController::class, 'store'])->name('bairros.store');
+        Route::get('/{bairro}/edit', [\App\Http\Controllers\BairroController::class, 'edit'])->name('bairros.edit');
+        Route::put('/{bairro}', [\App\Http\Controllers\BairroController::class, 'update'])->name('bairros.update');
+        Route::delete('/{bairro}', [\App\Http\Controllers\BairroController::class, 'destroy'])->name('bairros.destroy');
+    });
+
     // Grupo de rotas de vendas
     Route::group(['prefix' => 'vendas'], function () {
         Route::get('/', [\App\Http\Controllers\VendaController::class, 'index'])->name('vendas.index');

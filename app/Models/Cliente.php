@@ -12,7 +12,7 @@ class Cliente extends Model
     protected $table = 'clientes';
 
     protected $fillable = [
-        'nome', 'telefone', 'email', 'data_nascimento', 'endereco', 'observacoes'
+        'nome', 'telefone', 'email', 'data_nascimento', 'endereco', 'bairro_id', 'observacoes'
     ];
 
     protected $casts = [
@@ -22,6 +22,11 @@ class Cliente extends Model
     public function vendas()
     {
         return $this->hasMany(Venda::class, 'cliente_id');
+    }
+
+    public function bairro()
+    {
+        return $this->belongsTo(Bairro::class);
     }
 
     public function pedidos()
@@ -41,7 +46,7 @@ class Cliente extends Model
 
     public function getAllClientes($search = null)
     {
-        $query = Cliente::query();
+        $query = Cliente::with('bairro');
 
         if ($search) {
             $query->where('nome', 'like', "%{$search}%")

@@ -44,6 +44,7 @@ class MenuHelper
                 'name' => 'Clientes',
                 'subItems' => [
                     ['name' => 'Lista de Clientes', 'path' => '/clientes'],
+                    ['name' => 'Bairros', 'path' => '/bairros'],
                     /* ['name' => 'Brindes', 'path' => '/brindes'], */
                 ],
             ],

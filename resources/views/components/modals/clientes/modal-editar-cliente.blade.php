@@ -1,6 +1,6 @@
 <div class="p-6 dark:bg-transparent lg:p-10"
     x-data="editarClienteFormHandler()"
-    x-effect="cliente_id = $store.cliente.id; cliente_nome = $store.cliente.nome; cliente_telefone = $store.cliente.telefone; cliente_email = $store.cliente.email; cliente_data_nascimento = formatDateToBR($store.cliente.data_nascimento); cliente_endereco = $store.cliente.endereco; cliente_observacoes = $store.cliente.observacoes;">
+    x-effect="cliente_id = $store.cliente.id; cliente_nome = $store.cliente.nome; cliente_telefone = $store.cliente.telefone; cliente_email = $store.cliente.email; cliente_data_nascimento = formatDateToBR($store.cliente.data_nascimento); cliente_endereco = $store.cliente.endereco; cliente_bairro_id = $store.cliente.bairro_id || ''; cliente_observacoes = $store.cliente.observacoes;">
 
     <h2 class="mb-6 text-lg font-bold text-gray-800 dark:text-white">Editar Cliente</h2>
     <form id="editarClienteForm" class="grid grid-cols-1 gap-4" @submit.prevent="submitCliente">
@@ -49,6 +49,17 @@
         </div>
 
         <div class="col-span-1">
+            <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Bairro</label>
+            <select name="bairro_id" x-model="cliente_bairro_id"
+                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 transition-all">
+                <option value="">Selecione o bairro</option>
+                @foreach($bairros as $bairro)
+                    <option value="{{ $bairro->id }}">{{ $bairro->nome }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-span-1">
             <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Observações</label>
             <textarea name="observacoes" x-model="cliente_observacoes" rows="3" placeholder="Observações sobre o cliente (opcional)"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 transition-all"></textarea>
@@ -75,6 +86,7 @@
                 cliente_email: '',
                 cliente_data_nascimento: '',
                 cliente_endereco: '',
+                cliente_bairro_id: '',
                 cliente_observacoes: '',
                 
                 formatDateToBR(dateStr) {
@@ -122,6 +134,7 @@
                         email: formData.get('email'),
                         data_nascimento: this.convertDateToISO(formData.get('data_nascimento')),
                         endereco: formData.get('endereco'),
+                        bairro_id: formData.get('bairro_id') || null,
                         observacoes: formData.get('observacoes'),
                     };
                     

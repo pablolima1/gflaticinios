@@ -1,4 +1,4 @@
-@props(['clientes'])
+@props(['clientes', 'bairros'])
 
 <div x-data="clienteTableHandler()">
     <div class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
@@ -45,6 +45,9 @@
                                 Endereço</th>
                             <th scope="col"
                                 class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                Bairro</th>
+                            <th scope="col"
+                                class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 Data de Criação</th>
                             <th scope="col" class="relative px-4 py-3 capitalize">
                                 <span class="sr-only">Ações</span>
@@ -69,6 +72,9 @@
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->endereco }}</div>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->bairro?->nome ?? '-' }}</div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $cliente->created_at->format('d/m/Y H:i:s') }}</div>
@@ -108,7 +114,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="py-10 text-center text-lg text-gray-500 dark:text-gray-400">
+                            <td colspan="7" class="py-10 text-center text-lg text-gray-500 dark:text-gray-400">
                                 <div class="flex flex-col items-center justify-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m9-4V7a4 4 0 00-8 0v3m8 0a4 4 0 01-8 0m8 0v3a4 4 0 01-8 0V7a4 4 0 018 0v3z" />
@@ -163,7 +169,7 @@
 
     <!-- Modal de Edição de Cliente -->
     <x-ui.modal x-on:open-modal-editar-cliente.window="open = true" class="max-w-[700px] max-h-[90vh] overflow-y-auto">
-        @include('components.modals.clientes.modal-editar-cliente')
+        @include('components.modals.clientes.modal-editar-cliente', ['bairros' => $bairros])
     </x-ui.modal>
 
     <!-- Modal de Deleção de Cliente -->

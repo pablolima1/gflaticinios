@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Bairro;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -15,7 +16,9 @@ class ClienteController extends Controller
     {
         $search = $request->query('search');
         $clientes = $this->cliente->getAllClientes($search);
-        return view('clientes.index', compact('clientes'));
+        $bairros = Bairro::orderBy('nome')->get();
+
+        return view('clientes.index', compact('clientes', 'bairros'));
     }
 
     public function create()
@@ -36,6 +39,7 @@ class ClienteController extends Controller
             'email' => 'nullable|email|max:255',
             'data_nascimento' => 'nullable',
             'endereco' => 'nullable|string|max:255',
+            'bairro_id' => 'nullable|exists:bairros,id',
             'observacoes' => 'nullable|string',
         ]);
 
@@ -57,6 +61,7 @@ class ClienteController extends Controller
             'email' => 'nullable|email|max:255',
             'data_nascimento' => 'nullable|date',
             'endereco' => 'nullable|string|max:255',
+            'bairro_id' => 'nullable|exists:bairros,id',
             'observacoes' => 'nullable|string',
         ]);
 
