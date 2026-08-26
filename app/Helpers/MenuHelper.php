@@ -17,6 +17,14 @@ class MenuHelper
                 ],
             ],
             [
+                'icon' => 'task',
+                'name' => 'Pedidos',
+                'subItems' => [
+                    ['name' => 'Lista de Pedidos', 'path' => '/pedidos'],
+                    ['name' => 'Novo Pedido', 'path' => '/pedidos/create'],
+                ],
+            ],
+            [
                 'icon' => 'ecommerce',
                 'name' => 'Despesas',
                 'subItems' => [

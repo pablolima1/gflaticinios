@@ -86,6 +86,17 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{cliente}', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('clientes.destroy');
     });
 
+    Route::group(['prefix' => 'pedidos'], function () {
+        Route::get('/', [\App\Http\Controllers\PedidoController::class, 'index'])->name('pedidos.index');
+        Route::get('/create', [\App\Http\Controllers\PedidoController::class, 'create'])->name('pedidos.create');
+        Route::post('/', [\App\Http\Controllers\PedidoController::class, 'store'])->name('pedidos.store');
+        Route::get('/{pedido}/edit', [\App\Http\Controllers\PedidoController::class, 'edit'])->name('pedidos.edit');
+        Route::put('/{pedido}', [\App\Http\Controllers\PedidoController::class, 'update'])->name('pedidos.update');
+        Route::patch('/{pedido}/entregue', [\App\Http\Controllers\PedidoController::class, 'marcarComoEntregue'])->name('pedidos.entregue');
+        Route::patch('/{pedido}/entregue-pagar-depois', [\App\Http\Controllers\PedidoController::class, 'entregarParaPagarDepois'])->name('pedidos.entreguePagarDepois');
+        Route::delete('/{pedido}', [\App\Http\Controllers\PedidoController::class, 'destroy'])->name('pedidos.destroy');
+    });
+
     Route::group(['prefix' => 'produtos'], function () {
         Route::get('/', [\App\Http\Controllers\ProdutoController::class, 'index'])->name('produtos.index');
         Route::get('/create', [\App\Http\Controllers\ProdutoController::class, 'create'])->name('produtos.create');
