@@ -26,6 +26,17 @@
                 </div>
 
                 <div>
+                    <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Bairro de entrega</label>
+                    <select name="bairro_id" x-model="bairro_id" class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:border-brand-300 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+                        <option value="">Sem bairro cadastrado</option>
+                        @foreach ($bairros as $bairro)
+                            <option value="{{ $bairro->id }}">{{ $bairro->nome }}</option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">A escolha será salva no cadastro do cliente.</p>
+                </div>
+
+                <div>
                     <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">Data de entrega</label>
                     <x-form.date-picker-custom name="data_entrega" label="" placeholder="Selecione a data" defaultDate="{{ date('d/m/Y') }}" dateFormat="d/m/Y" />
                 </div>
@@ -101,6 +112,7 @@
             return {
                 cliente_id: '',
                 clienteNome: '',
+                bairro_id: '',
                 produtoId: '',
                 quantidade: 1,
                 valorUnitario: 0,
@@ -163,6 +175,7 @@
 
                     const payload = {
                         cliente_id: this.cliente_id,
+                        bairro_id: this.bairro_id || null,
                         data_entrega: form.querySelector('[name="data_entrega"]').value,
                         observacoes: form.querySelector('[name="observacoes"]').value,
                         items,
@@ -199,6 +212,7 @@
                     this.$watch('clienteNome', () => {
                         const cliente = clientes.find((c) => c.nome === this.clienteNome);
                         this.cliente_id = cliente ? cliente.id : '';
+                        this.bairro_id = cliente && cliente.bairro ? String(cliente.bairro.id) : '';
                     });
 
                     const produtoSelect = document.querySelector('select[x-model="produtoId"]');

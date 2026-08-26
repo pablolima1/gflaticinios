@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Bairro;
 use App\Models\ItemPedido;
 use App\Models\Pedido;
 use App\Models\Produto;
@@ -18,7 +19,7 @@ class PedidoController extends Controller
 
     public function index(Request $request)
     {
-        $query = $this->pedido->with(['cliente', 'itensPedido.produto'])->orderBy('data_entrega');
+        $query = $this->pedido->with(['cliente.bairro', 'itensPedido.produto'])->orderBy('data_entrega');
 
         if ($request->filled('cliente_id')) {
             $query->where('cliente_id', $request->cliente_id);
@@ -53,16 +54,18 @@ class PedidoController extends Controller
 
     public function create()
     {
-        $clientes = Cliente::orderBy('nome')->get();
+        $clientes = Cliente::with('bairro')->orderBy('nome')->get();
+        $bairros = Bairro::orderBy('nome')->get();
         $produtos = Produto::where('ativo', true)->orderBy('nome')->get();
 
-        return view('pedidos.create', compact('clientes', 'produtos'));
+        return view('pedidos.create', compact('clientes', 'bairros', 'produtos'));
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
+            'bairro_id' => 'nullable|exists:bairros,id',
             'data_entrega' => 'required',
             'observacoes' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
@@ -74,6 +77,9 @@ class PedidoController extends Controller
         $dataEntrega = $this->normalizarData($validatedData['data_entrega']);
 
         $pedido = DB::transaction(function () use ($validatedData, $dataEntrega) {
+            $cliente = Cliente::findOrFail($validatedData['cliente_id']);
+            $cliente->update(['bairro_id' => $validatedData['bairro_id'] ?? null]);
+
             $pedido = Pedido::create([
                 'cliente_id' => $validatedData['cliente_id'],
                 'data_entrega' => $dataEntrega,
@@ -159,7 +165,10 @@ class PedidoController extends Controller
 
     public function destroy(Pedido $pedido)
     {
-        $pedido->delete();
+        DB::transaction(function () use ($pedido) {
+            $pedido->itensPedido()->delete();
+            $pedido->delete();
+        });
 
         return redirect()->route('pedidos.index')->with('success', 'Pedido removido com sucesso!');
     }

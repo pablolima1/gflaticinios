@@ -60,6 +60,9 @@
                             <th scope="col" class="px-4 py-3 font-semibold text-gray-700 dark:text-gray-300 text-right text-sm">
                                 Pago
                             </th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-gray-700 dark:text-gray-300 text-center text-sm">
+                                Ações
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -81,6 +84,12 @@
                                 </td>
                                 <td class="px-4 py-3 text-sm font-semibold text-right text-green-600 dark:text-green-400">
                                     R$ {{ number_format($venda->totalPago(), 2, ',', '.') }}
+                                </td>
+                                <td class="px-4 py-3 text-sm text-center flex items-center justify-center gap-2">
+                                    <button @click="openDeleteModal({{ $venda->id }}, '{{ addslashes($venda->cliente->nome) }}', '{{ route('vendas.destroy', $venda) }}')"
+                                            class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition font-medium">
+                                        &#128465;
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -105,6 +114,86 @@
         @endif
     </x-common.component-card>
 </div>
+
+<!-- Modal de Confirmação de Deleção -->
+<x-ui.modal x-on:open-modal-delete.window="open = true" class="max-w-[500px]">
+    @include('pages.vendas.partials.modal-confirm-delete')
+</x-ui.modal>
+
+<script>
+    const showSuccessMessage = (message) => {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    };
+
+    const openDeleteModal = (vendaId, clienteNome, deleteUrl) => {
+        window.deleteVendaUrl = deleteUrl;
+        const nameEl = document.getElementById('delete-target-nome');
+        if (nameEl) nameEl.textContent = clienteNome;
+
+        window.dispatchEvent(new CustomEvent('open-modal-delete'));
+    };
+
+    const closeDeleteModal = () => {
+        window.dispatchEvent(new CustomEvent('close-modal'));
+    };
+
+    document.getElementById('modal-delete')?.addEventListener('click', (e) => {
+        if (e.target.id === 'modal-delete') {
+            closeDeleteModal();
+        }
+    });
+
+    document.getElementById('delete-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitButton = e.target.querySelector('button[type="submit"]');
+        const originalText = submitButton ? submitButton.textContent : '';
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processando...';
+        }
+
+        try {
+            const token = document.querySelector('meta[name="csrf-token"]').content;
+            const response = await fetch(window.deleteVendaUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({'_method': 'DELETE'})
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                showSuccessMessage(data.message || 'Registro excluído com sucesso!');
+                closeDeleteModal();
+                setTimeout(() => window.location.reload(), 1200);
+            } else {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+                showSuccessMessage(data.message || 'Erro ao excluir registro');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
+            showSuccessMessage('Erro ao excluir. Tente novamente.');
+        }
+    });
+</script>
 
 @endsection
 
