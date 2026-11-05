@@ -40,9 +40,10 @@ class VendaController extends Controller
     {
         $validatedData = $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
-            'produto_id' => 'required|exists:produtos,id',
-            'quantidade' => 'required|integer|min:1',
-            'valor' => 'required|numeric|min:0',
+            'items' => 'required|array|min:1',
+            'items.*.produto_id' => 'required|exists:produtos,id',
+            'items.*.quantidade' => 'required|integer|min:1',
+            'items.*.valor' => 'required|numeric|min:0',
             'status_pagamento' => 'required|in:pago,anotado',
         ]);
 
@@ -51,7 +52,17 @@ class VendaController extends Controller
             $dataOriginal = str_replace('/', '-', $request->input('data'));
             $dataFormatada = date('Y-m-d', strtotime($dataOriginal));
             
-            $valorTotal = $validatedData['valor'] * $validatedData['quantidade'];
+            $itensData = array_map(function ($item) {
+                $subtotal = $item['valor'] * $item['quantidade'];
+
+                return [
+                    'produto_id' => $item['produto_id'],
+                    'quantidade' => $item['quantidade'],
+                    'preco_unitario' => $item['valor'],
+                    'subtotal' => $subtotal,
+                ];
+            }, $validatedData['items']);
+            $valorTotal = array_sum(array_column($itensData, 'subtotal'));
             $isPago = $validatedData['status_pagamento'] === 'pago';
 
             // Prepara dados da venda
@@ -64,14 +75,6 @@ class VendaController extends Controller
                 'valor_total' => $valorTotal,
                 'observacoes' => null,
             ];
-
-            // Prepara dados dos itens
-            $itensData = [[
-                'produto_id' => $validatedData['produto_id'],
-                'quantidade' => $validatedData['quantidade'],
-                'preco_unitario' => $validatedData['valor'],
-                'subtotal' => $valorTotal,
-            ]];
 
             // Prepara dados do pagamento (se for "pago")
             $pagamentoData = $isPago ? [

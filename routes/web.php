@@ -107,6 +107,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{pedido}', [\App\Http\Controllers\PedidoController::class, 'destroy'])->name('pedidos.destroy');
     });
 
+    Route::group(['prefix' => 'pedidos-recorrentes', 'as' => 'pedidos-recorrentes.'], function () {
+        Route::get('/', [\App\Http\Controllers\PedidoRecorrenteController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\PedidoRecorrenteController::class, 'store'])->name('store');
+        Route::delete('/{pedidoRecorrente}', [\App\Http\Controllers\PedidoRecorrenteController::class, 'destroy'])->name('destroy');
+    });
+
     Route::group(['prefix' => 'produtos'], function () {
         Route::get('/', [\App\Http\Controllers\ProdutoController::class, 'index'])->name('produtos.index');
         Route::get('/create', [\App\Http\Controllers\ProdutoController::class, 'create'])->name('produtos.create');

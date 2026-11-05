@@ -134,6 +134,12 @@
                                     <div class="flex items-start justify-between gap-3">
                                         <div>
                                             <h3 class="text-base font-semibold text-gray-900 dark:text-white">{{ $pedido->cliente?->nome ?? 'Cliente não informado' }}</h3>
+                                            <p class="mt-1 text-xs text-gray-600 dark:text-gray-300">
+                                                <span class="font-semibold">Endereço:</span> {{ filled($pedido->cliente?->endereco) ? $pedido->cliente->endereco : 'Não Cadastrado' }}
+                                            </p>
+                                            <p class="text-xs text-gray-600 dark:text-gray-300">
+                                                <span class="font-semibold">Telefone:</span> {{ filled($pedido->cliente?->telefone) ? $pedido->cliente->telefone : 'Não Cadastrado' }}
+                                            </p>
                                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                                 {{ $pedido->itensPedido->map(fn ($item) => ($item->produto?->nome ?? 'Produto') . ' ' . $item->quantidade . 'x')->implode(', ') ?: 'Sem itens' }}
                                             </p>

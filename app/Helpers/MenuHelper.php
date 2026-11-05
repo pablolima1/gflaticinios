@@ -25,6 +25,11 @@ class MenuHelper
                 ],
             ],
             [
+                'icon' => 'calendar',
+                'name' => 'Pedidos Recorrentes',
+                'path' => '/pedidos-recorrentes',
+            ],
+            [
                 'icon' => 'ecommerce',
                 'name' => 'Despesas',
                 'subItems' => [

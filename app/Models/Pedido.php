@@ -13,6 +13,8 @@ class Pedido extends Model
 
     protected $fillable = [
         'cliente_id',
+        'pedido_recorrente_id',
+        'recorrente',
         'data_entrega',
         'status',
         'observacoes',
@@ -23,6 +25,7 @@ class Pedido extends Model
 
     protected $casts = [
         'data_entrega' => 'date',
+        'recorrente' => 'boolean',
         'valor_total' => 'decimal:2',
         'entregue_em' => 'datetime',
     ];
@@ -30,6 +33,11 @@ class Pedido extends Model
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
+    }
+
+    public function pedidoRecorrente()
+    {
+        return $this->belongsTo(PedidoRecorrente::class, 'pedido_recorrente_id');
     }
 
     public function itensPedido()
